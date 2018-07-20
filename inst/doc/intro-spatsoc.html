@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Alec Robitaille, Quinn Webber and Eric Vander Wal" />
+
+<meta name="date" content="2018-07-20" />
+
+<title>Introduction to spatsoc</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to spatsoc</h1>
+<h4 class="author"><em>Alec Robitaille, Quinn Webber and Eric Vander Wal</em></h4>
+<h4 class="date"><em>2018-07-20</em></h4>
+
+
+
+<p>The <code>spatsoc</code> package provides functionality for analyzing animal relocation data in time and space to identify potential interactions among individuals and build gambit-of-the-group data for constructing social networks.</p>
+<p>The package contains grouping functions that are used for identifying spatially and temporally explicit groups from input data. <!--In addition, the package contains functions for determining the nearest neighbor and mean pairwise distance between individuals, optionally across time steps.--> In addition, we provide a function for randomizing individual identifiers within groups, designed to test whether social networks generated from animal relocation data were based on non-random social proximity among individuals.</p>
+<p>The functions were developped for application across animal relocation data, for example, proximity based social network analyses and spatial and temporal clustering of points.</p>
+<div id="grouping" class="section level2">
+<h2>Grouping</h2>
+<p>Let’s read in <code>spatsoc</code>’s example data.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(spatsoc)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">DT &lt;-<span class="st"> </span><span class="kw">fread</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;DT.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;spatsoc&quot;</span>))</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">DT[, datetime <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">as.POSIXct</span>(datetime,</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">                            <span class="dt">tz =</span> <span class="st">'UTC'</span>)]</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ID</th>
+<th align="right">X</th>
+<th align="right">Y</th>
+<th align="left">datetime</th>
+<th align="right">population</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">B</td>
+<td align="right">556792.2</td>
+<td align="right">5400539</td>
+<td align="left">2018-08-20 19:30:11</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">A</td>
+<td align="right">557019.1</td>
+<td align="right">5400046</td>
+<td align="left">2018-08-30 11:15:01</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">557069.9</td>
+<td align="right">5400055</td>
+<td align="left">2018-08-21 04:31:05</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">C</td>
+<td align="right">557009.3</td>
+<td align="right">5400395</td>
+<td align="left">2018-08-17 09:46:07</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">557240.8</td>
+<td align="right">5400174</td>
+<td align="left">2018-08-31 05:15:50</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+<!-- note this input/example data is just for now.. -->
+<p>The data consist of relocations of 3 individuals over 19 days. <!--Relocations were recorded using GPS collars with fixes obtained every two hours. -->Using these data, we can compare the various grouping methods available in <code>spatsoc</code>.</p>
+<div id="group_times" class="section level3">
+<h3><code>group_times</code></h3>
+<p>The <code>group_times</code> function is used to group relocations temporally. It is flexible to a threshold provided in units of minutes, hours or days. Since GPS fixes taken at regular intervals have some level of variability, we will provide a time threshold (<code>threshold</code>), to consider all fixes within this threshold taken at the same time. Alternatively, we may want to understand different scales of grouping, perhaps daily movement trajectories or seasonal home range overlap.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">group_times</span>(DT, <span class="dt">datetime =</span> <span class="st">'datetime'</span>, <span class="dt">threshold =</span> <span class="st">'5 minutes'</span>)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ID</th>
+<th align="right">X</th>
+<th align="right">Y</th>
+<th align="left">datetime</th>
+<th align="right">timegroup</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">C</td>
+<td align="right">557058.0</td>
+<td align="right">5400054</td>
+<td align="left">2018-08-15 21:45:06</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">B</td>
+<td align="right">557045.0</td>
+<td align="right">5400050</td>
+<td align="left">2018-08-15 21:45:49</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">557041.0</td>
+<td align="right">5400088</td>
+<td align="left">2018-08-15 21:46:06</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">B</td>
+<td align="right">557056.8</td>
+<td align="right">5399986</td>
+<td align="left">2018-08-15 22:30:35</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">557128.0</td>
+<td align="right">5400074</td>
+<td align="left">2018-08-15 22:31:00</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">C</td>
+<td align="right">557062.8</td>
+<td align="right">5400088</td>
+<td align="left">2018-08-15 22:31:11</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">B</td>
+<td align="right">557078.1</td>
+<td align="right">5400039</td>
+<td align="left">2018-08-15 23:15:18</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">A</td>
+<td align="right">557007.2</td>
+<td align="right">5400117</td>
+<td align="left">2018-08-15 23:15:46</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="left">C</td>
+<td align="right">557099.3</td>
+<td align="right">5400079</td>
+<td align="left">2018-08-15 23:16:09</td>
+<td align="right">3</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">group_times</span>(DT, <span class="dt">datetime =</span> <span class="st">'datetime'</span>, <span class="dt">threshold =</span> <span class="st">'2 hours'</span>)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ID</th>
+<th align="right">X</th>
+<th align="right">Y</th>
+<th align="left">datetime</th>
+<th align="right">timegroup</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">C</td>
+<td align="right">557058.0</td>
+<td align="right">5400054</td>
+<td align="left">2018-08-15 21:45:06</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">B</td>
+<td align="right">557045.0</td>
+<td align="right">5400050</td>
+<td align="left">2018-08-15 21:45:49</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">557041.0</td>
+<td align="right">5400088</td>
+<td align="left">2018-08-15 21:46:06</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">B</td>
+<td align="right">557056.8</td>
+<td align="right">5399986</td>
+<td align="left">2018-08-15 22:30:35</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">557128.0</td>
+<td align="right">5400074</td>
+<td align="left">2018-08-15 22:31:00</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">C</td>
+<td align="right">557062.8</td>
+<td align="right">5400088</td>
+<td align="left">2018-08-15 22:31:11</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">B</td>
+<td align="right">557078.1</td>
+<td align="right">5400039</td>
+<td align="left">2018-08-15 23:15:18</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">A</td>
+<td align="right">557007.2</td>
+<td align="right">5400117</td>
+<td align="left">2018-08-15 23:15:46</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">C</td>
+<td align="right">557099.3</td>
+<td align="right">5400079</td>
+<td align="left">2018-08-15 23:16:09</td>
+<td align="right">2</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">group_times</span>(DT, <span class="dt">datetime =</span> <span class="st">'datetime'</span>, <span class="dt">threshold =</span> <span class="st">'5 days'</span>)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ID</th>
+<th align="right">X</th>
+<th align="right">Y</th>
+<th align="left">datetime</th>
+<th align="right">timegroup</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">557041.0</td>
+<td align="right">5400088</td>
+<td align="left">2018-08-15 21:46:06</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">C</td>
+<td align="right">557180.2</td>
+<td align="right">5400244</td>
+<td align="left">2018-08-16 00:46:09</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">B</td>
+<td align="right">557040.2</td>
+<td align="right">5400210</td>
+<td align="left">2018-08-16 10:31:20</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">A</td>
+<td align="right">556989.9</td>
+<td align="right">5399860</td>
+<td align="left">2018-08-20 00:00:20</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">556963.7</td>
+<td align="right">5400078</td>
+<td align="left">2018-08-20 08:16:12</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">A</td>
+<td align="right">556563.4</td>
+<td align="right">5400348</td>
+<td align="left">2018-08-22 21:00:07</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">557317.9</td>
+<td align="right">5399603</td>
+<td align="left">2018-08-25 00:00:38</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">A</td>
+<td align="right">557147.3</td>
+<td align="right">5399707</td>
+<td align="left">2018-08-25 23:15:38</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="left">C</td>
+<td align="right">557948.5</td>
+<td align="right">5401310</td>
+<td align="left">2018-08-29 09:45:46</td>
+<td align="right">3</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="group_pts" class="section level3">
+<h3><code>group_pts</code></h3>
+<p>The <code>group_pts</code> function compares the relocations of all individuals in each timegroup and groups individuals based on a distance threshold provided by the user.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">group_times</span>(<span class="dt">DT =</span> DT, <span class="dt">datetime =</span> <span class="st">'datetime'</span>, <span class="dt">threshold =</span> <span class="st">'15 minutes'</span>)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">group_pts</span>(DT, <span class="dt">threshold =</span> <span class="dv">50</span>, <span class="dt">id =</span> <span class="st">'ID'</span>, <span class="dt">coords =</span> <span class="kw">c</span>(<span class="st">'X'</span>, <span class="st">'Y'</span>))</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ID</th>
+<th align="right">X</th>
+<th align="right">Y</th>
+<th align="right">timegroup</th>
+<th align="right">group</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">557041.0</td>
+<td align="right">5400088</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">B</td>
+<td align="right">557045.0</td>
+<td align="right">5400050</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">C</td>
+<td align="right">557058.0</td>
+<td align="right">5400054</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">A</td>
+<td align="right">557128.0</td>
+<td align="right">5400074</td>
+<td align="right">2</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">557007.2</td>
+<td align="right">5400117</td>
+<td align="right">3</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">A</td>
+<td align="right">556945.8</td>
+<td align="right">5400134</td>
+<td align="right">4</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">556958.1</td>
+<td align="right">5400218</td>
+<td align="right">5</td>
+<td align="right">5</td>
+</tr>
+<tr class="even">
+<td align="left">A</td>
+<td align="right">556936.1</td>
+<td align="right">5400209</td>
+<td align="right">6</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">556962.1</td>
+<td align="right">5400129</td>
+<td align="right">7</td>
+<td align="right">7</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="group_lines" class="section level3">
+<h3><code>group_lines</code></h3>
+<p>The <code>group_lines</code> function groups individuals whose trajectories intersect in a specified time interval. This represents a coarser grouping method than <code>group_pts</code> which can help understand shared space at daily, weekly or other temporal resolutions.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">utm &lt;-<span class="st"> '+proj=utm +zone=21 ellps=WGS84'</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw">group_times</span>(<span class="dt">DT =</span> DT, <span class="dt">datetime =</span> <span class="st">'datetime'</span>, <span class="dt">threshold =</span> <span class="st">'1 day'</span>)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="kw">group_lines</span>(DT, <span class="dt">threshold =</span> <span class="dv">50</span>, <span class="dt">projection =</span> utm, </a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">            <span class="dt">id =</span> <span class="st">'ID'</span>, <span class="dt">coords =</span> <span class="kw">c</span>(<span class="st">'X'</span>, <span class="st">'Y'</span>),</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">            <span class="dt">timegroup =</span> <span class="st">'timegroup'</span>)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ID</th>
+<th align="right">X</th>
+<th align="right">Y</th>
+<th align="right">timegroup</th>
+<th align="right">group</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">557041.0</td>
+<td align="right">5400088</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">A</td>
+<td align="right">557128.0</td>
+<td align="right">5400074</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">557007.2</td>
+<td align="right">5400117</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">A</td>
+<td align="right">556945.8</td>
+<td align="right">5400134</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">556958.1</td>
+<td align="right">5400218</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">A</td>
+<td align="right">556936.1</td>
+<td align="right">5400209</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">556962.1</td>
+<td align="right">5400129</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">A</td>
+<td align="right">556981.3</td>
+<td align="right">5400065</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">556892.6</td>
+<td align="right">5400059</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="group_polys" class="section level3">
+<h3><code>group_polys</code></h3>
+<p>The <code>group_polys</code> function groups individuals whose home ranges intersect. This represents the coarsest grouping method, to provide a measure of overlap across seasons, years or all available relocations. It can either return the proportion of home range area overlapping between individuals or simple groups. Home ranges are calculated using <code>adehabitatHR::kernelUD</code> or <code>adehabitatHR::mcp</code>. Alternatively, a <code>SpatialPolygonsDataFrame</code> can be input to the <code>spPolys</code> argument.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">utm &lt;-<span class="st"> '+proj=utm +zone=21 ellps=WGS84'</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">group_times</span>(<span class="dt">DT =</span> DT, <span class="dt">datetime =</span> <span class="st">'datetime'</span>, <span class="dt">threshold =</span> <span class="st">'8 days'</span>)</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw">group_polys</span>(<span class="dt">DT =</span> DT, <span class="dt">area =</span> <span class="ot">TRUE</span>, <span class="dt">hrType =</span> <span class="st">'mcp'</span>,</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">           <span class="dt">hrParams =</span> <span class="kw">list</span>(<span class="st">'percent'</span> =<span class="st"> </span><span class="dv">95</span>),</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">           <span class="dt">projection =</span> utm,</a>
+<a class="sourceLine" id="cb7-6" data-line-number="6">           <span class="dt">coords =</span> <span class="kw">c</span>(<span class="st">'X'</span>, <span class="st">'Y'</span>), <span class="dt">id =</span> <span class="st">'ID'</span>)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ID1</th>
+<th align="left">ID2</th>
+<th align="right">area</th>
+<th align="right">proportion</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">A</td>
+<td align="left">A</td>
+<td align="right">974107.0</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">A</td>
+<td align="left">B</td>
+<td align="right">282558.6</td>
+<td align="right">0.2900694</td>
+</tr>
+<tr class="odd">
+<td align="left">A</td>
+<td align="left">C</td>
+<td align="right">525583.9</td>
+<td align="right">0.5395546</td>
+</tr>
+<tr class="even">
+<td align="left">B</td>
+<td align="left">A</td>
+<td align="right">282558.6</td>
+<td align="right">0.1201201</td>
+</tr>
+<tr class="odd">
+<td align="left">B</td>
+<td align="left">B</td>
+<td align="right">2352300.8</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">B</td>
+<td align="left">C</td>
+<td align="right">190150.7</td>
+<td align="right">0.0808360</td>
+</tr>
+<tr class="odd">
+<td align="left">C</td>
+<td align="left">A</td>
+<td align="right">525583.9</td>
+<td align="right">0.2401272</td>
+</tr>
+<tr class="even">
+<td align="left">C</td>
+<td align="left">B</td>
+<td align="right">190150.7</td>
+<td align="right">0.0868755</td>
+</tr>
+<tr class="odd">
+<td align="left">C</td>
+<td align="left">C</td>
+<td align="right">2188772.8</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="notes" class="section level2">
+<h2>Notes</h2>
+<p>Package dependencies for <code>spatsoc</code> are <code>sp</code>, <code>rgeos</code>, <code>igraph</code>, <code>adehabitatHR</code> and <code>data.table</code>. <code>data.table</code> provides efficient methods for manipulating large (or small) datasets. As a result, input <code>DT</code> for all <code>spatsoc</code> functions must be a <code>data.table</code> and if it isn’t, you can simply use <code>setDT(df)</code> to convert it by reference.</p>
+<p>In addition, since the <code>rgeos</code> package is used in most functions (<code>group_lines</code> and <code>group_polys</code>) the input <code>DT</code>’s coordinate system is important. <code>rgeos</code> expects planar coordinates and this requirement is carried forward for <code>spatsoc</code>. Since <code>rgeos</code> is used, system dependencies include <code>GEOS</code>.</p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
