@@ -1,5 +1,5 @@
 ## ----knitropts, include = FALSE------------------------------------------
-knitr::opts_chunk$set(message = FALSE, 
+knitr::opts_chunk$set(message = TRUE, 
                       warning = FALSE,
                       eval = FALSE, 
                       echo = FALSE)
@@ -11,6 +11,7 @@ DT[, datetime := as.POSIXct(datetime, tz = 'UTC')]
 
 ## ---- echo = TRUE--------------------------------------------------------
 #  library(spatsoc)
+#  library(data.table)
 #  DT <- fread(system.file("extdata", "DT.csv", package = "spatsoc"))
 #  DT[, datetime := as.POSIXct(datetime,
 #                              tz = 'UTC')]
@@ -27,7 +28,7 @@ nRows <- 9
 ## ----tabgroupmins, eval = TRUE-------------------------------------------
 knitr::kable(
   group_times(DT, threshold = '5 minutes', datetime = 'datetime')[, 
-    .(ID, X, Y, datetime, timegroup)][
+    .(ID, X, Y, datetime, minutes, timegroup)][
       order(datetime)][
         1:nRows])
 
@@ -37,7 +38,7 @@ knitr::kable(
 ## ----tabgrouphours, eval = TRUE------------------------------------------
 knitr::kable(
   group_times(DT, threshold = '2 hours', datetime = 'datetime')[, 
-    .(ID, X, Y, datetime, timegroup)][
+    .(ID, X, Y, datetime, hours, timegroup)][
       order(datetime)][
         1:nRows])
 
@@ -46,10 +47,8 @@ knitr::kable(
 
 ## ----tabgroupdays, eval = TRUE-------------------------------------------
 knitr::kable(
-  group_times(DT, threshold = '5 days', datetime = 'datetime')[, 
-    .SD[c(1, sample(.N, 2))], by = timegroup][
-      order(datetime)][
-        1:nRows, .(ID, X, Y, datetime, timegroup)])
+  group_times(DT, threshold = '5 days', datetime = 'datetime')[, .SD[sample(.N, 3)], by = .(timegroup, block)][order(datetime)][
+        1:nRows, .(ID, X, Y, datetime, block, timegroup)])
 
 ## ----grouppts, echo = TRUE-----------------------------------------------
 #  group_times(DT = DT, datetime = 'datetime', threshold = '15 minutes')
@@ -71,7 +70,7 @@ knitr::kable(
 #  group_times(DT = DT, datetime = 'datetime', threshold = '1 day')
 #  group_lines(DT, threshold = 50, projection = utm,
 #              id = 'ID', coords = c('X', 'Y'),
-#              timegroup = 'timegroup')
+#              timegroup = 'timegroup', sortBy = 'datetime')
 
 ## ----grouplines, eval = TRUE---------------------------------------------
 utm <- '+proj=utm +zone=21 ellps=WGS84'
@@ -80,7 +79,7 @@ knitr::kable(
     group_times(DT = DT, datetime = 'datetime', 
                 threshold = '1 day'), 
     threshold = 50, projection = utm, 
-    id = 'ID', coords = c('X', 'Y')
+    id = 'ID', coords = c('X', 'Y'), sortBy = 'datetime'
   )[order(group)][
         1:nRows, .(ID, X, Y, timegroup, group)]
 )

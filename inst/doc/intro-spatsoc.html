@@ -1,843 +1,1243 @@
 <!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+<html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="pandoc" />
+<title>Grouping</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<meta name="author" content="Alec Robitaille, Quinn Webber and Eric Vander Wal" />
-
-<meta name="date" content="2018-07-20" />
-
-<title>Introduction to spatsoc</title>
-
-
-
-<style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {  }
-@media screen {
-a.sourceLine::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+};
+</script>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: #990073
+   }
+
+   pre .number {
+     color: #099;
+   }
+
+   pre .comment {
+     color: #998;
+     font-style: italic
+   }
+
+   pre .keyword {
+     color: #900;
+     font-weight: bold
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: #d14;
+   }
 </style>
 
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
 
 
-<style type="text/css">body {
-background-color: #fff;
-margin: 1em auto;
-max-width: 700px;
-overflow: visible;
-padding-left: 2em;
-padding-right: 2em;
-font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-font-size: 14px;
-line-height: 1.35;
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
 }
-#header {
-text-align: center;
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
 }
-#TOC {
-clear: both;
-margin: 0 0 10px 10px;
-padding: 4px;
-width: 400px;
-border: 1px solid #CCCCCC;
-border-radius: 5px;
-background-color: #f6f6f6;
-font-size: 13px;
-line-height: 1.3;
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
 }
-#TOC .toctitle {
-font-weight: bold;
-font-size: 15px;
-margin-left: 5px;
+
+h1 {
+   font-size:2.2em;
 }
-#TOC ul {
-padding-left: 40px;
-margin-left: -1.5em;
-margin-top: 5px;
-margin-bottom: 5px;
+
+h2 {
+   font-size:1.8em;
 }
-#TOC ul ul {
-margin-left: -2em;
+
+h3 {
+   font-size:1.4em;
 }
-#TOC li {
-line-height: 16px;
+
+h4 {
+   font-size:1.0em;
 }
-table {
-margin: 1em auto;
-border-width: 1px;
-border-color: #DDDDDD;
-border-style: outset;
-border-collapse: collapse;
+
+h5 {
+   font-size:0.9em;
 }
-table th {
-border-width: 2px;
-padding: 5px;
-border-style: inset;
+
+h6 {
+   font-size:0.8em;
 }
-table td {
-border-width: 1px;
-border-style: inset;
-line-height: 18px;
-padding: 5px 5px;
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
 }
-table, table th, table td {
-border-left-style: none;
-border-right-style: none;
-}
-table thead, table tr.even {
-background-color: #f7f7f7;
-}
-p {
-margin: 0.5em 0;
-}
-blockquote {
-background-color: #f6f6f6;
-padding: 0.25em 0.75em;
-}
-hr {
-border-style: solid;
-border: none;
-border-top: 1px solid #777;
-margin: 28px 0;
-}
-dl {
-margin-left: 0;
-}
-dl dd {
-margin-bottom: 13px;
-margin-left: 13px;
-}
-dl dt {
-font-weight: bold;
-}
-ul {
-margin-top: 0;
-}
-ul li {
-list-style: circle outside;
-}
-ul ul {
-margin-bottom: 0;
-}
-pre, code {
-background-color: #f7f7f7;
-border-radius: 3px;
-color: #333;
-white-space: pre-wrap; 
+
+pre, img {
+  max-width: 100%;
 }
 pre {
-border-radius: 3px;
-margin: 5px 0px 10px 0px;
-padding: 10px;
+  overflow-x: auto;
 }
-pre:not([class]) {
-background-color: #f7f7f7;
+pre code {
+   display: block; padding: 0.5em;
 }
-code {
-font-family: Consolas, Monaco, 'Courier New', monospace;
-font-size: 85%;
-}
-p > code, li > code {
-padding: 2px 0px;
-}
-div.figure {
-text-align: center;
-}
-img {
-background-color: #FFFFFF;
-padding: 2px;
-border: 1px solid #DDDDDD;
-border-radius: 3px;
-border: 1px solid #CCCCCC;
-margin: 0 5px;
-}
-h1 {
-margin-top: 0;
-font-size: 35px;
-line-height: 40px;
-}
-h2 {
-border-bottom: 4px solid #f7f7f7;
-padding-top: 10px;
-padding-bottom: 2px;
-font-size: 145%;
-}
-h3 {
-border-bottom: 2px solid #f7f7f7;
-padding-top: 10px;
-font-size: 120%;
-}
-h4 {
-border-bottom: 1px solid #f7f7f7;
-margin-left: 8px;
-font-size: 105%;
-}
-h5, h6 {
-border-bottom: 1px solid #ccc;
-font-size: 105%;
-}
-a {
-color: #0033dd;
-text-decoration: none;
-}
-a:hover {
-color: #6666ff; }
-a:visited {
-color: #800080; }
-a:visited:hover {
-color: #BB00BB; }
-a[href^="http:"] {
-text-decoration: underline; }
-a[href^="https:"] {
-text-decoration: underline; }
 
-code > span.kw { color: #555; font-weight: bold; } 
-code > span.dt { color: #902000; } 
-code > span.dv { color: #40a070; } 
-code > span.bn { color: #d14; } 
-code > span.fl { color: #d14; } 
-code > span.ch { color: #d14; } 
-code > span.st { color: #d14; } 
-code > span.co { color: #888888; font-style: italic; } 
-code > span.ot { color: #007020; } 
-code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
 </style>
+
+
 
 </head>
 
 <body>
+<p>The <code>spatsoc</code> package provides functionality for analyzing animal relocation data in time and space to identify potential interactions among individuals and build gambit-of-the-group data for constructing social networks. </p>
 
+<p>The package contains grouping functions that are used for identifying spatially and temporally explicit groups from input data. In addition, we provide a function for randomizing individual identifiers within groups, designed to test whether social networks generated from animal relocation data were based on non-random social proximity among individuals.</p>
 
+<p>The functions were developed for application across animal relocation data, for example, proximity based social network analyses and spatial and temporal clustering of points.</p>
 
-
-<h1 class="title toc-ignore">Introduction to spatsoc</h1>
-<h4 class="author"><em>Alec Robitaille, Quinn Webber and Eric Vander Wal</em></h4>
-<h4 class="date"><em>2018-07-20</em></h4>
-
-
-
-<p>The <code>spatsoc</code> package provides functionality for analyzing animal relocation data in time and space to identify potential interactions among individuals and build gambit-of-the-group data for constructing social networks.</p>
-<p>The package contains grouping functions that are used for identifying spatially and temporally explicit groups from input data. <!--In addition, the package contains functions for determining the nearest neighbor and mean pairwise distance between individuals, optionally across time steps.--> In addition, we provide a function for randomizing individual identifiers within groups, designed to test whether social networks generated from animal relocation data were based on non-random social proximity among individuals.</p>
-<p>The functions were developped for application across animal relocation data, for example, proximity based social network analyses and spatial and temporal clustering of points.</p>
-<div id="grouping" class="section level2">
 <h2>Grouping</h2>
-<p>Let’s read in <code>spatsoc</code>’s example data.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(spatsoc)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">DT &lt;-<span class="st"> </span><span class="kw">fread</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;DT.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;spatsoc&quot;</span>))</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">DT[, datetime <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">as.POSIXct</span>(datetime,</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">                            <span class="dt">tz =</span> <span class="st">'UTC'</span>)]</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
+
+<p><code>spatsoc</code> expects a <code>data.table</code> for all of its functions. If you have a <code>data.frame</code>, you can use <code>data.table::setDT()</code> to convert it by reference. If your data is a CSV, you can use <code>data.table::fread()</code> to import it as a <code>data.table</code>. </p>
+
+<p>The data consist of relocations of 10 individuals over 365 days. Using these data, we can compare the various grouping methods available in <code>spatsoc</code>.</p>
+
+<pre><code class="r">library(spatsoc)
+library(data.table)
+DT &lt;- fread(system.file(&quot;extdata&quot;, &quot;DT.csv&quot;, package = &quot;spatsoc&quot;))
+DT[, datetime := as.POSIXct(datetime,
+                            tz = &#39;UTC&#39;)]
+</code></pre>
+
+<table><thead>
+<tr>
 <th align="left">ID</th>
 <th align="right">X</th>
 <th align="right">Y</th>
 <th align="left">datetime</th>
 <th align="right">population</th>
 </tr>
-</thead>
-<tbody>
-<tr class="odd">
+</thead><tbody>
+<tr>
+<td align="left">F</td>
+<td align="right">705455.5</td>
+<td align="right">5510309</td>
+<td align="left">2017-02-19 10:00:54</td>
+<td align="right">1</td>
+</tr>
+<tr>
 <td align="left">B</td>
-<td align="right">556792.2</td>
-<td align="right">5400539</td>
-<td align="left">2018-08-20 19:30:11</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="left">A</td>
-<td align="right">557019.1</td>
-<td align="right">5400046</td>
-<td align="left">2018-08-30 11:15:01</td>
+<td align="right">700180.2</td>
+<td align="right">5508577</td>
+<td align="left">2016-11-21 20:00:41</td>
 <td align="right">1</td>
 </tr>
-<tr class="odd">
-<td align="left">A</td>
-<td align="right">557069.9</td>
-<td align="right">5400055</td>
-<td align="left">2018-08-21 04:31:05</td>
+<tr>
+<td align="left">F</td>
+<td align="right">703576.8</td>
+<td align="right">5511196</td>
+<td align="left">2017-02-08 12:00:25</td>
 <td align="right">1</td>
 </tr>
-<tr class="even">
-<td align="left">C</td>
-<td align="right">557009.3</td>
-<td align="right">5400395</td>
-<td align="left">2018-08-17 09:46:07</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="left">A</td>
-<td align="right">557240.8</td>
-<td align="right">5400174</td>
-<td align="left">2018-08-31 05:15:50</td>
+<tr>
+<td align="left">B</td>
+<td align="right">697908.9</td>
+<td align="right">5510673</td>
+<td align="left">2017-02-26 04:00:47</td>
 <td align="right">1</td>
 </tr>
-</tbody>
-</table>
-<!-- note this input/example data is just for now.. -->
-<p>The data consist of relocations of 3 individuals over 19 days. <!--Relocations were recorded using GPS collars with fixes obtained every two hours. -->Using these data, we can compare the various grouping methods available in <code>spatsoc</code>.</p>
-<div id="group_times" class="section level3">
+<tr>
+<td align="left">A</td>
+<td align="right">703460.9</td>
+<td align="right">5503296</td>
+<td align="left">2016-12-14 22:00:54</td>
+<td align="right">1</td>
+</tr>
+</tbody></table>
+
 <h3><code>group_times</code></h3>
-<p>The <code>group_times</code> function is used to group relocations temporally. It is flexible to a threshold provided in units of minutes, hours or days. Since GPS fixes taken at regular intervals have some level of variability, we will provide a time threshold (<code>threshold</code>), to consider all fixes within this threshold taken at the same time. Alternatively, we may want to understand different scales of grouping, perhaps daily movement trajectories or seasonal home range overlap.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">group_times</span>(DT, <span class="dt">datetime =</span> <span class="st">'datetime'</span>, <span class="dt">threshold =</span> <span class="st">'5 minutes'</span>)</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
+
+<p>The <code>group_times</code> function is used to group relocations temporally. It is flexible to a threshold provided in units of minutes, hours or days. Since GPS fixes taken at regular intervals have some level of variability, we will provide a time threshold (<code>threshold</code>), to consider all fixes within this threshold taken at the same time. Alternatively, we may want to understand different scales of grouping, perhaps daily movement trajectories or seasonal home range overlap. </p>
+
+<pre><code class="r">group_times(DT, datetime = &#39;datetime&#39;, threshold = &#39;5 minutes&#39;)
+</code></pre>
+
+<table><thead>
+<tr>
 <th align="left">ID</th>
 <th align="right">X</th>
 <th align="right">Y</th>
 <th align="left">datetime</th>
+<th align="right">minutes</th>
 <th align="right">timegroup</th>
 </tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">C</td>
-<td align="right">557058.0</td>
-<td align="right">5400054</td>
-<td align="left">2018-08-15 21:45:06</td>
+</thead><tbody>
+<tr>
+<td align="left">I</td>
+<td align="right">711042.0</td>
+<td align="right">5506384</td>
+<td align="left">2016-11-01 00:00:24</td>
+<td align="right">0</td>
 <td align="right">1</td>
 </tr>
-<tr class="even">
-<td align="left">B</td>
-<td align="right">557045.0</td>
-<td align="right">5400050</td>
-<td align="left">2018-08-15 21:45:49</td>
+<tr>
+<td align="left">C</td>
+<td align="right">710205.4</td>
+<td align="right">5505888</td>
+<td align="left">2016-11-01 00:00:44</td>
+<td align="right">0</td>
 <td align="right">1</td>
 </tr>
-<tr class="odd">
-<td align="left">A</td>
-<td align="right">557041.0</td>
-<td align="right">5400088</td>
-<td align="left">2018-08-15 21:46:06</td>
+<tr>
+<td align="left">D</td>
+<td align="right">700875.0</td>
+<td align="right">5490954</td>
+<td align="left">2016-11-01 00:00:47</td>
+<td align="right">0</td>
 <td align="right">1</td>
 </tr>
-<tr class="even">
-<td align="left">B</td>
-<td align="right">557056.8</td>
-<td align="right">5399986</td>
-<td align="left">2018-08-15 22:30:35</td>
-<td align="right">2</td>
+<tr>
+<td align="left">E</td>
+<td align="right">701671.9</td>
+<td align="right">5504286</td>
+<td align="left">2016-11-01 00:00:48</td>
+<td align="right">0</td>
+<td align="right">1</td>
 </tr>
-<tr class="odd">
+<tr>
+<td align="left">F</td>
+<td align="right">705583.0</td>
+<td align="right">5513813</td>
+<td align="left">2016-11-01 00:00:48</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td align="left">G</td>
+<td align="right">699635.5</td>
+<td align="right">5509635</td>
+<td align="left">2016-11-01 00:00:48</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="right">701724.1</td>
+<td align="right">5504325</td>
+<td align="left">2016-11-01 00:00:49</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr>
 <td align="left">A</td>
-<td align="right">557128.0</td>
-<td align="right">5400074</td>
-<td align="left">2018-08-15 22:31:00</td>
-<td align="right">2</td>
+<td align="right">715851.4</td>
+<td align="right">5505340</td>
+<td align="left">2016-11-01 00:00:54</td>
+<td align="right">0</td>
+<td align="right">1</td>
 </tr>
-<tr class="even">
-<td align="left">C</td>
-<td align="right">557062.8</td>
-<td align="right">5400088</td>
-<td align="left">2018-08-15 22:31:11</td>
-<td align="right">2</td>
+<tr>
+<td align="left">J</td>
+<td align="right">707568.6</td>
+<td align="right">5500406</td>
+<td align="left">2016-11-01 00:00:56</td>
+<td align="right">0</td>
+<td align="right">1</td>
 </tr>
-<tr class="odd">
-<td align="left">B</td>
-<td align="right">557078.1</td>
-<td align="right">5400039</td>
-<td align="left">2018-08-15 23:15:18</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="left">A</td>
-<td align="right">557007.2</td>
-<td align="right">5400117</td>
-<td align="left">2018-08-15 23:15:46</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
-<td align="left">C</td>
-<td align="right">557099.3</td>
-<td align="right">5400079</td>
-<td align="left">2018-08-15 23:16:09</td>
-<td align="right">3</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">group_times</span>(DT, <span class="dt">datetime =</span> <span class="st">'datetime'</span>, <span class="dt">threshold =</span> <span class="st">'2 hours'</span>)</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
+</tbody></table>
+
+<p>A message is returned when <code>group_times</code> is run again on the same <code>DT</code>, as the columns already exist in the input <code>DT</code> and will be overwritten. </p>
+
+<pre><code class="r">group_times(DT, datetime = &#39;datetime&#39;, threshold = &#39;2 hours&#39;)
+</code></pre>
+
+<pre><code>## minutes, timegroup columns found in input DT and will be overwritten by this function
+</code></pre>
+
+<table><thead>
+<tr>
 <th align="left">ID</th>
 <th align="right">X</th>
 <th align="right">Y</th>
 <th align="left">datetime</th>
+<th align="right">hours</th>
 <th align="right">timegroup</th>
 </tr>
-</thead>
-<tbody>
-<tr class="odd">
+</thead><tbody>
+<tr>
+<td align="left">I</td>
+<td align="right">711042.0</td>
+<td align="right">5506384</td>
+<td align="left">2016-11-01 00:00:24</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr>
 <td align="left">C</td>
-<td align="right">557058.0</td>
-<td align="right">5400054</td>
-<td align="left">2018-08-15 21:45:06</td>
+<td align="right">710205.4</td>
+<td align="right">5505888</td>
+<td align="left">2016-11-01 00:00:44</td>
+<td align="right">0</td>
 <td align="right">1</td>
 </tr>
-<tr class="even">
-<td align="left">B</td>
-<td align="right">557045.0</td>
-<td align="right">5400050</td>
-<td align="left">2018-08-15 21:45:49</td>
+<tr>
+<td align="left">D</td>
+<td align="right">700875.0</td>
+<td align="right">5490954</td>
+<td align="left">2016-11-01 00:00:47</td>
+<td align="right">0</td>
 <td align="right">1</td>
 </tr>
-<tr class="odd">
+<tr>
+<td align="left">E</td>
+<td align="right">701671.9</td>
+<td align="right">5504286</td>
+<td align="left">2016-11-01 00:00:48</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="right">705583.0</td>
+<td align="right">5513813</td>
+<td align="left">2016-11-01 00:00:48</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td align="left">G</td>
+<td align="right">699635.5</td>
+<td align="right">5509635</td>
+<td align="left">2016-11-01 00:00:48</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="right">701724.1</td>
+<td align="right">5504325</td>
+<td align="left">2016-11-01 00:00:49</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr>
 <td align="left">A</td>
-<td align="right">557041.0</td>
-<td align="right">5400088</td>
-<td align="left">2018-08-15 21:46:06</td>
+<td align="right">715851.4</td>
+<td align="right">5505340</td>
+<td align="left">2016-11-01 00:00:54</td>
+<td align="right">0</td>
 <td align="right">1</td>
 </tr>
-<tr class="even">
-<td align="left">B</td>
-<td align="right">557056.8</td>
-<td align="right">5399986</td>
-<td align="left">2018-08-15 22:30:35</td>
+<tr>
+<td align="left">J</td>
+<td align="right">707568.6</td>
+<td align="right">5500406</td>
+<td align="left">2016-11-01 00:00:56</td>
+<td align="right">0</td>
 <td align="right">1</td>
 </tr>
-<tr class="odd">
-<td align="left">A</td>
-<td align="right">557128.0</td>
-<td align="right">5400074</td>
-<td align="left">2018-08-15 22:31:00</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">C</td>
-<td align="right">557062.8</td>
-<td align="right">5400088</td>
-<td align="left">2018-08-15 22:31:11</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">B</td>
-<td align="right">557078.1</td>
-<td align="right">5400039</td>
-<td align="left">2018-08-15 23:15:18</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="left">A</td>
-<td align="right">557007.2</td>
-<td align="right">5400117</td>
-<td align="left">2018-08-15 23:15:46</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="left">C</td>
-<td align="right">557099.3</td>
-<td align="right">5400079</td>
-<td align="left">2018-08-15 23:16:09</td>
-<td align="right">2</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">group_times</span>(DT, <span class="dt">datetime =</span> <span class="st">'datetime'</span>, <span class="dt">threshold =</span> <span class="st">'5 days'</span>)</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
+</tbody></table>
+
+<pre><code class="r">group_times(DT, datetime = &#39;datetime&#39;, threshold = &#39;5 days&#39;)
+</code></pre>
+
+<pre><code>## hours, timegroup columns found in input DT and will be overwritten by this function
+</code></pre>
+
+<table><thead>
+<tr>
 <th align="left">ID</th>
 <th align="right">X</th>
 <th align="right">Y</th>
 <th align="left">datetime</th>
+<th align="right">block</th>
 <th align="right">timegroup</th>
 </tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">A</td>
-<td align="right">557041.0</td>
-<td align="right">5400088</td>
-<td align="left">2018-08-15 21:46:06</td>
+</thead><tbody>
+<tr>
+<td align="left">I</td>
+<td align="right">711124.0</td>
+<td align="right">5506407</td>
+<td align="left">2016-11-01 04:00:44</td>
+<td align="right">1</td>
 <td align="right">1</td>
 </tr>
-<tr class="even">
-<td align="left">C</td>
-<td align="right">557180.2</td>
-<td align="right">5400244</td>
-<td align="left">2018-08-16 00:46:09</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
+<tr>
 <td align="left">B</td>
-<td align="right">557040.2</td>
-<td align="right">5400210</td>
-<td align="left">2018-08-16 10:31:20</td>
+<td align="right">699240.3</td>
+<td align="right">5510142</td>
+<td align="left">2016-11-02 04:00:54</td>
+<td align="right">1</td>
 <td align="right">1</td>
 </tr>
-<tr class="even">
-<td align="left">A</td>
-<td align="right">556989.9</td>
-<td align="right">5399860</td>
-<td align="left">2018-08-20 00:00:20</td>
+<tr>
+<td align="left">H</td>
+<td align="right">703319.4</td>
+<td align="right">5503448</td>
+<td align="left">2016-11-02 22:00:36</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="right">706078.6</td>
+<td align="right">5512317</td>
+<td align="left">2016-11-09 12:00:48</td>
+<td align="right">2</td>
 <td align="right">2</td>
 </tr>
-<tr class="odd">
-<td align="left">A</td>
-<td align="right">556963.7</td>
-<td align="right">5400078</td>
-<td align="left">2018-08-20 08:16:12</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="left">A</td>
-<td align="right">556563.4</td>
-<td align="right">5400348</td>
-<td align="left">2018-08-22 21:00:07</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="left">A</td>
-<td align="right">557317.9</td>
-<td align="right">5399603</td>
-<td align="left">2018-08-25 00:00:38</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="left">A</td>
-<td align="right">557147.3</td>
-<td align="right">5399707</td>
-<td align="left">2018-08-25 23:15:38</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
+<tr>
 <td align="left">C</td>
-<td align="right">557948.5</td>
-<td align="right">5401310</td>
-<td align="left">2018-08-29 09:45:46</td>
+<td align="right">701022.8</td>
+<td align="right">5505840</td>
+<td align="left">2016-11-10 14:00:08</td>
+<td align="right">2</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td align="left">B</td>
+<td align="right">697988.4</td>
+<td align="right">5511889</td>
+<td align="left">2016-11-10 20:00:47</td>
+<td align="right">2</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="right">707980.6</td>
+<td align="right">5512335</td>
+<td align="left">2016-11-11 20:00:49</td>
+<td align="right">3</td>
 <td align="right">3</td>
 </tr>
-</tbody>
-</table>
-</div>
-<div id="group_pts" class="section level3">
+<tr>
+<td align="left">J</td>
+<td align="right">705627.0</td>
+<td align="right">5498892</td>
+<td align="left">2016-11-11 20:00:53</td>
+<td align="right">3</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td align="left">E</td>
+<td align="right">702667.3</td>
+<td align="right">5504936</td>
+<td align="left">2016-11-12 16:00:33</td>
+<td align="right">3</td>
+<td align="right">3</td>
+</tr>
+</tbody></table>
+
 <h3><code>group_pts</code></h3>
+
 <p>The <code>group_pts</code> function compares the relocations of all individuals in each timegroup and groups individuals based on a distance threshold provided by the user.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">group_times</span>(<span class="dt">DT =</span> DT, <span class="dt">datetime =</span> <span class="st">'datetime'</span>, <span class="dt">threshold =</span> <span class="st">'15 minutes'</span>)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">group_pts</span>(DT, <span class="dt">threshold =</span> <span class="dv">50</span>, <span class="dt">id =</span> <span class="st">'ID'</span>, <span class="dt">coords =</span> <span class="kw">c</span>(<span class="st">'X'</span>, <span class="st">'Y'</span>))</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
+
+<pre><code class="r">group_times(DT = DT, datetime = &#39;datetime&#39;, threshold = &#39;15 minutes&#39;)
+group_pts(DT, threshold = 50, id = &#39;ID&#39;, coords = c(&#39;X&#39;, &#39;Y&#39;))
+</code></pre>
+
+<pre><code>## block, timegroup columns found in input DT and will be overwritten by this function
+</code></pre>
+
+<table><thead>
+<tr>
 <th align="left">ID</th>
 <th align="right">X</th>
 <th align="right">Y</th>
 <th align="right">timegroup</th>
 <th align="right">group</th>
 </tr>
-</thead>
-<tbody>
-<tr class="odd">
+</thead><tbody>
+<tr>
 <td align="left">A</td>
-<td align="right">557041.0</td>
-<td align="right">5400088</td>
+<td align="right">715851.4</td>
+<td align="right">5505340</td>
 <td align="right">1</td>
 <td align="right">1</td>
 </tr>
-<tr class="even">
-<td align="left">B</td>
-<td align="right">557045.0</td>
-<td align="right">5400050</td>
-<td align="right">1</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">C</td>
-<td align="right">557058.0</td>
-<td align="right">5400054</td>
-<td align="right">1</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
+<tr>
 <td align="left">A</td>
-<td align="right">557128.0</td>
-<td align="right">5400074</td>
+<td align="right">715822.8</td>
+<td align="right">5505289</td>
 <td align="right">2</td>
 <td align="right">2</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">A</td>
-<td align="right">557007.2</td>
-<td align="right">5400117</td>
+<td align="right">715872.9</td>
+<td align="right">5505252</td>
 <td align="right">3</td>
 <td align="right">3</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">A</td>
-<td align="right">556945.8</td>
-<td align="right">5400134</td>
+<td align="right">715820.5</td>
+<td align="right">5505231</td>
 <td align="right">4</td>
 <td align="right">4</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">A</td>
-<td align="right">556958.1</td>
-<td align="right">5400218</td>
+<td align="right">715830.6</td>
+<td align="right">5505227</td>
 <td align="right">5</td>
 <td align="right">5</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">A</td>
-<td align="right">556936.1</td>
-<td align="right">5400209</td>
+<td align="right">715829.4</td>
+<td align="right">5505332</td>
 <td align="right">6</td>
 <td align="right">6</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">A</td>
-<td align="right">556962.1</td>
-<td align="right">5400129</td>
+<td align="right">715306.6</td>
+<td align="right">5505837</td>
 <td align="right">7</td>
 <td align="right">7</td>
 </tr>
-</tbody>
-</table>
-</div>
-<div id="group_lines" class="section level3">
+<tr>
+<td align="left">A</td>
+<td align="right">715349.7</td>
+<td align="right">5505644</td>
+<td align="right">8</td>
+<td align="right">8</td>
+</tr>
+<tr>
+<td align="left">A</td>
+<td align="right">715224.1</td>
+<td align="right">5505661</td>
+<td align="right">9</td>
+<td align="right">9</td>
+</tr>
+</tbody></table>
+
 <h3><code>group_lines</code></h3>
+
 <p>The <code>group_lines</code> function groups individuals whose trajectories intersect in a specified time interval. This represents a coarser grouping method than <code>group_pts</code> which can help understand shared space at daily, weekly or other temporal resolutions.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">utm &lt;-<span class="st"> '+proj=utm +zone=21 ellps=WGS84'</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw">group_times</span>(<span class="dt">DT =</span> DT, <span class="dt">datetime =</span> <span class="st">'datetime'</span>, <span class="dt">threshold =</span> <span class="st">'1 day'</span>)</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="kw">group_lines</span>(DT, <span class="dt">threshold =</span> <span class="dv">50</span>, <span class="dt">projection =</span> utm, </a>
-<a class="sourceLine" id="cb6-4" data-line-number="4">            <span class="dt">id =</span> <span class="st">'ID'</span>, <span class="dt">coords =</span> <span class="kw">c</span>(<span class="st">'X'</span>, <span class="st">'Y'</span>),</a>
-<a class="sourceLine" id="cb6-5" data-line-number="5">            <span class="dt">timegroup =</span> <span class="st">'timegroup'</span>)</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
+
+<pre><code class="r">utm &lt;- &#39;+proj=utm +zone=21 ellps=WGS84&#39;
+group_times(DT = DT, datetime = &#39;datetime&#39;, threshold = &#39;1 day&#39;)
+group_lines(DT, threshold = 50, projection = utm, 
+            id = &#39;ID&#39;, coords = c(&#39;X&#39;, &#39;Y&#39;),
+            timegroup = &#39;timegroup&#39;, sortBy = &#39;datetime&#39;)
+</code></pre>
+
+<pre><code>## minutes, timegroup columns found in input DT and will be overwritten by this function
+</code></pre>
+
+<pre><code>## group column will be overwritten by this function
+</code></pre>
+
+<table><thead>
+<tr>
 <th align="left">ID</th>
 <th align="right">X</th>
 <th align="right">Y</th>
 <th align="right">timegroup</th>
 <th align="right">group</th>
 </tr>
-</thead>
-<tbody>
-<tr class="odd">
+</thead><tbody>
+<tr>
 <td align="left">A</td>
-<td align="right">557041.0</td>
-<td align="right">5400088</td>
+<td align="right">715851.4</td>
+<td align="right">5505340</td>
 <td align="right">1</td>
 <td align="right">1</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">A</td>
-<td align="right">557128.0</td>
-<td align="right">5400074</td>
+<td align="right">715822.8</td>
+<td align="right">5505289</td>
 <td align="right">1</td>
 <td align="right">1</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">A</td>
-<td align="right">557007.2</td>
-<td align="right">5400117</td>
+<td align="right">715872.9</td>
+<td align="right">5505252</td>
 <td align="right">1</td>
 <td align="right">1</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">A</td>
-<td align="right">556945.8</td>
-<td align="right">5400134</td>
-<td align="right">2</td>
+<td align="right">715820.5</td>
+<td align="right">5505231</td>
+<td align="right">1</td>
 <td align="right">1</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">A</td>
-<td align="right">556958.1</td>
-<td align="right">5400218</td>
-<td align="right">2</td>
+<td align="right">715830.6</td>
+<td align="right">5505227</td>
+<td align="right">1</td>
 <td align="right">1</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">A</td>
-<td align="right">556936.1</td>
-<td align="right">5400209</td>
-<td align="right">2</td>
+<td align="right">715829.4</td>
+<td align="right">5505332</td>
+<td align="right">1</td>
 <td align="right">1</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">A</td>
-<td align="right">556962.1</td>
-<td align="right">5400129</td>
-<td align="right">2</td>
+<td align="right">715306.6</td>
+<td align="right">5505837</td>
+<td align="right">1</td>
 <td align="right">1</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">A</td>
-<td align="right">556981.3</td>
-<td align="right">5400065</td>
-<td align="right">2</td>
+<td align="right">715349.7</td>
+<td align="right">5505644</td>
+<td align="right">1</td>
 <td align="right">1</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">A</td>
-<td align="right">556892.6</td>
-<td align="right">5400059</td>
-<td align="right">2</td>
+<td align="right">715224.1</td>
+<td align="right">5505661</td>
+<td align="right">1</td>
 <td align="right">1</td>
 </tr>
-</tbody>
-</table>
-</div>
-<div id="group_polys" class="section level3">
+</tbody></table>
+
 <h3><code>group_polys</code></h3>
+
 <p>The <code>group_polys</code> function groups individuals whose home ranges intersect. This represents the coarsest grouping method, to provide a measure of overlap across seasons, years or all available relocations. It can either return the proportion of home range area overlapping between individuals or simple groups. Home ranges are calculated using <code>adehabitatHR::kernelUD</code> or <code>adehabitatHR::mcp</code>. Alternatively, a <code>SpatialPolygonsDataFrame</code> can be input to the <code>spPolys</code> argument.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">utm &lt;-<span class="st"> '+proj=utm +zone=21 ellps=WGS84'</span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">group_times</span>(<span class="dt">DT =</span> DT, <span class="dt">datetime =</span> <span class="st">'datetime'</span>, <span class="dt">threshold =</span> <span class="st">'8 days'</span>)</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw">group_polys</span>(<span class="dt">DT =</span> DT, <span class="dt">area =</span> <span class="ot">TRUE</span>, <span class="dt">hrType =</span> <span class="st">'mcp'</span>,</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">           <span class="dt">hrParams =</span> <span class="kw">list</span>(<span class="st">'percent'</span> =<span class="st"> </span><span class="dv">95</span>),</a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">           <span class="dt">projection =</span> utm,</a>
-<a class="sourceLine" id="cb7-6" data-line-number="6">           <span class="dt">coords =</span> <span class="kw">c</span>(<span class="st">'X'</span>, <span class="st">'Y'</span>), <span class="dt">id =</span> <span class="st">'ID'</span>)</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
+
+<pre><code class="r">utm &lt;- &#39;+proj=utm +zone=21 ellps=WGS84&#39;
+group_times(DT = DT, datetime = &#39;datetime&#39;, threshold = &#39;8 days&#39;)
+group_polys(DT = DT, area = TRUE, hrType = &#39;mcp&#39;,
+           hrParams = list(&#39;percent&#39; = 95),
+           projection = utm,
+           coords = c(&#39;X&#39;, &#39;Y&#39;), id = &#39;ID&#39;)
+</code></pre>
+
+<pre><code>## timegroup columns found in input DT and will be overwritten by this function
+</code></pre>
+
+<table><thead>
+<tr>
 <th align="left">ID1</th>
 <th align="left">ID2</th>
 <th align="right">area</th>
 <th align="right">proportion</th>
 </tr>
-</thead>
-<tbody>
-<tr class="odd">
+</thead><tbody>
+<tr>
 <td align="left">A</td>
 <td align="left">A</td>
-<td align="right">974107.0</td>
+<td align="right">145142204</td>
 <td align="right">1.0000000</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">A</td>
 <td align="left">B</td>
-<td align="right">282558.6</td>
-<td align="right">0.2900694</td>
+<td align="right">9731424</td>
+<td align="right">0.0670475</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">A</td>
 <td align="left">C</td>
-<td align="right">525583.9</td>
-<td align="right">0.5395546</td>
+<td align="right">110069503</td>
+<td align="right">0.7583563</td>
 </tr>
-<tr class="even">
+<tr>
+<td align="left">A</td>
+<td align="left">E</td>
+<td align="right">60057115</td>
+<td align="right">0.4137812</td>
+</tr>
+<tr>
+<td align="left">A</td>
+<td align="left">F</td>
+<td align="right">87608610</td>
+<td align="right">0.6036053</td>
+</tr>
+<tr>
+<td align="left">A</td>
+<td align="left">G</td>
+<td align="right">12182087</td>
+<td align="right">0.0839321</td>
+</tr>
+<tr>
+<td align="left">A</td>
+<td align="left">H</td>
+<td align="right">61089896</td>
+<td align="right">0.4208968</td>
+</tr>
+<tr>
+<td align="left">A</td>
+<td align="left">I</td>
+<td align="right">125675100</td>
+<td align="right">0.8658757</td>
+</tr>
+<tr>
+<td align="left">A</td>
+<td align="left">J</td>
+<td align="right">101995862</td>
+<td align="right">0.7027306</td>
+</tr>
+<tr>
 <td align="left">B</td>
 <td align="left">A</td>
-<td align="right">282558.6</td>
-<td align="right">0.1201201</td>
+<td align="right">9731424</td>
+<td align="right">0.9167682</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">B</td>
 <td align="left">B</td>
-<td align="right">2352300.8</td>
+<td align="right">10614922</td>
 <td align="right">1.0000000</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">B</td>
 <td align="left">C</td>
-<td align="right">190150.7</td>
-<td align="right">0.0808360</td>
+<td align="right">9554942</td>
+<td align="right">0.9001425</td>
 </tr>
-<tr class="odd">
+<tr>
+<td align="left">B</td>
+<td align="left">E</td>
+<td align="right">9906676</td>
+<td align="right">0.9332783</td>
+</tr>
+<tr>
+<td align="left">B</td>
+<td align="left">F</td>
+<td align="right">9509693</td>
+<td align="right">0.8958796</td>
+</tr>
+<tr>
+<td align="left">B</td>
+<td align="left">G</td>
+<td align="right">10573553</td>
+<td align="right">0.9961027</td>
+</tr>
+<tr>
+<td align="left">B</td>
+<td align="left">H</td>
+<td align="right">10145705</td>
+<td align="right">0.9557964</td>
+</tr>
+<tr>
+<td align="left">B</td>
+<td align="left">I</td>
+<td align="right">9711953</td>
+<td align="right">0.9149339</td>
+</tr>
+<tr>
+<td align="left">B</td>
+<td align="left">J</td>
+<td align="right">10384186</td>
+<td align="right">0.9782630</td>
+</tr>
+<tr>
 <td align="left">C</td>
 <td align="left">A</td>
-<td align="right">525583.9</td>
-<td align="right">0.2401272</td>
+<td align="right">110069503</td>
+<td align="right">0.9996112</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">C</td>
 <td align="left">B</td>
-<td align="right">190150.7</td>
-<td align="right">0.0868755</td>
+<td align="right">9554942</td>
+<td align="right">0.0867745</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">C</td>
 <td align="left">C</td>
-<td align="right">2188772.8</td>
+<td align="right">110112310</td>
 <td align="right">1.0000000</td>
 </tr>
-</tbody>
-</table>
-</div>
-</div>
-<div id="notes" class="section level2">
+<tr>
+<td align="left">C</td>
+<td align="left">E</td>
+<td align="right">54497018</td>
+<td align="right">0.4949221</td>
+</tr>
+<tr>
+<td align="left">C</td>
+<td align="left">F</td>
+<td align="right">82198072</td>
+<td align="right">0.7464930</td>
+</tr>
+<tr>
+<td align="left">C</td>
+<td align="left">G</td>
+<td align="right">12003003</td>
+<td align="right">0.1090069</td>
+</tr>
+<tr>
+<td align="left">C</td>
+<td align="left">H</td>
+<td align="right">55343937</td>
+<td align="right">0.5026135</td>
+</tr>
+<tr>
+<td align="left">C</td>
+<td align="left">I</td>
+<td align="right">109925578</td>
+<td align="right">0.9983042</td>
+</tr>
+<tr>
+<td align="left">C</td>
+<td align="left">J</td>
+<td align="right">88882259</td>
+<td align="right">0.8071964</td>
+</tr>
+<tr>
+<td align="left">D</td>
+<td align="left">D</td>
+<td align="right">11667275</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr>
+<td align="left">E</td>
+<td align="left">A</td>
+<td align="right">60057115</td>
+<td align="right">0.9628674</td>
+</tr>
+<tr>
+<td align="left">E</td>
+<td align="left">B</td>
+<td align="right">9906676</td>
+<td align="right">0.1588291</td>
+</tr>
+<tr>
+<td align="left">E</td>
+<td align="left">C</td>
+<td align="right">54497018</td>
+<td align="right">0.8737250</td>
+</tr>
+<tr>
+<td align="left">E</td>
+<td align="left">E</td>
+<td align="right">62373195</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr>
+<td align="left">E</td>
+<td align="left">F</td>
+<td align="right">45418786</td>
+<td align="right">0.7281780</td>
+</tr>
+<tr>
+<td align="left">E</td>
+<td align="left">G</td>
+<td align="right">12323593</td>
+<td align="right">0.1975784</td>
+</tr>
+<tr>
+<td align="left">E</td>
+<td align="left">H</td>
+<td align="right">61624267</td>
+<td align="right">0.9879928</td>
+</tr>
+<tr>
+<td align="left">E</td>
+<td align="left">I</td>
+<td align="right">56208280</td>
+<td align="right">0.9011608</td>
+</tr>
+<tr>
+<td align="left">E</td>
+<td align="left">J</td>
+<td align="right">61868357</td>
+<td align="right">0.9919062</td>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">A</td>
+<td align="right">87608610</td>
+<td align="right">0.9384981</td>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">B</td>
+<td align="right">9509693</td>
+<td align="right">0.1018716</td>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">C</td>
+<td align="right">82198072</td>
+<td align="right">0.8805382</td>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">E</td>
+<td align="right">45418786</td>
+<td align="right">0.4865440</td>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">F</td>
+<td align="right">93349803</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">G</td>
+<td align="right">11958427</td>
+<td align="right">0.1281034</td>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">H</td>
+<td align="right">46287984</td>
+<td align="right">0.4958552</td>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">I</td>
+<td align="right">83430540</td>
+<td align="right">0.8937409</td>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">J</td>
+<td align="right">61213465</td>
+<td align="right">0.6557428</td>
+</tr>
+<tr>
+<td align="left">G</td>
+<td align="left">A</td>
+<td align="right">12182087</td>
+<td align="right">0.9320482</td>
+</tr>
+<tr>
+<td align="left">G</td>
+<td align="left">B</td>
+<td align="right">10573553</td>
+<td align="right">0.8089797</td>
+</tr>
+<tr>
+<td align="left">G</td>
+<td align="left">C</td>
+<td align="right">12003003</td>
+<td align="right">0.9183466</td>
+</tr>
+<tr>
+<td align="left">G</td>
+<td align="left">E</td>
+<td align="right">12323593</td>
+<td align="right">0.9428748</td>
+</tr>
+<tr>
+<td align="left">G</td>
+<td align="left">F</td>
+<td align="right">11958427</td>
+<td align="right">0.9149361</td>
+</tr>
+<tr>
+<td align="left">G</td>
+<td align="left">G</td>
+<td align="right">13070233</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr>
+<td align="left">G</td>
+<td align="left">H</td>
+<td align="right">12563547</td>
+<td align="right">0.9612336</td>
+</tr>
+<tr>
+<td align="left">G</td>
+<td align="left">I</td>
+<td align="right">12162428</td>
+<td align="right">0.9305441</td>
+</tr>
+<tr>
+<td align="left">G</td>
+<td align="left">J</td>
+<td align="right">12803712</td>
+<td align="right">0.9796086</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="left">A</td>
+<td align="right">61089896</td>
+<td align="right">0.7535271</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="left">B</td>
+<td align="right">10145705</td>
+<td align="right">0.1251445</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="left">C</td>
+<td align="right">55343937</td>
+<td align="right">0.6826523</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="left">E</td>
+<td align="right">61624267</td>
+<td align="right">0.7601184</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="left">F</td>
+<td align="right">46287984</td>
+<td align="right">0.5709496</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="left">G</td>
+<td align="right">12563547</td>
+<td align="right">0.1549679</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="left">H</td>
+<td align="right">81071930</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="left">I</td>
+<td align="right">57514743</td>
+<td align="right">0.7094286</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="left">J</td>
+<td align="right">66161291</td>
+<td align="right">0.8160814</td>
+</tr>
+<tr>
+<td align="left">I</td>
+<td align="left">A</td>
+<td align="right">125675100</td>
+<td align="right">0.9993982</td>
+</tr>
+<tr>
+<td align="left">I</td>
+<td align="left">B</td>
+<td align="right">9711953</td>
+<td align="right">0.0772317</td>
+</tr>
+<tr>
+<td align="left">I</td>
+<td align="left">C</td>
+<td align="right">109925578</td>
+<td align="right">0.8741542</td>
+</tr>
+<tr>
+<td align="left">I</td>
+<td align="left">E</td>
+<td align="right">56208280</td>
+<td align="right">0.4469816</td>
+</tr>
+<tr>
+<td align="left">I</td>
+<td align="left">F</td>
+<td align="right">83430540</td>
+<td align="right">0.6634594</td>
+</tr>
+<tr>
+<td align="left">I</td>
+<td align="left">G</td>
+<td align="right">12162428</td>
+<td align="right">0.0967185</td>
+</tr>
+<tr>
+<td align="left">I</td>
+<td align="left">H</td>
+<td align="right">57514743</td>
+<td align="right">0.4573709</td>
+</tr>
+<tr>
+<td align="left">I</td>
+<td align="left">I</td>
+<td align="right">125750781</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr>
+<td align="left">I</td>
+<td align="left">J</td>
+<td align="right">93471355</td>
+<td align="right">0.7433064</td>
+</tr>
+<tr>
+<td align="left">J</td>
+<td align="left">A</td>
+<td align="right">101995862</td>
+<td align="right">0.7697949</td>
+</tr>
+<tr>
+<td align="left">J</td>
+<td align="left">B</td>
+<td align="right">10384186</td>
+<td align="right">0.0783727</td>
+</tr>
+<tr>
+<td align="left">J</td>
+<td align="left">C</td>
+<td align="right">88882259</td>
+<td align="right">0.6708224</td>
+</tr>
+<tr>
+<td align="left">J</td>
+<td align="left">E</td>
+<td align="right">61868357</td>
+<td align="right">0.4669400</td>
+</tr>
+<tr>
+<td align="left">J</td>
+<td align="left">F</td>
+<td align="right">61213465</td>
+<td align="right">0.4619973</td>
+</tr>
+<tr>
+<td align="left">J</td>
+<td align="left">G</td>
+<td align="right">12803712</td>
+<td align="right">0.0966336</td>
+</tr>
+<tr>
+<td align="left">J</td>
+<td align="left">H</td>
+<td align="right">66161291</td>
+<td align="right">0.4993401</td>
+</tr>
+<tr>
+<td align="left">J</td>
+<td align="left">I</td>
+<td align="right">93471355</td>
+<td align="right">0.7054578</td>
+</tr>
+<tr>
+<td align="left">J</td>
+<td align="left">J</td>
+<td align="right">132497451</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody></table>
+
 <h2>Notes</h2>
-<p>Package dependencies for <code>spatsoc</code> are <code>sp</code>, <code>rgeos</code>, <code>igraph</code>, <code>adehabitatHR</code> and <code>data.table</code>. <code>data.table</code> provides efficient methods for manipulating large (or small) datasets. As a result, input <code>DT</code> for all <code>spatsoc</code> functions must be a <code>data.table</code> and if it isn’t, you can simply use <code>setDT(df)</code> to convert it by reference.</p>
-<p>In addition, since the <code>rgeos</code> package is used in most functions (<code>group_lines</code> and <code>group_polys</code>) the input <code>DT</code>’s coordinate system is important. <code>rgeos</code> expects planar coordinates and this requirement is carried forward for <code>spatsoc</code>. Since <code>rgeos</code> is used, system dependencies include <code>GEOS</code>.</p>
-</div>
 
+<p>Package dependencies for <code>spatsoc</code> are <code>sp</code>, <code>rgeos</code>, <code>igraph</code>, <code>adehabitatHR</code> and <code>data.table</code>. <code>data.table</code> provides efficient methods for manipulating large (or small) datasets. As a result, input <code>DT</code> for all <code>spatsoc</code> functions must be a <code>data.table</code> and if it isn&#39;t, you can simply use <code>data.table::setDT(df)</code> to convert it by reference. </p>
 
-
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
+<p>In addition, since the <code>rgeos</code> package is used in most functions (<code>group_lines</code> and <code>group_polys</code>) the input <code>DT</code>&#39;s coordinate system is important. <code>rgeos</code> expects planar coordinates and this requirement is carried forward for <code>spatsoc</code>. Since <code>rgeos</code> is used, system dependencies include <code>GEOS</code>. </p>
 
 </body>
+
 </html>

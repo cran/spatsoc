@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Usage</title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: #990073
+   }
+
+   pre .number {
+     color: #099;
+   }
+
+   pre .comment {
+     color: #998;
+     font-style: italic
+   }
+
+   pre .keyword {
+     color: #900;
+     font-weight: bold
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: #d14;
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<h1>Usage</h1>
+
+<p><code>spatsoc</code> leverages <code>data.table</code> to modify by reference and iteratively work on subsets of the input data. The first input for all functions in <code>spatsoc</code> is <code>DT</code>, an input <code>data.table</code>. If your data is a <code>data.frame</code>, you can convert it by reference using <code>setDT(DF)</code>. </p>
+
+<h2>Spatial and temporal grouping</h2>
+
+<p><code>spatsoc</code> is designed to work in two steps: temporal followed by spatial grouping. Considering your specific study species and system, determine a relevant temporal and spatial grouping threshold. This may be 5 minutes and 50 meters or 2 days and 100 meters or any other thresholds - that decision is left to you. In some cases, the spatial grouping function selected is only relevant with certain temporal grouping thresholds. For example, we wouldn&#39;t expect a threshold of 5 minutes with <code>group_polys</code>. </p>
+
+<pre><code class="r"># Load packages
+library(spatsoc)
+library(data.table)
+
+# Read data as a data.table
+DT &lt;- fread(system.file(&quot;extdata&quot;, &quot;DT.csv&quot;, package = &quot;spatsoc&quot;))
+
+# Cast datetime column to POSIXct
+DT[, datetime := as.POSIXct(datetime)]
+
+# Temporal groups
+group_times(DT, datetime = &#39;datetime&#39;, threshold = &#39;5 minutes&#39;)
+
+# Spatial groups
+group_pts(
+  DT,
+  threshold = 50,
+  id = &#39;ID&#39;,
+  coords = c(&#39;X&#39;, &#39;Y&#39;),
+  timegroup = &#39;timegroup&#39;
+)
+</code></pre>
+
+<table><thead>
+<tr>
+<th align="left">ID</th>
+<th align="right">X</th>
+<th align="right">Y</th>
+<th align="left">datetime</th>
+<th align="right">timegroup</th>
+<th align="right">group</th>
+</tr>
+</thead><tbody>
+<tr>
+<td align="left">A</td>
+<td align="right">715851.4</td>
+<td align="right">5505340</td>
+<td align="left">2016-11-01 00:00:54</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td align="left">A</td>
+<td align="right">715822.8</td>
+<td align="right">5505289</td>
+<td align="left">2016-11-01 02:01:22</td>
+<td align="right">2</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td align="left">A</td>
+<td align="right">715872.9</td>
+<td align="right">5505252</td>
+<td align="left">2016-11-01 04:01:24</td>
+<td align="right">3</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td align="left">A</td>
+<td align="right">715820.5</td>
+<td align="right">5505231</td>
+<td align="left">2016-11-01 06:01:05</td>
+<td align="right">4</td>
+<td align="right">4</td>
+</tr>
+<tr>
+<td align="left">A</td>
+<td align="right">715830.6</td>
+<td align="right">5505227</td>
+<td align="left">2016-11-01 08:01:11</td>
+<td align="right">5</td>
+<td align="right">5</td>
+</tr>
+</tbody></table>
+
+<!-- ## Social network analysis -->
+
+<!-- ### Grouping -->
+
+<!-- ### Randomizations -->
+
+<!-- ### group by individual matrix -->
+
+<!-- ### igraph -->
+
+<h1>Installation</h1>
+
+<h2>System dependencies</h2>
+
+<h3>GEOS</h3>
+
+<p>Install <code>GEOS</code>:</p>
+
+<ul>
+<li>Debian/Ubuntu: <code>apt-get install libgeos-dev</code></li>
+<li>Arch: <code>pacman -S geos</code></li>
+<li>Fedora: <code>dnf install geos geos-devel</code></li>
+<li>Mac: <code>brew install geos</code></li>
+<li>Windows: see <a href="https://trac.osgeo.org/osgeo4w/">here</a></li>
+</ul>
+
+<h2>Package dependencies</h2>
+
+<ul>
+<li><code>data.table</code></li>
+<li><code>igraph</code></li>
+<li><code>sp</code></li>
+<li><code>adehabitatHR</code></li>
+</ul>
+
+<h1>Functions</h1>
+
+<h2>group_times</h2>
+
+<p><code>group_times(DT, datetime, threshold)</code></p>
+
+<ul>
+<li><code>DT</code>: input <code>data.table</code></li>
+<li><code>datetime</code>: date time column name in input data.table</li>
+<li><code>threshold</code>: threshold for grouping </li>
+</ul>
+
+<h3>DT</h3>
+
+<p>A <code>data.table</code> with a date time formatted column. The input <code>DT</code> will be returned with columns appended. The <code>timegroup</code> column corresponds to the temporal group assigned to each row. Please note that the actual value of the time group is meaningless. Reordered data will return a different time group. What is meaningful, however,  is the contents of each group. Each group will contain all rows nearest to the threshold provided. </p>
+
+<h3>datetime format</h3>
+
+<p>The <code>group_times</code> function expects either one column (<code>POSIXct</code>) or two columns (<code>IDate</code> and <code>ITime</code>). </p>
+
+<p>Given a character column representing the date time, convert it to <code>POSIXct</code> or <code>IDate</code> and <code>ITime</code>:</p>
+
+<pre><code class="r">DT[, datetime := as.POSIXct(datetime)]
+DT[, c(&#39;idate&#39;, &#39;itime&#39;) := IDateTime(datetime)]
+</code></pre>
+
+<p>These are then provided to the function using the names of the column in the input data. </p>
+
+<p><code>group_times(DT, datetime = &#39;datetime&#39;, threshold = &#39;5 minutes&#39;)</code></p>
+
+<p>or</p>
+
+<p><code>group_times(DT, datetime = c(&#39;idate&#39;, &#39;itime&#39;), threshold = &#39;5 minutes&#39;)</code></p>
+
+<h3>threshold recommendations</h3>
+
+<p>The <code>threshold</code> provided to <code>group_times</code> should be related to the fix rate of the input dataset and to the specific study system and species. If relocations are recorded every two hours, a <code>threshold = &#39;2 hours&#39;</code> will group all rows to the nearest two hour group (10am, 12pm, 2pm, 4pm, &hellip;). This, however, means that the relocations can be up to one hour apart from each other. Picking a smaller threshold, e.g.: <code>threshold = &#39;15 minutes&#39;</code> may be more relevant in some cases. The flexibility of <code>spatsoc</code>&#39;s threshold argument means the user must carefully consider what threshold is reasonable to their specific system. </p>
+
+<h3>Limitations of threshold</h3>
+
+<p>The <code>threshold</code> of <code>group_times</code> is considered only within the scope of 24 hours and this poses limitations on it:</p>
+
+<ul>
+<li><code>threshold</code> must evenly divide into 60 minutes or 24 hours</li>
+<li>multi-day blocks should divide evenly into the range of days in the <code>DT</code></li>
+<li>number of minutes cannot exceed 60</li>
+<li><code>threshold</code> cannot be fractional</li>
+</ul>
+
+<h3>Columns returned by group_times</h3>
+
+<p>The main column returned by <code>group_times</code> is &ldquo;timegroup&rdquo;. It represents the temporal group of each row, where those nearest (either above or below) within the threshold are grouped. Its actual value does not have any meaning, but the contents of each group do. That means if the data is reordered, a row may have a different time group, but the other rows in that group should not change.  </p>
+
+<p>The extra columns are provided to help the user investigate, troubleshoot and interpret the timegroup. </p>
+
+<table><thead>
+<tr>
+<th>threshold unit</th>
+<th>column(s) added</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>minute</td>
+<td>&ldquo;minutes&rdquo; column added identifying the nearest minute group for each row.</td>
+</tr>
+<tr>
+<td>hour</td>
+<td>&ldquo;hours&rdquo; column added identifying the nearest hour group for each row.</td>
+</tr>
+<tr>
+<td>day</td>
+<td>&ldquo;block&rdquo; columns added identifying the multiday block for each row.</td>
+</tr>
+</tbody></table>
+
+<h3>Warnings and messages</h3>
+
+<ul>
+<li>&ldquo;columns found in input DT and will be overwritten by this function&rdquo;</li>
+</ul>
+
+<p>This message is returned to the user when a column matching those returned by <code>group_times</code> is found in the input DT. This is commonly the case when <code>group_times</code> is run multiple times consecutively. </p>
+
+<ul>
+<li>&ldquo;no threshold provided, using the time field directly to group&rdquo;</li>
+</ul>
+
+<p>This message is returned to the user when the <code>threshold</code> is NULL. This is the default setting of <code>threshold</code> and, at times, may be suitable. In this case, the date times in the <code>datetime</code> column will be grouped exactly. Usually, a threshold should be provided. </p>
+
+<h2>group_pts</h2>
+
+<p><code>group_pts(DT, threshold, id, coords, timegroup, splitBy)</code></p>
+
+<ul>
+<li><code>DT</code>: input <code>data.table</code></li>
+<li><code>threshold</code>: threshold for grouping </li>
+<li><code>id</code>: column name of IDs in <code>DT</code></li>
+<li><code>coords</code>: column names of x and y coordinates in <code>DT</code></li>
+<li><code>timegroup</code>: (optional) column name of time group</li>
+<li><code>splitBy</code>: (optional) column names of extra variables to group on</li>
+</ul>
+
+<h3><a name="group_pts DT"></a>DT</h3>
+
+<p>The input <code>data.table</code>. It will returned with a column named group appended, which represents the spatial (and temporal if <code>timegroup</code> is provided) group. </p>
+
+<h3>threshold</h3>
+
+<p>The threshold must be in the units of the coordinates. </p>
+
+<h3>coords</h3>
+
+<p>The coordinates must be planar, such as UTM (of whichever zone your relocations are in). </p>
+
+<h2>group_lines</h2>
+
+<p><code>group_lines(DT, threshold, projection, id, coords, timegroup, sortBy, splitBy, spLines)</code></p>
+
+<ul>
+<li><code>DT</code>: input <code>data.table</code></li>
+<li><code>threshold</code>: threshold for grouping </li>
+<li><code>projection</code>: projection of coordinates in <code>DT</code></li>
+<li><code>id</code>: column name of IDs in <code>DT</code></li>
+<li><code>coords</code>: column names of x and y coordinates in <code>DT</code></li>
+<li><code>timegroup</code>: (optional) column name of time group</li>
+<li><code>sortBy</code>: column name of date time to sort rows for building lines</li>
+<li><code>splitBy</code>: (optional) column names of extra variables to group on</li>
+<li><code>spLines</code>: alternatively, provide solely a <code>SpatialLines</code> object</li>
+</ul>
+
+<h3>DT</h3>
+
+<p>See <a href="#dt-1">3.2.1</a>. </p>
+
+<h3>threshold</h3>
+
+<p>The <code>threshold</code> argument represents a buffer area around each line. When <code>threshold = 0</code>, the lines are grouped by spatial overlap. If the threshold is greater than 0, the lines buffered, then grouped by spatial overlap. </p>
+
+<h3>sortBy</h3>
+
+<p>The <code>sortBy</code> argument expects a date time formatted column name, which is used to order the rows for each individual (and <code>splitBy</code>). </p>
+
+<h2>group_polys</h2>
+
+<p><code>group_polys(DT, area, hrType, hrParams, projection, id, coords, timegroup, splitBy, spLines)</code></p>
+
+<ul>
+<li><code>DT</code>: input <code>data.table</code></li>
+<li><code>area</code>: boolean argument if proportional area should be returned</li>
+<li><code>hrType</code>: type of home range created </li>
+<li><code>hrParams</code>: parameters relevant to the type of home range created</li>
+<li><code>projection</code>: projection of coordinates in <code>DT</code></li>
+<li><code>id</code>: column name of IDs in <code>DT</code></li>
+<li><code>coords</code>: column names of x and y coordinates in <code>DT</code></li>
+<li><code>timegroup</code>: (optional) column name of time group</li>
+<li><code>splitBy</code>: (optional) column names of extra variables to group on</li>
+<li><code>spPolys</code>: alternatively, provide solely a <code>SpatialPolygons</code> object</li>
+</ul>
+
+<h3>DT and area</h3>
+
+<p>If <code>area = FALSE</code>, see <a href="#dt-1">3.2.1</a>. If <code>area = TRUE</code>, the DT will not be appended with a group column instead a <code>data.table</code> with IDs and proportional area overlap will be returned. </p>
+
+<p>The default unit for area overlap is square meters. </p>
+
+<!-- direction of proportion -->
+
+<h3>hrType and hrParams</h3>
+
+<p>Currently, <code>spatsoc</code> offers two types of home ranges provided by the <code>adehabitatHR</code> package: <code>mcp</code> and <code>kernel</code>. The parameters must match the arguments of those functions. </p>
+
+<!-- ## randomizations -->
+
+<h1>Package design</h1>
+
+<h2>Don&#39;t I need to reassign to save the output?</h2>
+
+<p>(Almost) all functions in <code>spatsoc</code> use data.table&#39;s modify-by-reference to reduce recopying large datasets and improve performance. The exception is <code>group_polys(area = TRUE)</code>. </p>
+
+<h2>Why does a function print the result, but columns aren&#39;t added to my DT?</h2>
+
+<p>Check that your <code>data.table</code> has columns allocated (with <code>data.table::truelength</code>) and if not, use <code>data.table::setDT</code>. This can happen if you are reading your data from <code>RDS</code> or <code>RData</code> files.  <a href="https://cran.r-project.org/package=data.table/vignettes/datatable-faq.html#reading-data.table-from-rds-or-rdata-file">See here.</a></p>
+
+<pre><code class="r">if (truelength(DT) == 0) {
+  setDT(DT)
+}
+# then go to spatsoc
+group_times(DT, datetime = &#39;datetime&#39;, threshold = &#39;5 minutes&#39;)
+</code></pre>
+
+</body>
+
+</html>

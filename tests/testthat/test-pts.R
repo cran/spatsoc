@@ -2,7 +2,7 @@
 context('test group_pts')
 library(spatsoc)
 
-DT <- fread('../testdata/buffalo.csv')
+DT <- fread('../testdata/DT.csv')
 
 test_that('DT is required', {
   expect_error(group_pts(
@@ -195,7 +195,7 @@ test_that('warns if timegroup is a datetime or character',
 
 test_that('group column succesfully detected', {
   copyDT <- copy(DT)[, group := 1]
-  expect_warning(
+  expect_message(
     group_pts(
       copyDT,
       threshold = 10,

@@ -2,7 +2,8 @@
 context('test build_polys')
 library(spatsoc)
 
-DT <- fread('../testdata/buffalo.csv')
+DT <- fread('../testdata/DT.csv')
+
 utm <-
   '+proj=utm +zone=36 +south +ellps=WGS84 +datum=WGS84 +units=m +no_defs'
 
@@ -184,7 +185,7 @@ test_that('hrParams returns error if params do not match function params', {
 })
 
 test_that('if hrParams NULL, warns', {
-  expect_warning(
+  expect_message(
     build_polys(
       DT = DT,
       projection = utm,

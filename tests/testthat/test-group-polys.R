@@ -2,7 +2,8 @@
 context('test group_polys')
 library(spatsoc)
 
-DT <- fread('../testdata/buffalo.csv')
+DT <- fread('../testdata/DT.csv')
+
 utm <-
   '+proj=utm +zone=36 +south +ellps=WGS84 +datum=WGS84 +units=m +no_defs'
 
@@ -80,7 +81,7 @@ test_that('projection provided or error', {
 
 test_that('mising hrParams warns default used', {
   copyDT <- copy(DT)
-  expect_warning(
+  expect_message(
     group_polys(
       DT = copyDT,
       projection = utm,
@@ -162,7 +163,7 @@ test_that('splitBy and spPolys are not both provided', {
 
 
 test_that('ID field is alphanumeric and does not have spaces', {
-  copyDT <- copy(DT)[, ID := gsub('e', ' ', ID)]
+  copyDT <- copy(DT)[ID == unique(ID)[1], ID := paste(ID, ID)]
   expect_error(
     group_polys(
       DT = copyDT,
@@ -261,10 +262,9 @@ test_that('withinGroup is not returned to the user', {
 
 
 test_that('group column succesfully detected', {
-  copyDT <- copy(DT)
-  copyDT[, group := 1][, mnth := month(datetime)]
-
-  expect_warning(
+  copyDT <- copy(DT)[, group := 1][, mnth := month(datetime)]
+  copyDT <- copyDT[, nBy := .N, by = .(mnth, ID)][nBy > 30]
+  expect_message(
     group_polys(
       DT = copyDT,
       projection = utm,
@@ -274,6 +274,21 @@ test_that('group column succesfully detected', {
       coords = c('X', 'Y'),
       id = 'ID',
       splitBy = 'mnth'
+    ),
+    'group column will be overwritten'
+  )
+
+  copyDT <- copy(DT)[, group := 1][, mnth := month(datetime)]
+  copyDT <- copyDT[, nBy := .N, by = .(mnth, ID)][nBy > 30]
+  expect_message(
+    group_polys(
+      DT = copyDT,
+      projection = utm,
+      hrType = 'mcp',
+      hrParams = list(percent = 95),
+      area = FALSE,
+      coords = c('X', 'Y'),
+      id = 'ID'
     ),
     'group column will be overwritten'
   )

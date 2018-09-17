@@ -8,29 +8,131 @@ randomizations(DT = NULL, type = NULL, id = NULL, datetime = NULL,
   splitBy = NULL, iterations = NULL)
 }
 \arguments{
-\item{DT}{input data.table with id, group fields and (optional) time fields}
+\item{DT}{input data.table}
 
 \item{type}{one of 'daily', 'step' or 'trajectory' - see details}
 
-\item{id}{field indicating the id in the input data.table}
+\item{id}{Character string of ID column name}
 
-\item{datetime}{(optional) time field used for providing datetime or hour field or group time field}
+\item{datetime}{field used for providing date time or time group - see details}
 
 \item{splitBy}{List of fields in DT to split the randomization process by}
 
 \item{iterations}{The number of iterations to randomize}
 }
+\value{
+\code{randomizations} returns the random date time or random id along with the original \code{DT}, depending on the randomization \code{type}.
+
+In the case where \code{iterations = 1}:
+
+\itemize{
+\item step - \code{randomID} each time step
+\item daily - \code{randomID} for each day and \code{jul} indicating julian day
+\item trajectory - a random date time ("random" prefixed to \code{datetime} argument), observed \code{jul} and \code{randomJul} indicating the random day relocations are swapped to.
+}
+
+If \code{iterations > 1}, two more columns are returned.
+and return must be reassigned
+
+\itemize{
+\item observed - if the rows represent the observed (TRUE/FALSE)
+\item iteration - iteration of rows (where 0 is the observed)
+}
+
+A message is returned when any of these columns already exist in the input \code{DT}, because they will be overwritten.
+}
 \description{
-Data stream randomization methods
+\code{randomizations} performs data-stream social network randomization. The function accepts a \code{data.table} with relocation data, individual identifiers and a randomization \code{type}. The \code{data.table} is randomized either using \code{step} or \code{daily} between-individual methods, or within-individual daily \code{trajectory} method described by Spiegel et al. (2016).
 }
 \details{
-Three randomization methods are provided:
+The \code{DT} must be a \code{data.table}. If your data is a \code{data.frame}, you can convert it by reference using \code{\link[data.table:setDT]{data.table::setDT}}.
 
-'step' randomly assigns an ID to each location.
+Three randomization \code{type}s are provided:
+\enumerate{
+\item step - randomizes identities of relocations between individuals within each time step.
+\item daily - randomizes identities of relocations between individuals within each day.
+\item trajectory - randomizes daily trajectories within individuals (Spiegel et al. 2016).
+}
 
-'daily' will randomize the ID for each individual 24hr trajectory
+Depending on the \code{type}, the \code{datetime} must be a certain format:
 
-'trajectory' will implement the daily movement trajectory randomizations (Spiegel et al. 2016).
+\itemize{
+\item step - datetime is integer group created by \code{group_times}
+\item daily - datetime is \code{POSIXct} format
+\item trajectory - datetime is \code{POSIXct} format
+}
+
+The \code{id}, \code{datetime},  (and optional \code{splitBy}) arguments expect the names of respective columns in \code{DT} which correspond to the individual identifier, date time, and additional grouping columns.
+
+Please note that if the data extends over multiple years, a column indicating the year should be provided to the \code{splitBy} argument. This will ensure randomizations only occur within each year.
+
+For example, using \code{\link[data.table:year]{data.table::year}}:
+
+\preformatted{
+DT[, yr := year(datetime)]
+randomizations(DT, type = 'step', id = 'ID', datetime = 'timegroup', splitBy = 'yr')
+}
+
+The \code{iterations} is set to 1 if not provided. Take caution with a large value for \code{iterations} with large input \code{DT}.
+}
+\examples{
+# Load data.table
+library(data.table)
+
+# Read example data
+DT <- fread(system.file("extdata", "DT.csv", package = "spatsoc"))
+
+# Date time columns
+DT[, datetime := as.POSIXct(datetime)]
+DT[, yr := year(datetime)]
+
+# Temporal grouping
+group_times(DT, datetime = 'datetime', threshold = '5 minutes')
+
+# Spatial grouping with timegroup
+group_pts(DT, threshold = 5, id = 'ID', coords = c('X', 'Y'), timegroup = 'timegroup')
+
+## Iterations = 1
+randomizations(
+    DT,
+    type = 'step',
+    id = 'ID',
+    datetime = 'timegroup',
+    iterations = 1,
+    splitBy = 'yr'
+)
+
+## Iterations > 1
+# Randomization: step
+randStep <- randomizations(
+    DT,
+    type = 'step',
+    id = 'ID',
+    datetime = 'timegroup',
+    splitBy = 'yr',
+    iterations = 2
+)
+
+# Randomization: daily
+randDaily <- randomizations(
+    DT,
+    type = 'daily',
+    id = 'ID',
+    datetime = 'datetime',
+    splitBy = 'yr',
+    iterations = 2
+)
+
+# Randomization: trajectory
+randTraj <- randomizations(
+    DT,
+    type = 'trajectory',
+    id = 'ID',
+    datetime = 'datetime',
+    splitBy = 'yr',
+    iterations = 2
+)
+
 }
 \references{
 \url{http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12553/full}
