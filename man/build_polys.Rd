@@ -31,16 +31,16 @@ build_polys(DT = NULL, projection = NULL, hrType = NULL,
 An error is returned when \code{hrParams} do not match the arguments of the \code{hrType} \code{adehabitatHR} function.
 }
 \description{
-\code{build_polys} creates a \code{SpatialPolygons} object from a \code{data.table}. The function accepts a \code{data.table} with relocation data, individual identifiers, a \code{projection}, \code{hrType} and \code{hrParams}. The relocation data is transformed into \code{SpatialPolygons} for each individual and optionally, each \code{splitBy}. Relocation data should be in two columns representing the latitude and longitude.
+\code{build_polys} creates a \code{SpatialPolygons} object from a \code{data.table}. The function accepts a \code{data.table} with relocation data, individual identifiers, a \code{projection}, \code{hrType} and \code{hrParams}. The relocation data is transformed into \code{SpatialPolygons} for each individual and optionally, each \code{splitBy}. Relocation data should be in two columns representing the X and Y coordinates.
 }
 \details{
 The \code{DT} must be a \code{data.table}. If your data is a \code{data.frame}, you can convert it by reference using \code{\link[data.table:setDT]{data.table::setDT}}.
 
-The \code{id}, \code{coords} (and optional \code{splitBy}) arguments expect the names of respective columns in \code{DT} which correspond to the individual identifier, latitude and longitude, and additional grouping columns.
+The \code{id}, \code{coords} (and optional \code{splitBy}) arguments expect the names of respective columns in \code{DT} which correspond to the individual identifier, X and Y coordinates, and additional grouping columns.
 
-The \code{projection} expects a \code{PROJ.4} character string (such as those available on \url{spatialreference.org}).
+The \code{projection} expects a \code{PROJ.4} character string (such as those available on \url{spatialreference.org}). \code{build_polys} expects planar coordinates (not unprojected latitude, longitude).
 
-The \code{hrType} must be either one of "kernel" or "mcp". The \code{hrParams} must be a named list of arguments matching those of \code{adehabitatHR::kernelUD} or \code{adehabitatHR::mcp}.
+The \code{hrType} must be either one of "kernel" or "mcp". The \code{hrParams} must be a named list of arguments matching those of \code{adehabitatHR::kernelUD} and \code{adehabitatHR::getverticeshr} or \code{adehabitatHR::mcp}.
 
 The \code{splitBy} argument offers further control building \code{SpatialPolygons}. If in your \code{DT}, you have multiple temporal groups (e.g.: years) for example, you can provide the name of the column which identifies them and build \code{SpatialPolygons} for each individual in each year.
 
@@ -59,8 +59,9 @@ DT[, datetime := as.POSIXct(datetime, tz = 'UTC')]
 # Proj4 string for example data
 utm <- '+proj=utm +zone=36 +south +ellps=WGS84 +datum=WGS84 +units=m +no_defs'
 
-# Build polygons for each individual
-build_polys(DT, projection = utm, hrType = 'mcp', hrParams = list(percent = 95),
+# Build polygons for each individual using kernelUD and getverticeshr
+build_polys(DT, projection = utm, hrType = 'kernel',
+            hrParams = list(grid = 60, percent = 95),
             id = 'ID', coords = c('X', 'Y'))
 
 # Build polygons for each individual by year

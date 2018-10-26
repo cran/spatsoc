@@ -211,11 +211,19 @@ hr {
 
 <p><code>spatsoc</code> expects a <code>data.table</code> for all of its functions. If you have a <code>data.frame</code>, you can use <code>data.table::setDT()</code> to convert it by reference. If your data is a CSV, you can use <code>data.table::fread()</code> to import it as a <code>data.table</code>. </p>
 
-<p>The data consist of relocations of 10 individuals over 365 days. Using these data, we can compare the various grouping methods available in <code>spatsoc</code>.</p>
+<p>The data consist of relocations of 3 individuals over 365 days. Using these data, we can compare the various grouping methods available in <code>spatsoc</code>.</p>
 
-<pre><code class="r">library(spatsoc)
+<pre><code class="r">## Load packages
+library(spatsoc)
 library(data.table)
+
+## Read in spatsoc&#39;s example data
 DT &lt;- fread(system.file(&quot;extdata&quot;, &quot;DT.csv&quot;, package = &quot;spatsoc&quot;))
+
+## Subset to only individuals H, I, and J
+DT &lt;- DT[ID %in% c(&#39;H&#39;, &#39;I&#39;, &#39;J&#39;)]
+
+## Cast character column &#39;datetime&#39; as POSIXct
 DT[, datetime := as.POSIXct(datetime,
                             tz = &#39;UTC&#39;)]
 </code></pre>
@@ -230,38 +238,45 @@ DT[, datetime := as.POSIXct(datetime,
 </tr>
 </thead><tbody>
 <tr>
-<td align="left">F</td>
-<td align="right">705455.5</td>
-<td align="right">5510309</td>
-<td align="left">2017-02-19 10:00:54</td>
+<td align="left">I</td>
+<td align="right">711042.0</td>
+<td align="right">5506384</td>
+<td align="left">2016-11-01 00:00:24</td>
 <td align="right">1</td>
 </tr>
 <tr>
-<td align="left">B</td>
-<td align="right">700180.2</td>
-<td align="right">5508577</td>
-<td align="left">2016-11-21 20:00:41</td>
+<td align="left">H</td>
+<td align="right">701724.1</td>
+<td align="right">5504325</td>
+<td align="left">2016-11-01 00:00:49</td>
 <td align="right">1</td>
 </tr>
 <tr>
-<td align="left">F</td>
-<td align="right">703576.8</td>
-<td align="right">5511196</td>
-<td align="left">2017-02-08 12:00:25</td>
+<td align="left">J</td>
+<td align="right">707568.6</td>
+<td align="right">5500406</td>
+<td align="left">2016-11-01 00:00:56</td>
 <td align="right">1</td>
 </tr>
 <tr>
-<td align="left">B</td>
-<td align="right">697908.9</td>
-<td align="right">5510673</td>
-<td align="left">2017-02-26 04:00:47</td>
+<td align="left">J</td>
+<td align="right">707566.5</td>
+<td align="right">5500404</td>
+<td align="left">2016-11-01 02:00:21</td>
 <td align="right">1</td>
 </tr>
 <tr>
-<td align="left">A</td>
-<td align="right">703460.9</td>
-<td align="right">5503296</td>
-<td align="left">2016-12-14 22:00:54</td>
+<td align="left">H</td>
+<td align="right">701648.5</td>
+<td align="right">5504276</td>
+<td align="left">2016-11-01 02:00:33</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td align="left">I</td>
+<td align="right">711229.0</td>
+<td align="right">5506446</td>
+<td align="left">2016-11-01 02:00:33</td>
 <td align="right">1</td>
 </tr>
 </tbody></table>
@@ -292,58 +307,10 @@ DT[, datetime := as.POSIXct(datetime,
 <td align="right">1</td>
 </tr>
 <tr>
-<td align="left">C</td>
-<td align="right">710205.4</td>
-<td align="right">5505888</td>
-<td align="left">2016-11-01 00:00:44</td>
-<td align="right">0</td>
-<td align="right">1</td>
-</tr>
-<tr>
-<td align="left">D</td>
-<td align="right">700875.0</td>
-<td align="right">5490954</td>
-<td align="left">2016-11-01 00:00:47</td>
-<td align="right">0</td>
-<td align="right">1</td>
-</tr>
-<tr>
-<td align="left">E</td>
-<td align="right">701671.9</td>
-<td align="right">5504286</td>
-<td align="left">2016-11-01 00:00:48</td>
-<td align="right">0</td>
-<td align="right">1</td>
-</tr>
-<tr>
-<td align="left">F</td>
-<td align="right">705583.0</td>
-<td align="right">5513813</td>
-<td align="left">2016-11-01 00:00:48</td>
-<td align="right">0</td>
-<td align="right">1</td>
-</tr>
-<tr>
-<td align="left">G</td>
-<td align="right">699635.5</td>
-<td align="right">5509635</td>
-<td align="left">2016-11-01 00:00:48</td>
-<td align="right">0</td>
-<td align="right">1</td>
-</tr>
-<tr>
 <td align="left">H</td>
 <td align="right">701724.1</td>
 <td align="right">5504325</td>
 <td align="left">2016-11-01 00:00:49</td>
-<td align="right">0</td>
-<td align="right">1</td>
-</tr>
-<tr>
-<td align="left">A</td>
-<td align="right">715851.4</td>
-<td align="right">5505340</td>
-<td align="left">2016-11-01 00:00:54</td>
 <td align="right">0</td>
 <td align="right">1</td>
 </tr>
@@ -354,6 +321,54 @@ DT[, datetime := as.POSIXct(datetime,
 <td align="left">2016-11-01 00:00:56</td>
 <td align="right">0</td>
 <td align="right">1</td>
+</tr>
+<tr>
+<td align="left">J</td>
+<td align="right">707566.5</td>
+<td align="right">5500404</td>
+<td align="left">2016-11-01 02:00:21</td>
+<td align="right">0</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="right">701648.5</td>
+<td align="right">5504276</td>
+<td align="left">2016-11-01 02:00:33</td>
+<td align="right">0</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td align="left">I</td>
+<td align="right">711229.0</td>
+<td align="right">5506446</td>
+<td align="left">2016-11-01 02:00:33</td>
+<td align="right">0</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td align="left">J</td>
+<td align="right">707562.6</td>
+<td align="right">5500374</td>
+<td align="left">2016-11-01 04:00:41</td>
+<td align="right">0</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td align="left">I</td>
+<td align="right">711124.0</td>
+<td align="right">5506407</td>
+<td align="left">2016-11-01 04:00:44</td>
+<td align="right">0</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="right">701607.2</td>
+<td align="right">5504291</td>
+<td align="left">2016-11-01 04:00:54</td>
+<td align="right">0</td>
+<td align="right">3</td>
 </tr>
 </tbody></table>
 
@@ -384,58 +399,10 @@ DT[, datetime := as.POSIXct(datetime,
 <td align="right">1</td>
 </tr>
 <tr>
-<td align="left">C</td>
-<td align="right">710205.4</td>
-<td align="right">5505888</td>
-<td align="left">2016-11-01 00:00:44</td>
-<td align="right">0</td>
-<td align="right">1</td>
-</tr>
-<tr>
-<td align="left">D</td>
-<td align="right">700875.0</td>
-<td align="right">5490954</td>
-<td align="left">2016-11-01 00:00:47</td>
-<td align="right">0</td>
-<td align="right">1</td>
-</tr>
-<tr>
-<td align="left">E</td>
-<td align="right">701671.9</td>
-<td align="right">5504286</td>
-<td align="left">2016-11-01 00:00:48</td>
-<td align="right">0</td>
-<td align="right">1</td>
-</tr>
-<tr>
-<td align="left">F</td>
-<td align="right">705583.0</td>
-<td align="right">5513813</td>
-<td align="left">2016-11-01 00:00:48</td>
-<td align="right">0</td>
-<td align="right">1</td>
-</tr>
-<tr>
-<td align="left">G</td>
-<td align="right">699635.5</td>
-<td align="right">5509635</td>
-<td align="left">2016-11-01 00:00:48</td>
-<td align="right">0</td>
-<td align="right">1</td>
-</tr>
-<tr>
 <td align="left">H</td>
 <td align="right">701724.1</td>
 <td align="right">5504325</td>
 <td align="left">2016-11-01 00:00:49</td>
-<td align="right">0</td>
-<td align="right">1</td>
-</tr>
-<tr>
-<td align="left">A</td>
-<td align="right">715851.4</td>
-<td align="right">5505340</td>
-<td align="left">2016-11-01 00:00:54</td>
 <td align="right">0</td>
 <td align="right">1</td>
 </tr>
@@ -446,6 +413,54 @@ DT[, datetime := as.POSIXct(datetime,
 <td align="left">2016-11-01 00:00:56</td>
 <td align="right">0</td>
 <td align="right">1</td>
+</tr>
+<tr>
+<td align="left">J</td>
+<td align="right">707566.5</td>
+<td align="right">5500404</td>
+<td align="left">2016-11-01 02:00:21</td>
+<td align="right">2</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="right">701648.5</td>
+<td align="right">5504276</td>
+<td align="left">2016-11-01 02:00:33</td>
+<td align="right">2</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td align="left">I</td>
+<td align="right">711229.0</td>
+<td align="right">5506446</td>
+<td align="left">2016-11-01 02:00:33</td>
+<td align="right">2</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td align="left">J</td>
+<td align="right">707562.6</td>
+<td align="right">5500374</td>
+<td align="left">2016-11-01 04:00:41</td>
+<td align="right">4</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td align="left">I</td>
+<td align="right">711124.0</td>
+<td align="right">5506407</td>
+<td align="left">2016-11-01 04:00:44</td>
+<td align="right">4</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="right">701607.2</td>
+<td align="right">5504291</td>
+<td align="left">2016-11-01 04:00:54</td>
+<td align="right">4</td>
+<td align="right">3</td>
 </tr>
 </tbody></table>
 
@@ -467,73 +482,73 @@ DT[, datetime := as.POSIXct(datetime,
 </thead><tbody>
 <tr>
 <td align="left">I</td>
-<td align="right">711124.0</td>
-<td align="right">5506407</td>
-<td align="left">2016-11-01 04:00:44</td>
+<td align="right">711096.4</td>
+<td align="right">5506542</td>
+<td align="left">2016-11-01 10:00:15</td>
 <td align="right">1</td>
 <td align="right">1</td>
 </tr>
 <tr>
-<td align="left">B</td>
-<td align="right">699240.3</td>
-<td align="right">5510142</td>
-<td align="left">2016-11-02 04:00:54</td>
+<td align="left">J</td>
+<td align="right">707326.2</td>
+<td align="right">5500548</td>
+<td align="left">2016-11-01 20:00:40</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td align="left">I</td>
+<td align="right">713924.5</td>
+<td align="right">5505451</td>
+<td align="left">2016-11-04 00:00:50</td>
 <td align="right">1</td>
 <td align="right">1</td>
 </tr>
 <tr>
 <td align="left">H</td>
-<td align="right">703319.4</td>
-<td align="right">5503448</td>
-<td align="left">2016-11-02 22:00:36</td>
-<td align="right">1</td>
-<td align="right">1</td>
-</tr>
-<tr>
-<td align="left">F</td>
-<td align="right">706078.6</td>
-<td align="right">5512317</td>
-<td align="left">2016-11-09 12:00:48</td>
+<td align="right">701709.1</td>
+<td align="right">5504459</td>
+<td align="left">2016-11-08 00:00:24</td>
 <td align="right">2</td>
 <td align="right">2</td>
 </tr>
 <tr>
-<td align="left">C</td>
-<td align="right">701022.8</td>
-<td align="right">5505840</td>
-<td align="left">2016-11-10 14:00:08</td>
+<td align="left">H</td>
+<td align="right">701815.5</td>
+<td align="right">5503981</td>
+<td align="left">2016-11-08 10:00:21</td>
 <td align="right">2</td>
 <td align="right">2</td>
-</tr>
-<tr>
-<td align="left">B</td>
-<td align="right">697988.4</td>
-<td align="right">5511889</td>
-<td align="left">2016-11-10 20:00:47</td>
-<td align="right">2</td>
-<td align="right">2</td>
-</tr>
-<tr>
-<td align="left">F</td>
-<td align="right">707980.6</td>
-<td align="right">5512335</td>
-<td align="left">2016-11-11 20:00:49</td>
-<td align="right">3</td>
-<td align="right">3</td>
 </tr>
 <tr>
 <td align="left">J</td>
-<td align="right">705627.0</td>
-<td align="right">5498892</td>
-<td align="left">2016-11-11 20:00:53</td>
+<td align="right">706891.8</td>
+<td align="right">5499710</td>
+<td align="left">2016-11-10 12:00:48</td>
+<td align="right">2</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="right">701682.3</td>
+<td align="right">5504833</td>
+<td align="left">2016-11-11 06:00:23</td>
 <td align="right">3</td>
 <td align="right">3</td>
 </tr>
 <tr>
-<td align="left">E</td>
-<td align="right">702667.3</td>
-<td align="right">5504936</td>
-<td align="left">2016-11-12 16:00:33</td>
+<td align="left">I</td>
+<td align="right">700544.9</td>
+<td align="right">5505157</td>
+<td align="left">2016-11-13 14:00:54</td>
+<td align="right">3</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td align="left">I</td>
+<td align="right">703088.2</td>
+<td align="right">5505441</td>
+<td align="left">2016-11-15 04:00:24</td>
 <td align="right">3</td>
 <td align="right">3</td>
 </tr>
@@ -544,7 +559,7 @@ DT[, datetime := as.POSIXct(datetime,
 <p>The <code>group_pts</code> function compares the relocations of all individuals in each timegroup and groups individuals based on a distance threshold provided by the user.</p>
 
 <pre><code class="r">group_times(DT = DT, datetime = &#39;datetime&#39;, threshold = &#39;15 minutes&#39;)
-group_pts(DT, threshold = 50, id = &#39;ID&#39;, coords = c(&#39;X&#39;, &#39;Y&#39;))
+group_pts(DT, threshold = 50, id = &#39;ID&#39;, coords = c(&#39;X&#39;, &#39;Y&#39;), timegroup = &#39;timegroup&#39;)
 </code></pre>
 
 <pre><code>## block, timegroup columns found in input DT and will be overwritten by this function
@@ -560,67 +575,67 @@ group_pts(DT, threshold = 50, id = &#39;ID&#39;, coords = c(&#39;X&#39;, &#39;Y&
 </tr>
 </thead><tbody>
 <tr>
-<td align="left">A</td>
-<td align="right">715851.4</td>
-<td align="right">5505340</td>
-<td align="right">1</td>
-<td align="right">1</td>
+<td align="left">H</td>
+<td align="right">699126.1</td>
+<td align="right">5508836</td>
+<td align="right">771</td>
+<td align="right">771</td>
 </tr>
 <tr>
-<td align="left">A</td>
-<td align="right">715822.8</td>
-<td align="right">5505289</td>
-<td align="right">2</td>
-<td align="right">2</td>
+<td align="left">I</td>
+<td align="right">699130.0</td>
+<td align="right">5508761</td>
+<td align="right">771</td>
+<td align="right">771</td>
 </tr>
 <tr>
-<td align="left">A</td>
-<td align="right">715872.9</td>
-<td align="right">5505252</td>
-<td align="right">3</td>
-<td align="right">3</td>
+<td align="left">J</td>
+<td align="right">699138.0</td>
+<td align="right">5508797</td>
+<td align="right">771</td>
+<td align="right">771</td>
 </tr>
 <tr>
-<td align="left">A</td>
-<td align="right">715820.5</td>
-<td align="right">5505231</td>
-<td align="right">4</td>
-<td align="right">4</td>
+<td align="left">H</td>
+<td align="right">699930.5</td>
+<td align="right">5508032</td>
+<td align="right">772</td>
+<td align="right">772</td>
 </tr>
 <tr>
-<td align="left">A</td>
-<td align="right">715830.6</td>
-<td align="right">5505227</td>
-<td align="right">5</td>
-<td align="right">5</td>
+<td align="left">H</td>
+<td align="right">700139.2</td>
+<td align="right">5507325</td>
+<td align="right">773</td>
+<td align="right">773</td>
 </tr>
 <tr>
-<td align="left">A</td>
-<td align="right">715829.4</td>
-<td align="right">5505332</td>
-<td align="right">6</td>
-<td align="right">6</td>
+<td align="left">I</td>
+<td align="right">700131.7</td>
+<td align="right">5507321</td>
+<td align="right">773</td>
+<td align="right">773</td>
 </tr>
 <tr>
-<td align="left">A</td>
-<td align="right">715306.6</td>
-<td align="right">5505837</td>
-<td align="right">7</td>
-<td align="right">7</td>
+<td align="left">H</td>
+<td align="right">700012.2</td>
+<td align="right">5508010</td>
+<td align="right">774</td>
+<td align="right">774</td>
 </tr>
 <tr>
-<td align="left">A</td>
-<td align="right">715349.7</td>
-<td align="right">5505644</td>
-<td align="right">8</td>
-<td align="right">8</td>
+<td align="left">I</td>
+<td align="right">700015.0</td>
+<td align="right">5508001</td>
+<td align="right">774</td>
+<td align="right">774</td>
 </tr>
 <tr>
-<td align="left">A</td>
-<td align="right">715224.1</td>
-<td align="right">5505661</td>
-<td align="right">9</td>
-<td align="right">9</td>
+<td align="left">J</td>
+<td align="right">700002.3</td>
+<td align="right">5508005</td>
+<td align="right">774</td>
+<td align="right">774</td>
 </tr>
 </tbody></table>
 
@@ -644,74 +659,54 @@ group_lines(DT, threshold = 50, projection = utm,
 <table><thead>
 <tr>
 <th align="left">ID</th>
-<th align="right">X</th>
-<th align="right">Y</th>
 <th align="right">timegroup</th>
 <th align="right">group</th>
 </tr>
 </thead><tbody>
 <tr>
-<td align="left">A</td>
-<td align="right">715851.4</td>
-<td align="right">5505340</td>
+<td align="left">H</td>
 <td align="right">1</td>
 <td align="right">1</td>
 </tr>
 <tr>
-<td align="left">A</td>
-<td align="right">715822.8</td>
-<td align="right">5505289</td>
+<td align="left">I</td>
 <td align="right">1</td>
-<td align="right">1</td>
+<td align="right">121</td>
 </tr>
 <tr>
-<td align="left">A</td>
-<td align="right">715872.9</td>
-<td align="right">5505252</td>
+<td align="left">J</td>
 <td align="right">1</td>
-<td align="right">1</td>
+<td align="right">204</td>
 </tr>
 <tr>
-<td align="left">A</td>
-<td align="right">715820.5</td>
-<td align="right">5505231</td>
-<td align="right">1</td>
-<td align="right">1</td>
+<td align="left">H</td>
+<td align="right">2</td>
+<td align="right">2</td>
 </tr>
 <tr>
-<td align="left">A</td>
-<td align="right">715830.6</td>
-<td align="right">5505227</td>
-<td align="right">1</td>
-<td align="right">1</td>
+<td align="left">I</td>
+<td align="right">2</td>
+<td align="right">122</td>
 </tr>
 <tr>
-<td align="left">A</td>
-<td align="right">715829.4</td>
-<td align="right">5505332</td>
-<td align="right">1</td>
-<td align="right">1</td>
+<td align="left">J</td>
+<td align="right">2</td>
+<td align="right">205</td>
 </tr>
 <tr>
-<td align="left">A</td>
-<td align="right">715306.6</td>
-<td align="right">5505837</td>
-<td align="right">1</td>
-<td align="right">1</td>
+<td align="left">H</td>
+<td align="right">3</td>
+<td align="right">3</td>
 </tr>
 <tr>
-<td align="left">A</td>
-<td align="right">715349.7</td>
-<td align="right">5505644</td>
-<td align="right">1</td>
-<td align="right">1</td>
+<td align="left">I</td>
+<td align="right">3</td>
+<td align="right">123</td>
 </tr>
 <tr>
-<td align="left">A</td>
-<td align="right">715224.1</td>
-<td align="right">5505661</td>
-<td align="right">1</td>
-<td align="right">1</td>
+<td align="left">J</td>
+<td align="right">3</td>
+<td align="right">206</td>
 </tr>
 </tbody></table>
 
@@ -739,372 +734,6 @@ group_polys(DT = DT, area = TRUE, hrType = &#39;mcp&#39;,
 </tr>
 </thead><tbody>
 <tr>
-<td align="left">A</td>
-<td align="left">A</td>
-<td align="right">145142204</td>
-<td align="right">1.0000000</td>
-</tr>
-<tr>
-<td align="left">A</td>
-<td align="left">B</td>
-<td align="right">9731424</td>
-<td align="right">0.0670475</td>
-</tr>
-<tr>
-<td align="left">A</td>
-<td align="left">C</td>
-<td align="right">110069503</td>
-<td align="right">0.7583563</td>
-</tr>
-<tr>
-<td align="left">A</td>
-<td align="left">E</td>
-<td align="right">60057115</td>
-<td align="right">0.4137812</td>
-</tr>
-<tr>
-<td align="left">A</td>
-<td align="left">F</td>
-<td align="right">87608610</td>
-<td align="right">0.6036053</td>
-</tr>
-<tr>
-<td align="left">A</td>
-<td align="left">G</td>
-<td align="right">12182087</td>
-<td align="right">0.0839321</td>
-</tr>
-<tr>
-<td align="left">A</td>
-<td align="left">H</td>
-<td align="right">61089896</td>
-<td align="right">0.4208968</td>
-</tr>
-<tr>
-<td align="left">A</td>
-<td align="left">I</td>
-<td align="right">125675100</td>
-<td align="right">0.8658757</td>
-</tr>
-<tr>
-<td align="left">A</td>
-<td align="left">J</td>
-<td align="right">101995862</td>
-<td align="right">0.7027306</td>
-</tr>
-<tr>
-<td align="left">B</td>
-<td align="left">A</td>
-<td align="right">9731424</td>
-<td align="right">0.9167682</td>
-</tr>
-<tr>
-<td align="left">B</td>
-<td align="left">B</td>
-<td align="right">10614922</td>
-<td align="right">1.0000000</td>
-</tr>
-<tr>
-<td align="left">B</td>
-<td align="left">C</td>
-<td align="right">9554942</td>
-<td align="right">0.9001425</td>
-</tr>
-<tr>
-<td align="left">B</td>
-<td align="left">E</td>
-<td align="right">9906676</td>
-<td align="right">0.9332783</td>
-</tr>
-<tr>
-<td align="left">B</td>
-<td align="left">F</td>
-<td align="right">9509693</td>
-<td align="right">0.8958796</td>
-</tr>
-<tr>
-<td align="left">B</td>
-<td align="left">G</td>
-<td align="right">10573553</td>
-<td align="right">0.9961027</td>
-</tr>
-<tr>
-<td align="left">B</td>
-<td align="left">H</td>
-<td align="right">10145705</td>
-<td align="right">0.9557964</td>
-</tr>
-<tr>
-<td align="left">B</td>
-<td align="left">I</td>
-<td align="right">9711953</td>
-<td align="right">0.9149339</td>
-</tr>
-<tr>
-<td align="left">B</td>
-<td align="left">J</td>
-<td align="right">10384186</td>
-<td align="right">0.9782630</td>
-</tr>
-<tr>
-<td align="left">C</td>
-<td align="left">A</td>
-<td align="right">110069503</td>
-<td align="right">0.9996112</td>
-</tr>
-<tr>
-<td align="left">C</td>
-<td align="left">B</td>
-<td align="right">9554942</td>
-<td align="right">0.0867745</td>
-</tr>
-<tr>
-<td align="left">C</td>
-<td align="left">C</td>
-<td align="right">110112310</td>
-<td align="right">1.0000000</td>
-</tr>
-<tr>
-<td align="left">C</td>
-<td align="left">E</td>
-<td align="right">54497018</td>
-<td align="right">0.4949221</td>
-</tr>
-<tr>
-<td align="left">C</td>
-<td align="left">F</td>
-<td align="right">82198072</td>
-<td align="right">0.7464930</td>
-</tr>
-<tr>
-<td align="left">C</td>
-<td align="left">G</td>
-<td align="right">12003003</td>
-<td align="right">0.1090069</td>
-</tr>
-<tr>
-<td align="left">C</td>
-<td align="left">H</td>
-<td align="right">55343937</td>
-<td align="right">0.5026135</td>
-</tr>
-<tr>
-<td align="left">C</td>
-<td align="left">I</td>
-<td align="right">109925578</td>
-<td align="right">0.9983042</td>
-</tr>
-<tr>
-<td align="left">C</td>
-<td align="left">J</td>
-<td align="right">88882259</td>
-<td align="right">0.8071964</td>
-</tr>
-<tr>
-<td align="left">D</td>
-<td align="left">D</td>
-<td align="right">11667275</td>
-<td align="right">1.0000000</td>
-</tr>
-<tr>
-<td align="left">E</td>
-<td align="left">A</td>
-<td align="right">60057115</td>
-<td align="right">0.9628674</td>
-</tr>
-<tr>
-<td align="left">E</td>
-<td align="left">B</td>
-<td align="right">9906676</td>
-<td align="right">0.1588291</td>
-</tr>
-<tr>
-<td align="left">E</td>
-<td align="left">C</td>
-<td align="right">54497018</td>
-<td align="right">0.8737250</td>
-</tr>
-<tr>
-<td align="left">E</td>
-<td align="left">E</td>
-<td align="right">62373195</td>
-<td align="right">1.0000000</td>
-</tr>
-<tr>
-<td align="left">E</td>
-<td align="left">F</td>
-<td align="right">45418786</td>
-<td align="right">0.7281780</td>
-</tr>
-<tr>
-<td align="left">E</td>
-<td align="left">G</td>
-<td align="right">12323593</td>
-<td align="right">0.1975784</td>
-</tr>
-<tr>
-<td align="left">E</td>
-<td align="left">H</td>
-<td align="right">61624267</td>
-<td align="right">0.9879928</td>
-</tr>
-<tr>
-<td align="left">E</td>
-<td align="left">I</td>
-<td align="right">56208280</td>
-<td align="right">0.9011608</td>
-</tr>
-<tr>
-<td align="left">E</td>
-<td align="left">J</td>
-<td align="right">61868357</td>
-<td align="right">0.9919062</td>
-</tr>
-<tr>
-<td align="left">F</td>
-<td align="left">A</td>
-<td align="right">87608610</td>
-<td align="right">0.9384981</td>
-</tr>
-<tr>
-<td align="left">F</td>
-<td align="left">B</td>
-<td align="right">9509693</td>
-<td align="right">0.1018716</td>
-</tr>
-<tr>
-<td align="left">F</td>
-<td align="left">C</td>
-<td align="right">82198072</td>
-<td align="right">0.8805382</td>
-</tr>
-<tr>
-<td align="left">F</td>
-<td align="left">E</td>
-<td align="right">45418786</td>
-<td align="right">0.4865440</td>
-</tr>
-<tr>
-<td align="left">F</td>
-<td align="left">F</td>
-<td align="right">93349803</td>
-<td align="right">1.0000000</td>
-</tr>
-<tr>
-<td align="left">F</td>
-<td align="left">G</td>
-<td align="right">11958427</td>
-<td align="right">0.1281034</td>
-</tr>
-<tr>
-<td align="left">F</td>
-<td align="left">H</td>
-<td align="right">46287984</td>
-<td align="right">0.4958552</td>
-</tr>
-<tr>
-<td align="left">F</td>
-<td align="left">I</td>
-<td align="right">83430540</td>
-<td align="right">0.8937409</td>
-</tr>
-<tr>
-<td align="left">F</td>
-<td align="left">J</td>
-<td align="right">61213465</td>
-<td align="right">0.6557428</td>
-</tr>
-<tr>
-<td align="left">G</td>
-<td align="left">A</td>
-<td align="right">12182087</td>
-<td align="right">0.9320482</td>
-</tr>
-<tr>
-<td align="left">G</td>
-<td align="left">B</td>
-<td align="right">10573553</td>
-<td align="right">0.8089797</td>
-</tr>
-<tr>
-<td align="left">G</td>
-<td align="left">C</td>
-<td align="right">12003003</td>
-<td align="right">0.9183466</td>
-</tr>
-<tr>
-<td align="left">G</td>
-<td align="left">E</td>
-<td align="right">12323593</td>
-<td align="right">0.9428748</td>
-</tr>
-<tr>
-<td align="left">G</td>
-<td align="left">F</td>
-<td align="right">11958427</td>
-<td align="right">0.9149361</td>
-</tr>
-<tr>
-<td align="left">G</td>
-<td align="left">G</td>
-<td align="right">13070233</td>
-<td align="right">1.0000000</td>
-</tr>
-<tr>
-<td align="left">G</td>
-<td align="left">H</td>
-<td align="right">12563547</td>
-<td align="right">0.9612336</td>
-</tr>
-<tr>
-<td align="left">G</td>
-<td align="left">I</td>
-<td align="right">12162428</td>
-<td align="right">0.9305441</td>
-</tr>
-<tr>
-<td align="left">G</td>
-<td align="left">J</td>
-<td align="right">12803712</td>
-<td align="right">0.9796086</td>
-</tr>
-<tr>
-<td align="left">H</td>
-<td align="left">A</td>
-<td align="right">61089896</td>
-<td align="right">0.7535271</td>
-</tr>
-<tr>
-<td align="left">H</td>
-<td align="left">B</td>
-<td align="right">10145705</td>
-<td align="right">0.1251445</td>
-</tr>
-<tr>
-<td align="left">H</td>
-<td align="left">C</td>
-<td align="right">55343937</td>
-<td align="right">0.6826523</td>
-</tr>
-<tr>
-<td align="left">H</td>
-<td align="left">E</td>
-<td align="right">61624267</td>
-<td align="right">0.7601184</td>
-</tr>
-<tr>
-<td align="left">H</td>
-<td align="left">F</td>
-<td align="right">46287984</td>
-<td align="right">0.5709496</td>
-</tr>
-<tr>
-<td align="left">H</td>
-<td align="left">G</td>
-<td align="right">12563547</td>
-<td align="right">0.1549679</td>
-</tr>
-<tr>
 <td align="left">H</td>
 <td align="left">H</td>
 <td align="right">81071930</td>
@@ -1124,42 +753,6 @@ group_polys(DT = DT, area = TRUE, hrType = &#39;mcp&#39;,
 </tr>
 <tr>
 <td align="left">I</td>
-<td align="left">A</td>
-<td align="right">125675100</td>
-<td align="right">0.9993982</td>
-</tr>
-<tr>
-<td align="left">I</td>
-<td align="left">B</td>
-<td align="right">9711953</td>
-<td align="right">0.0772317</td>
-</tr>
-<tr>
-<td align="left">I</td>
-<td align="left">C</td>
-<td align="right">109925578</td>
-<td align="right">0.8741542</td>
-</tr>
-<tr>
-<td align="left">I</td>
-<td align="left">E</td>
-<td align="right">56208280</td>
-<td align="right">0.4469816</td>
-</tr>
-<tr>
-<td align="left">I</td>
-<td align="left">F</td>
-<td align="right">83430540</td>
-<td align="right">0.6634594</td>
-</tr>
-<tr>
-<td align="left">I</td>
-<td align="left">G</td>
-<td align="right">12162428</td>
-<td align="right">0.0967185</td>
-</tr>
-<tr>
-<td align="left">I</td>
 <td align="left">H</td>
 <td align="right">57514743</td>
 <td align="right">0.4573709</td>
@@ -1175,42 +768,6 @@ group_polys(DT = DT, area = TRUE, hrType = &#39;mcp&#39;,
 <td align="left">J</td>
 <td align="right">93471355</td>
 <td align="right">0.7433064</td>
-</tr>
-<tr>
-<td align="left">J</td>
-<td align="left">A</td>
-<td align="right">101995862</td>
-<td align="right">0.7697949</td>
-</tr>
-<tr>
-<td align="left">J</td>
-<td align="left">B</td>
-<td align="right">10384186</td>
-<td align="right">0.0783727</td>
-</tr>
-<tr>
-<td align="left">J</td>
-<td align="left">C</td>
-<td align="right">88882259</td>
-<td align="right">0.6708224</td>
-</tr>
-<tr>
-<td align="left">J</td>
-<td align="left">E</td>
-<td align="right">61868357</td>
-<td align="right">0.4669400</td>
-</tr>
-<tr>
-<td align="left">J</td>
-<td align="left">F</td>
-<td align="right">61213465</td>
-<td align="right">0.4619973</td>
-</tr>
-<tr>
-<td align="left">J</td>
-<td align="left">G</td>
-<td align="right">12803712</td>
-<td align="right">0.0966336</td>
 </tr>
 <tr>
 <td align="left">J</td>

@@ -19,6 +19,7 @@ knitr::opts_chunk$set(message = FALSE,
                       echo = TRUE)
 ```
 
+spatsoc is an R package for detecting spatial and temporal groups in GPS relocations. It can be used to convert GPS relocations to gambit-of-the-group format to build proximity-based social networks. In addition, the randomization function provides data-stream randomization methods suitable for GPS data.
 
 # Usage
 `spatsoc` leverages `data.table` to modify by reference and iteratively work on subsets of the input data. The first input for all functions in `spatsoc` is `DT`, an input `data.table`. If your data is a `data.frame`, you can convert it by reference using `setDT(DF)`. 
@@ -55,15 +56,9 @@ group_pts(
 knitr::kable(DT[order(group, timegroup)][1:5, .(ID, X, Y, datetime, timegroup, group)])
 ```
 
-<!-- ## Social network analysis -->
 
-<!-- ### Grouping -->
-
-<!-- ### Randomizations -->
-
-<!-- ### group by individual matrix -->
-
-<!-- ### igraph -->
+## Social network analysis
+See the vignette about [using spatsoc in social network analysis!](http://spatsoc.gitlab.io/articles/using-in-sna.html)
 
 
 # Installation
@@ -195,6 +190,9 @@ See [3.2.1](#dt-1).
 ### threshold
 The `threshold` argument represents a buffer area around each line. When `threshold = 0`, the lines are grouped by spatial overlap. If the threshold is greater than 0, the lines buffered, then grouped by spatial overlap. 
 
+### coords
+The coordinates must be planar, such as UTM (of whichever zone your relocations are in). 
+
 ### sortBy
 The `sortBy` argument expects a date time formatted column name, which is used to order the rows for each individual (and `splitBy`). 
 
@@ -220,19 +218,44 @@ The default unit for area overlap is square meters.
 
 <!-- direction of proportion -->
 
+### coords
+The coordinates must be planar, such as UTM (of whichever zone your relocations are in). 
+
 ### hrType and hrParams
-Currently, `spatsoc` offers two types of home ranges provided by the `adehabitatHR` package: `mcp` and `kernel`. The parameters must match the arguments of those functions. 
+Currently, `spatsoc` offers two types of home ranges provided by the `adehabitatHR` package: 'mcp' (`mcp`) and 'kernel' (`kernelUD` and `getverticeshr`). The parameters must match the arguments of those functions. 
 
-<!-- ## randomizations -->
+Internally, we match arguments to the functions allowing the user to provide, for example, both the percent (provided to `getverticeshr`) and grid arguments (provided to `mcp`).
+
+```{r}
+group_polys(
+  DT,
+  area = FALSE,
+  projection = utm,
+  hrType = 'mcp',
+  hrParams = list(grid = 60, percent = 95),
+  id = 'ID',
+  coords = c('X', 'Y')
+)
+```
+
+## randomizations
+`randomizations(DT, type, id, datetime, splitBy, iterations)`
+  
+* `DT`: input `data.table`
+* `type`: one of 'daily', 'step' or 'trajectory' 
+* `id`: Character string of ID column name
+* `datetime`: field used for providing date time or time group - see details
+* `splitBy`: List of fields in DT to split the randomization process by
+* `iterations`: The number of iterations to randomize
 
 
-
+**See the vignette [Using spatsoc in social network analysis](http://spatsoc.gitlab.io/articles/using-in-sna.html) for details about the `randomizations` function (specifically the section 'Data stream randomization')**
 
 
 # Package design
 ## Don't I need to reassign to save the output?
 
-(Almost) all functions in `spatsoc` use data.table's modify-by-reference to reduce recopying large datasets and improve performance. The exception is `group_polys(area = TRUE)`. 
+(Almost) all functions in `spatsoc` use data.table's modify-by-reference to reduce recopying large datasets and improve performance. The exceptions are `group_polys(area = TRUE)` and `randomizations` with `iterations` greater than 1. 
 
 
 ## Why does a function print the result, but columns aren't added to my DT?
@@ -247,3 +270,61 @@ if (truelength(DT) == 0) {
 group_times(DT, datetime = 'datetime', threshold = '5 minutes')
 ```
 
+
+
+
+# Summary information
+Here are some useful code chunks for understanding the spatial and temporal extent of your data and the outputs of `spatsoc` functions. 
+
+## Number of individuals
+```{r}
+# Number of unique individuals
+DT[, uniqueN(ID)]
+
+# Number of unique individuals by timegroup
+DT[, uniqueN(ID), by = timegroup]
+```
+
+## Temporal range
+
+```{r}
+# Min, max datetime
+DT[, range(datetime)]
+
+# Difference between relocations in hours
+DT[order(datetime), 
+   .(difHours = as.numeric(difftime(datetime, shift(datetime), units = 'hours'))), 
+   by = ID]
+
+# Difference between relocations in hours
+DT[order(datetime), 
+   .(difMins = as.numeric(difftime(datetime, shift(datetime), units = 'mins'))), 
+   by = ID]
+```
+
+## Spatial extent
+Simple spatial extents can be calculated for all individuals or by individual. 
+```{r}
+# All individuals
+DT[, .(minX = min(X),
+       maxX = max(X),
+       minY = min(Y),
+       maxY = max(Y),)]
+
+# By individual
+DT[, .(minX = min(X),
+       maxX = max(X),
+       minY = min(Y),
+       maxY = max(Y),),
+   by = ID]
+```
+
+## `spatsoc` outputs
+After using the grouping functions, we can determine the number of individuals in a temporal or spatial group. 
+```{r}
+# Number of unique individuals by timegroup
+DT[, uniqueN(ID), by = timegroup]
+
+# Number of unique individuals by group
+DT[, uniqueN(ID), by = group]
+```

@@ -201,6 +201,8 @@ hr {
 </head>
 
 <body>
+<p>spatsoc is an R package for detecting spatial and temporal groups in GPS relocations. It can be used to convert GPS relocations to gambit-of-the-group format to build proximity-based social networks. In addition, the randomization function provides data-stream randomization methods suitable for GPS data.</p>
+
 <h1>Usage</h1>
 
 <p><code>spatsoc</code> leverages <code>data.table</code> to modify by reference and iteratively work on subsets of the input data. The first input for all functions in <code>spatsoc</code> is <code>DT</code>, an input <code>data.table</code>. If your data is a <code>data.frame</code>, you can convert it by reference using <code>setDT(DF)</code>. </p>
@@ -284,15 +286,9 @@ group_pts(
 </tr>
 </tbody></table>
 
-<!-- ## Social network analysis -->
+<h2>Social network analysis</h2>
 
-<!-- ### Grouping -->
-
-<!-- ### Randomizations -->
-
-<!-- ### group by individual matrix -->
-
-<!-- ### igraph -->
+<p>See the vignette about <a href="http://spatsoc.gitlab.io/articles/using-in-sna.html">using spatsoc in social network analysis!</a></p>
 
 <h1>Installation</h1>
 
@@ -457,6 +453,10 @@ DT[, c(&#39;idate&#39;, &#39;itime&#39;) := IDateTime(datetime)]
 
 <p>The <code>threshold</code> argument represents a buffer area around each line. When <code>threshold = 0</code>, the lines are grouped by spatial overlap. If the threshold is greater than 0, the lines buffered, then grouped by spatial overlap. </p>
 
+<h3>coords</h3>
+
+<p>The coordinates must be planar, such as UTM (of whichever zone your relocations are in). </p>
+
 <h3>sortBy</h3>
 
 <p>The <code>sortBy</code> argument expects a date time formatted column name, which is used to order the rows for each individual (and <code>splitBy</code>). </p>
@@ -486,17 +486,47 @@ DT[, c(&#39;idate&#39;, &#39;itime&#39;) := IDateTime(datetime)]
 
 <!-- direction of proportion -->
 
+<h3>coords</h3>
+
+<p>The coordinates must be planar, such as UTM (of whichever zone your relocations are in). </p>
+
 <h3>hrType and hrParams</h3>
 
-<p>Currently, <code>spatsoc</code> offers two types of home ranges provided by the <code>adehabitatHR</code> package: <code>mcp</code> and <code>kernel</code>. The parameters must match the arguments of those functions. </p>
+<p>Currently, <code>spatsoc</code> offers two types of home ranges provided by the <code>adehabitatHR</code> package: &#39;mcp&#39; (<code>mcp</code>) and &#39;kernel&#39; (<code>kernelUD</code> and <code>getverticeshr</code>). The parameters must match the arguments of those functions. </p>
 
-<!-- ## randomizations -->
+<p>Internally, we match arguments to the functions allowing the user to provide, for example, both the percent (provided to <code>getverticeshr</code>) and grid arguments (provided to <code>mcp</code>).</p>
+
+<pre><code class="r">group_polys(
+  DT,
+  area = FALSE,
+  projection = utm,
+  hrType = &#39;mcp&#39;,
+  hrParams = list(grid = 60, percent = 95),
+  id = &#39;ID&#39;,
+  coords = c(&#39;X&#39;, &#39;Y&#39;)
+)
+</code></pre>
+
+<h2>randomizations</h2>
+
+<p><code>randomizations(DT, type, id, datetime, splitBy, iterations)</code></p>
+
+<ul>
+<li><code>DT</code>: input <code>data.table</code></li>
+<li><code>type</code>: one of &#39;daily&#39;, &#39;step&#39; or &#39;trajectory&#39; </li>
+<li><code>id</code>: Character string of ID column name</li>
+<li><code>datetime</code>: field used for providing date time or time group - see details</li>
+<li><code>splitBy</code>: List of fields in DT to split the randomization process by</li>
+<li><code>iterations</code>: The number of iterations to randomize</li>
+</ul>
+
+<p><strong>See the vignette <a href="http://spatsoc.gitlab.io/articles/using-in-sna.html">Using spatsoc in social network analysis</a> for details about the <code>randomizations</code> function (specifically the section &#39;Data stream randomization&#39;)</strong></p>
 
 <h1>Package design</h1>
 
 <h2>Don&#39;t I need to reassign to save the output?</h2>
 
-<p>(Almost) all functions in <code>spatsoc</code> use data.table&#39;s modify-by-reference to reduce recopying large datasets and improve performance. The exception is <code>group_polys(area = TRUE)</code>. </p>
+<p>(Almost) all functions in <code>spatsoc</code> use data.table&#39;s modify-by-reference to reduce recopying large datasets and improve performance. The exceptions are <code>group_polys(area = TRUE)</code> and <code>randomizations</code> with <code>iterations</code> greater than 1. </p>
 
 <h2>Why does a function print the result, but columns aren&#39;t added to my DT?</h2>
 
@@ -507,6 +537,64 @@ DT[, c(&#39;idate&#39;, &#39;itime&#39;) := IDateTime(datetime)]
 }
 # then go to spatsoc
 group_times(DT, datetime = &#39;datetime&#39;, threshold = &#39;5 minutes&#39;)
+</code></pre>
+
+<h1>Summary information</h1>
+
+<p>Here are some useful code chunks for understanding the spatial and temporal extent of your data and the outputs of <code>spatsoc</code> functions. </p>
+
+<h2>Number of individuals</h2>
+
+<pre><code class="r"># Number of unique individuals
+DT[, uniqueN(ID)]
+
+# Number of unique individuals by timegroup
+DT[, uniqueN(ID), by = timegroup]
+</code></pre>
+
+<h2>Temporal range</h2>
+
+<pre><code class="r"># Min, max datetime
+DT[, range(datetime)]
+
+# Difference between relocations in hours
+DT[order(datetime), 
+   .(difHours = as.numeric(difftime(datetime, shift(datetime), units = &#39;hours&#39;))), 
+   by = ID]
+
+# Difference between relocations in hours
+DT[order(datetime), 
+   .(difMins = as.numeric(difftime(datetime, shift(datetime), units = &#39;mins&#39;))), 
+   by = ID]
+</code></pre>
+
+<h2>Spatial extent</h2>
+
+<p>Simple spatial extents can be calculated for all individuals or by individual. </p>
+
+<pre><code class="r"># All individuals
+DT[, .(minX = min(X),
+       maxX = max(X),
+       minY = min(Y),
+       maxY = max(Y),)]
+
+# By individual
+DT[, .(minX = min(X),
+       maxX = max(X),
+       minY = min(Y),
+       maxY = max(Y),),
+   by = ID]
+</code></pre>
+
+<h2><code>spatsoc</code> outputs</h2>
+
+<p>After using the grouping functions, we can determine the number of individuals in a temporal or spatial group. </p>
+
+<pre><code class="r"># Number of unique individuals by timegroup
+DT[, uniqueN(ID), by = timegroup]
+
+# Number of unique individuals by group
+DT[, uniqueN(ID), by = group]
 </code></pre>
 
 </body>

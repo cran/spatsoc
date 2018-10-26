@@ -34,10 +34,63 @@ knitr::kable(DT[order(group, timegroup)][1:5, .(ID, X, Y, datetime, timegroup, g
 #  DT[, datetime := as.POSIXct(datetime)]
 #  DT[, c('idate', 'itime') := IDateTime(datetime)]
 
+## ------------------------------------------------------------------------
+#  group_polys(
+#    DT,
+#    area = FALSE,
+#    projection = utm,
+#    hrType = 'mcp',
+#    hrParams = list(grid = 60, percent = 95),
+#    id = 'ID',
+#    coords = c('X', 'Y')
+#  )
+
 ## ----alloc---------------------------------------------------------------
 #  if (truelength(DT) == 0) {
 #    setDT(DT)
 #  }
 #  # then go to spatsoc
 #  group_times(DT, datetime = 'datetime', threshold = '5 minutes')
+
+## ------------------------------------------------------------------------
+#  # Number of unique individuals
+#  DT[, uniqueN(ID)]
+#  
+#  # Number of unique individuals by timegroup
+#  DT[, uniqueN(ID), by = timegroup]
+
+## ------------------------------------------------------------------------
+#  # Min, max datetime
+#  DT[, range(datetime)]
+#  
+#  # Difference between relocations in hours
+#  DT[order(datetime),
+#     .(difHours = as.numeric(difftime(datetime, shift(datetime), units = 'hours'))),
+#     by = ID]
+#  
+#  # Difference between relocations in hours
+#  DT[order(datetime),
+#     .(difMins = as.numeric(difftime(datetime, shift(datetime), units = 'mins'))),
+#     by = ID]
+
+## ------------------------------------------------------------------------
+#  # All individuals
+#  DT[, .(minX = min(X),
+#         maxX = max(X),
+#         minY = min(Y),
+#         maxY = max(Y),)]
+#  
+#  # By individual
+#  DT[, .(minX = min(X),
+#         maxX = max(X),
+#         minY = min(Y),
+#         maxY = max(Y),),
+#     by = ID]
+
+## ------------------------------------------------------------------------
+#  # Number of unique individuals by timegroup
+#  DT[, uniqueN(ID), by = timegroup]
+#  
+#  # Number of unique individuals by group
+#  DT[, uniqueN(ID), by = group]
 

@@ -22,15 +22,18 @@ three spatial grouping functions:
 \item \code{\link{group_polys}}
 }
 
-and one social network data-stream randomization function:
+and two social network functions:
 \itemize{
 \item \code{\link{randomizations}}
+\item \code{\link{get_gbi}}
 }
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://spatsoc.gitlab.io}
+  \item \url{https://www.gitlab.com/robit.a/spatsoc}
+  \item \url{https://github.com/ropensci/spatsoc}
   \item Report bugs at \url{https://www.gitlab.com/robit.a/spatsoc/issues}
 }
 

@@ -1,13 +1,13 @@
 #' Group Polygons
 #'
-#' \code{group_polys} groups rows into spatial groups by overlapping polygons (home ranges). The function accepts a \code{data.table} with relocation data, individual identifiers and an \code{area} argument.  The relocation data is transformed into home range \code{SpatialPolygons}. If the \code{area} argument is \code{FALSE}, \code{group_polys} returns grouping calculated by overlap. If the \code{area} argument is \code{TRUE}, the area and proportion of overlap is calculated. Relocation data should be in two columns representing the latitude and longitude.
+#' \code{group_polys} groups rows into spatial groups by overlapping polygons (home ranges). The function accepts a \code{data.table} with relocation data, individual identifiers and an \code{area} argument.  The relocation data is transformed into home range \code{SpatialPolygons}. If the \code{area} argument is \code{FALSE}, \code{group_polys} returns grouping calculated by overlap. If the \code{area} argument is \code{TRUE}, the area and proportion of overlap is calculated. Relocation data should be in two columns representing the X and Y coordinates.
 #'
 #' The \code{DT} must be a \code{data.table}. If your data is a \code{data.frame}, you can convert it by reference using \code{\link[data.table:setDT]{data.table::setDT}}.
 #'
 #'
-#' The \code{id}, \code{coords} (and optional \code{splitBy}) arguments expect the names of respective columns in \code{DT} which correspond to the individual identifier, latitude and longitude, and additional grouping columns.
+#' The \code{id}, \code{coords} (and optional \code{splitBy}) arguments expect the names of respective columns in \code{DT} which correspond to the individual identifier, X and Y coordinates, and additional grouping columns.
 #'
-#' The \code{projection} expects a \code{PROJ.4} character string (such as those available on \url{spatialreference.org}).
+#' The \code{projection} expects a \code{PROJ.4} character string (such as those available on \url{spatialreference.org}). \code{group_polys} expects planar coordinates (not unprojected latitude, longitude).
 #'
 #' The \code{hrType} must be either one of "kernel" or "mcp". The \code{hrParams} must be a named list of arguments matching those of \code{adehabitatHR::kernelUD} or \code{adehabitatHR::mcp}.
 #'
@@ -25,10 +25,6 @@
 #' @param spPolys Alternatively, provide solely a SpatialPolygons object
 #'
 #' @export
-#'
-#' @importFrom methods slot
-#' @importFrom rgeos gIntersects gIntersection gBuffer
-#' @importFrom igraph graph_from_adjacency_matrix clusters
 #'
 #' @family Spatial grouping
 #' @seealso \code{\link{build_polys}} \code{\link{group_times}}
@@ -114,8 +110,8 @@ group_polys <-
         inters <-
           rgeos::gIntersection(spPolys, spPolys, byid = TRUE)
         out <- data.table::data.table(
-          area = vapply(inters@polygons, slot, 'area', FUN.VALUE = 1),
-          IDs = vapply(inters@polygons, slot, 'ID', FUN.VALUE = "")
+          area = vapply(inters@polygons, methods::slot, 'area', FUN.VALUE = 1),
+          IDs = vapply(inters@polygons, methods::slot, 'ID', FUN.VALUE = "")
         )
 
         set(out, j = 'ID1', value = tstrsplit(out[['IDs']], ' ', keep = 1))
