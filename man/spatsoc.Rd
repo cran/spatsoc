@@ -32,19 +32,18 @@ and two social network functions:
 Useful links:
 \itemize{
   \item \url{https://spatsoc.gitlab.io}
-  \item \url{https://www.gitlab.com/robit.a/spatsoc}
   \item \url{https://github.com/ropensci/spatsoc}
-  \item Report bugs at \url{https://www.gitlab.com/robit.a/spatsoc/issues}
+  \item Report bugs at \url{https://github.com/ropensci/spatsoc/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Alec L. Robitaille \email{robit.alec@gmail.com}
+\strong{Maintainer}: Alec L. Robitaille \email{robit.alec@gmail.com} (0000-0002-4706-1762)
 
 Authors:
 \itemize{
-  \item Quinn Webber
-  \item Eric Vander Wal
+  \item Quinn Webber (0000-0002-0434-9360)
+  \item Eric Vander Wal (0000-0002-8534-4317)
 }
 
 }

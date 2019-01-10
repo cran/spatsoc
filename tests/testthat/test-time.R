@@ -256,3 +256,37 @@ test_that('multiyear blocks are well handled', {
                                    data.table::year(isoDate))]$N)
 
 })
+
+
+test_that('group_times nearest hour with minutes threshold', {
+  DT <- data.table(
+    idate = as.IDate('2018-12-12'),
+    itime = as.ITime(
+      c('01:00', '01:02', '00:58',
+        '03:00', '03:02', '02:59',
+        '05:00', '05:01', '04:58')
+    )
+  )
+
+  expect_equal(
+    group_times(DT, c('idate', 'itime'),
+                threshold = '5 minutes')[, uniqueN(timegroup)],
+               3)
+
+  DT <- data.table(
+    idate = as.IDate(
+      c('2018-12-12','2018-12-12', '2018-12-12',
+        '2018-12-12','2018-12-12', '2018-12-13',
+        '2018-12-13','2018-12-13', '2018-12-13')),
+    itime = as.ITime(
+      c('22:00', '22:02', '21:58',
+        '23:58', '23:59', '0:01',
+        '2:00', '2:01', '1:58'))
+  )
+
+  expect_equal(
+    group_times(DT, c('idate', 'itime'),
+                threshold = '5 minutes')[, uniqueN(timegroup)],
+    3)
+
+})
