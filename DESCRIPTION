@@ -1,7 +1,7 @@
 Package: spatsoc
 Title: Group Animal Relocation Data by Spatial and Temporal
         Relationship
-Version: 0.1.6
+Version: 0.1.8
 Authors@R: 
     c(person(given = "Alec L.",
              family = "Robitaille",
@@ -29,15 +29,15 @@ Imports: data.table (>= 1.10.5), sp, rgeos, adehabitatHR, igraph,
         methods
 Suggests: testthat, knitr, rmarkdown, asnipe
 SystemRequirements: GEOS (>= 3.2.0)
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 BugReports: https://github.com/ropensci/spatsoc/issues
 URL: https://spatsoc.gitlab.io, https://github.com/ropensci/spatsoc
 NeedsCompilation: no
-Packaged: 2019-01-04 16:24:07 UTC; alecr
+Packaged: 2019-04-05 22:11:23 UTC; alecr
 Author: Alec L. Robitaille [aut, cre] (<https://orcid.org/0000-0002-4706-1762>),
   Quinn Webber [aut] (<https://orcid.org/0000-0002-0434-9360>),
   Eric Vander Wal [aut] (<https://orcid.org/0000-0002-8534-4317>)
 Maintainer: Alec L. Robitaille <robit.alec@gmail.com>
 Repository: CRAN
-Date/Publication: 2019-01-10 18:10:03 UTC
+Date/Publication: 2019-04-05 22:30:03 UTC

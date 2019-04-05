@@ -19,14 +19,14 @@ knitr::opts_chunk$set(message = FALSE,
                       echo = TRUE)
 ```
 
-spatsoc is an R package for detecting spatial and temporal groups in GPS relocations. It can be used to convert GPS relocations to gambit-of-the-group format to build proximity-based social networks. In addition, the randomization function provides data-stream randomization methods suitable for GPS data.
+spatsoc is an R package for detecting spatial and temporal groups in GPS relocations. It can be used to build proximity-based social networks using gambit-of-the-group format and edge-lists. . In addition, the randomization function provides data-stream randomization methods suitable for GPS data.
 
 # Usage
 `spatsoc` leverages `data.table` to modify by reference and iteratively work on subsets of the input data. The first input for all functions in `spatsoc` is `DT`, an input `data.table`. If your data is a `data.frame`, you can convert it by reference using `setDT(DF)`. 
 
 ## Spatial and temporal grouping
 
-`spatsoc` is designed to work in two steps: temporal followed by spatial grouping. Considering your specific study species and system, determine a relevant temporal and spatial grouping threshold. This may be 5 minutes and 50 meters or 2 days and 100 meters or any other thresholds - that decision is left to you. In some cases, the spatial grouping function selected is only relevant with certain temporal grouping thresholds. For example, we wouldn't expect a threshold of 5 minutes with `group_polys`. 
+`spatsoc` is designed to work in two steps: temporal followed by either spatial grouping or edge list generating. Considering your specific study species and system, determine a relevant temporal and spatial grouping threshold. This may be 5 minutes and 50 meters or 2 days and 100 meters or any other thresholds - the functions provided by `spatsoc` are flexible to user input. In some cases, the spatial grouping function selected is only relevant with certain temporal grouping thresholds. For example, we wouldn't expect a threshold of 5 minutes with `group_polys`. 
 
 ```{r, eval = TRUE, results = 'hide'}
 # Load packages
@@ -58,7 +58,7 @@ knitr::kable(DT[order(group, timegroup)][1:5, .(ID, X, Y, datetime, timegroup, g
 
 
 ## Social network analysis
-See the vignette about [using spatsoc in social network analysis!](http://spatsoc.gitlab.io/articles/using-in-sna.html)
+See the vignette about [using spatsoc in social network analysis](http://spatsoc.gitlab.io/articles/using-in-sna.html).
 
 
 # Installation
@@ -80,6 +80,7 @@ Install `GEOS`:
 * `igraph`
 * `sp`
 * `adehabitatHR`
+* `rgeos`
 
 
 
@@ -123,7 +124,7 @@ The `threshold` provided to `group_times` should be related to the fix rate of t
 The `threshold` of `group_times` is considered only within the scope of 24 hours and this poses limitations on it:
 
 * `threshold` must evenly divide into 60 minutes or 24 hours
-* multi-day blocks should divide evenly into the range of days in the `DT`
+* multi-day blocks are consistent **across years** and timegroups from these are **by year**. 
 * number of minutes cannot exceed 60
 * `threshold` cannot be fractional
 
@@ -149,6 +150,10 @@ This message is returned to the user when a column matching those returned by `g
 * "no threshold provided, using the time field directly to group"
 
 This message is returned to the user when the `threshold` is NULL. This is the default setting of `threshold` and, at times, may be suitable. In this case, the date times in the `datetime` column will be grouped exactly. Usually, a threshold should be provided. 
+
+* "the minimum and maximum days in DT are not evenly divisible by the provided block length"
+
+This warning is returned to the user when the `threshold` with unit days does not divide evenly into the range of days in DT. For example, if DT had data covering 30 days, and a threshold of '7 days' was used, this warning would be returned. Note, this warning is returned for the range of days for the entire data set and not by year. 
 
 ## group_pts
 
@@ -238,6 +243,32 @@ group_polys(
 )
 ```
 
+## edge_dist
+`edge_dist(DT = NULL, threshold = NULL, id = NULL, coords = NULL, timegroup = NULL, splitBy = NULL, fillNA = TRUE)`
+
+* `DT`: input `data.table`
+* `threshold`: threshold for grouping 
+* `id`: column name of IDs in `DT`
+* `coords`: column names of x and y coordinates in `DT`
+* `timegroup`: (optional) column name of time group
+* `splitBy`: (optional) column names of extra variables to group on
+* `fillNA`: boolean indicating if NAs should be returned for individuals that were not within the threshold distance of any other. If TRUE, NAs are returned. If FALSE, only edges between individuals within the threshold distance are returned.
+
+This is the non-chain rule implementation similar to `group_pts`. Edges are defined by the distance threshold and NAs are returned for individuals within each timegroup if they are not within the threshold distance of any other individual (if `fillNA` is TRUE). 
+
+## edge_nn
+`edge_nn(DT = NULL, id = NULL, coords = NULL, timegroup = NULL, splitBy = NULL, threshold = NULL)`
+
+* `DT`: input `data.table`
+* `id`: column name of IDs in `DT`
+* `coords`: column names of x and y coordinates in `DT`
+* `timegroup`: (optional) column name of time group
+* `splitBy`: (optional) column names of extra variables to group on
+* `threshold`: (optional) spatial distance threshold to set maximum distance between an individual and their neighbour.
+
+This function can be used to generate edge lists defined either by nearest neighbour or nearest neighbour with a maximum distance. NAs are returned for nearest neighbour for an individual was alone in a timegroup (and/or splitBy) or if the distance between an individual and it's nearest neighbour is greater than the threshold. 
+
+
 ## randomizations
 `randomizations(DT, type, id, datetime, splitBy, iterations)`
   
@@ -255,7 +286,7 @@ group_polys(
 # Package design
 ## Don't I need to reassign to save the output?
 
-(Almost) all functions in `spatsoc` use data.table's modify-by-reference to reduce recopying large datasets and improve performance. The exceptions are `group_polys(area = TRUE)` and `randomizations` with `iterations` greater than 1. 
+(Almost) all functions in `spatsoc` use data.table's modify-by-reference to reduce recopying large datasets and improve performance. The exceptions are `group_polys(area = TRUE)` and `randomizations`.
 
 
 ## Why does a function print the result, but columns aren't added to my DT?

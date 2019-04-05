@@ -201,7 +201,7 @@ hr {
 </head>
 
 <body>
-<p>spatsoc is an R package for detecting spatial and temporal groups in GPS relocations. It can be used to convert GPS relocations to gambit-of-the-group format to build proximity-based social networks. In addition, the randomization function provides data-stream randomization methods suitable for GPS data.</p>
+<p>spatsoc is an R package for detecting spatial and temporal groups in GPS relocations. It can be used to build proximity-based social networks using gambit-of-the-group format and edge-lists. . In addition, the randomization function provides data-stream randomization methods suitable for GPS data.</p>
 
 <h1>Usage</h1>
 
@@ -209,7 +209,7 @@ hr {
 
 <h2>Spatial and temporal grouping</h2>
 
-<p><code>spatsoc</code> is designed to work in two steps: temporal followed by spatial grouping. Considering your specific study species and system, determine a relevant temporal and spatial grouping threshold. This may be 5 minutes and 50 meters or 2 days and 100 meters or any other thresholds - that decision is left to you. In some cases, the spatial grouping function selected is only relevant with certain temporal grouping thresholds. For example, we wouldn&#39;t expect a threshold of 5 minutes with <code>group_polys</code>. </p>
+<p><code>spatsoc</code> is designed to work in two steps: temporal followed by either spatial grouping or edge list generating. Considering your specific study species and system, determine a relevant temporal and spatial grouping threshold. This may be 5 minutes and 50 meters or 2 days and 100 meters or any other thresholds - the functions provided by <code>spatsoc</code> are flexible to user input. In some cases, the spatial grouping function selected is only relevant with certain temporal grouping thresholds. For example, we wouldn&#39;t expect a threshold of 5 minutes with <code>group_polys</code>. </p>
 
 <pre><code class="r"># Load packages
 library(spatsoc)
@@ -288,7 +288,7 @@ group_pts(
 
 <h2>Social network analysis</h2>
 
-<p>See the vignette about <a href="http://spatsoc.gitlab.io/articles/using-in-sna.html">using spatsoc in social network analysis!</a></p>
+<p>See the vignette about <a href="http://spatsoc.gitlab.io/articles/using-in-sna.html">using spatsoc in social network analysis</a>.</p>
 
 <h1>Installation</h1>
 
@@ -313,6 +313,7 @@ group_pts(
 <li><code>igraph</code></li>
 <li><code>sp</code></li>
 <li><code>adehabitatHR</code></li>
+<li><code>rgeos</code></li>
 </ul>
 
 <h1>Functions</h1>
@@ -359,7 +360,7 @@ DT[, c(&#39;idate&#39;, &#39;itime&#39;) := IDateTime(datetime)]
 
 <ul>
 <li><code>threshold</code> must evenly divide into 60 minutes or 24 hours</li>
-<li>multi-day blocks should divide evenly into the range of days in the <code>DT</code></li>
+<li>multi-day blocks are consistent <strong>across years</strong> and timegroups from these are <strong>by year</strong>. </li>
 <li>number of minutes cannot exceed 60</li>
 <li><code>threshold</code> cannot be fractional</li>
 </ul>
@@ -403,6 +404,12 @@ DT[, c(&#39;idate&#39;, &#39;itime&#39;) := IDateTime(datetime)]
 </ul>
 
 <p>This message is returned to the user when the <code>threshold</code> is NULL. This is the default setting of <code>threshold</code> and, at times, may be suitable. In this case, the date times in the <code>datetime</code> column will be grouped exactly. Usually, a threshold should be provided. </p>
+
+<ul>
+<li>&ldquo;the minimum and maximum days in DT are not evenly divisible by the provided block length&rdquo;</li>
+</ul>
+
+<p>This warning is returned to the user when the <code>threshold</code> with unit days does not divide evenly into the range of days in DT. For example, if DT had data covering 30 days, and a threshold of &#39;7 days&#39; was used, this warning would be returned. Note, this warning is returned for the range of days for the entire data set and not by year. </p>
 
 <h2>group_pts</h2>
 
@@ -507,6 +514,37 @@ DT[, c(&#39;idate&#39;, &#39;itime&#39;) := IDateTime(datetime)]
 )
 </code></pre>
 
+<h2>edge_dist</h2>
+
+<p><code>edge_dist(DT = NULL, threshold = NULL, id = NULL, coords = NULL, timegroup = NULL, splitBy = NULL, fillNA = TRUE)</code></p>
+
+<ul>
+<li><code>DT</code>: input <code>data.table</code></li>
+<li><code>threshold</code>: threshold for grouping </li>
+<li><code>id</code>: column name of IDs in <code>DT</code></li>
+<li><code>coords</code>: column names of x and y coordinates in <code>DT</code></li>
+<li><code>timegroup</code>: (optional) column name of time group</li>
+<li><code>splitBy</code>: (optional) column names of extra variables to group on</li>
+<li><code>fillNA</code>: boolean indicating if NAs should be returned for individuals that were not within the threshold distance of any other. If TRUE, NAs are returned. If FALSE, only edges between individuals within the threshold distance are returned.</li>
+</ul>
+
+<p>This is the non-chain rule implementation similar to <code>group_pts</code>. Edges are defined by the distance threshold and NAs are returned for individuals within each timegroup if they are not within the threshold distance of any other individual (if <code>fillNA</code> is TRUE). </p>
+
+<h2>edge_nn</h2>
+
+<p><code>edge_nn(DT = NULL, id = NULL, coords = NULL, timegroup = NULL, splitBy = NULL, threshold = NULL)</code></p>
+
+<ul>
+<li><code>DT</code>: input <code>data.table</code></li>
+<li><code>id</code>: column name of IDs in <code>DT</code></li>
+<li><code>coords</code>: column names of x and y coordinates in <code>DT</code></li>
+<li><code>timegroup</code>: (optional) column name of time group</li>
+<li><code>splitBy</code>: (optional) column names of extra variables to group on</li>
+<li><code>threshold</code>: (optional) spatial distance threshold to set maximum distance between an individual and their neighbour.</li>
+</ul>
+
+<p>This function can be used to generate edge lists defined either by nearest neighbour or nearest neighbour with a maximum distance. NAs are returned for nearest neighbour for an individual was alone in a timegroup (and/or splitBy) or if the distance between an individual and it&#39;s nearest neighbour is greater than the threshold. </p>
+
 <h2>randomizations</h2>
 
 <p><code>randomizations(DT, type, id, datetime, splitBy, iterations)</code></p>
@@ -526,7 +564,7 @@ DT[, c(&#39;idate&#39;, &#39;itime&#39;) := IDateTime(datetime)]
 
 <h2>Don&#39;t I need to reassign to save the output?</h2>
 
-<p>(Almost) all functions in <code>spatsoc</code> use data.table&#39;s modify-by-reference to reduce recopying large datasets and improve performance. The exceptions are <code>group_polys(area = TRUE)</code> and <code>randomizations</code> with <code>iterations</code> greater than 1. </p>
+<p>(Almost) all functions in <code>spatsoc</code> use data.table&#39;s modify-by-reference to reduce recopying large datasets and improve performance. The exceptions are <code>group_polys(area = TRUE)</code> and <code>randomizations</code>.</p>
 
 <h2>Why does a function print the result, but columns aren&#39;t added to my DT?</h2>
 

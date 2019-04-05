@@ -6,26 +6,26 @@ knitr::opts_chunk$set(message = TRUE,
 
 ## ----libs, eval = TRUE, include = FALSE----------------------------------
 library(spatsoc); library(data.table)
-DT <- fread(system.file("extdata", "DT.csv", package = "spatsoc"))[ID %in% c('H', 'I', 'J')]
+DT <- fread(system.file("extdata", "DT.csv", package = "spatsoc"))
 DT[, datetime := as.POSIXct(datetime, tz = 'UTC')]
 
 ## ---- echo = TRUE--------------------------------------------------------
-#  ## Load packages
+#  # Load packages
 #  library(spatsoc)
 #  library(data.table)
 #  
-#  ## Read in spatsoc's example data
+#  # Read in spatsoc's example data
 #  DT <- fread(system.file("extdata", "DT.csv", package = "spatsoc"))
 #  
-#  ## Subset to only individuals H, I, and J
+#  # Use subset of individuals
 #  DT <- DT[ID %in% c('H', 'I', 'J')]
 #  
-#  ## Cast character column 'datetime' as POSIXct
-#  DT[, datetime := as.POSIXct(datetime,
-#                              tz = 'UTC')]
+#  # Cast character column 'datetime' as POSIXct
+#  DT[, datetime := as.POSIXct(datetime, tz = 'UTC')]
 
 ## ---- eval = TRUE--------------------------------------------------------
-knitr::kable(DT[, .SD[1:2], ID][order(datetime)])
+DT <- DT[ID %chin% c('H', 'I', 'J')]
+knitr::kable(DT[, .SD[1:2], ID][order(ID)])
 
 ## ----groupmins, echo = TRUE----------------------------------------------
 #  group_times(DT, datetime = 'datetime', threshold = '5 minutes')
@@ -116,5 +116,31 @@ knitr::kable(
            projection = utm,
            coords = c('X', 'Y'), id = 'ID')[
              , .(ID1, ID2, area, proportion)])
+)
+
+## ----edgedist, echo = TRUE-----------------------------------------------
+#  group_times(DT = DT, datetime = 'datetime', threshold = '15 minutes')
+#  edge_dist(DT, threshold = 50, id = 'ID', coords = c('X', 'Y'), timegroup = 'timegroup', fillNA = TRUE)
+
+## ----fakeedgedist, eval = TRUE-------------------------------------------
+DT <- group_times(DT = DT, datetime = 'datetime', 
+                     threshold = '15 minutes')
+edges <- edge_dist(DT, threshold = 50, id = 'ID', coords = c('X', 'Y'), timegroup = 'timegroup', fillNA = TRUE)
+
+knitr::kable(
+  edges[1:6]
+)
+
+## ----edgenn, echo = TRUE-------------------------------------------------
+#  group_times(DT = DT, datetime = 'datetime', threshold = '15 minutes')
+#  edge_nn(DT, id = 'ID', coords = c('X', 'Y'), timegroup = 'timegroup')
+
+## ----fakeedgenn, eval = TRUE---------------------------------------------
+DT <- group_times(DT = DT, datetime = 'datetime', 
+                     threshold = '15 minutes')
+edges <- edge_nn(DT, id = 'ID', coords = c('X', 'Y'), timegroup = 'timegroup')
+
+knitr::kable(
+  edges[1:6]
 )
 

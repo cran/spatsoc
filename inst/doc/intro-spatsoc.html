@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<title>Grouping</title>
+<title>Data preparation</title>
 
 <script type="text/javascript">
 window.onload = function() {
@@ -203,29 +203,28 @@ hr {
 <body>
 <p>The <code>spatsoc</code> package provides functionality for analyzing animal relocation data in time and space to identify potential interactions among individuals and build gambit-of-the-group data for constructing social networks. </p>
 
-<p>The package contains grouping functions that are used for identifying spatially and temporally explicit groups from input data. In addition, we provide a function for randomizing individual identifiers within groups, designed to test whether social networks generated from animal relocation data were based on non-random social proximity among individuals.</p>
+<p>The package contains grouping and edge list generating functions that are used for identifying spatially and temporally explicit groups from input data. In addition, we provide social network analysis functions for randomizing individual identifiers within groups, designed to test whether social networks generated from animal relocation data were based on non-random social proximity among individuals and for generating group by individual matrices.</p>
 
 <p>The functions were developed for application across animal relocation data, for example, proximity based social network analyses and spatial and temporal clustering of points.</p>
 
-<h2>Grouping</h2>
+<h2>Data preparation</h2>
 
 <p><code>spatsoc</code> expects a <code>data.table</code> for all of its functions. If you have a <code>data.frame</code>, you can use <code>data.table::setDT()</code> to convert it by reference. If your data is a CSV, you can use <code>data.table::fread()</code> to import it as a <code>data.table</code>. </p>
 
-<p>The data consist of relocations of 3 individuals over 365 days. Using these data, we can compare the various grouping methods available in <code>spatsoc</code>.</p>
+<p>The data consist of relocations of 10 individuals over 365 days. Using these data, we can compare the various grouping methods available in <code>spatsoc</code>. Note: these examples will use a subset of the data, only individuals H, I and J. </p>
 
-<pre><code class="r">## Load packages
+<pre><code class="r"># Load packages
 library(spatsoc)
 library(data.table)
 
-## Read in spatsoc&#39;s example data
+# Read in spatsoc&#39;s example data
 DT &lt;- fread(system.file(&quot;extdata&quot;, &quot;DT.csv&quot;, package = &quot;spatsoc&quot;))
 
-## Subset to only individuals H, I, and J
+# Use subset of individuals
 DT &lt;- DT[ID %in% c(&#39;H&#39;, &#39;I&#39;, &#39;J&#39;)]
 
-## Cast character column &#39;datetime&#39; as POSIXct
-DT[, datetime := as.POSIXct(datetime,
-                            tz = &#39;UTC&#39;)]
+# Cast character column &#39;datetime&#39; as POSIXct
+DT[, datetime := as.POSIXct(datetime, tz = &#39;UTC&#39;)]
 </code></pre>
 
 <table><thead>
@@ -238,6 +237,20 @@ DT[, datetime := as.POSIXct(datetime,
 </tr>
 </thead><tbody>
 <tr>
+<td align="left">H</td>
+<td align="right">701724.1</td>
+<td align="right">5504325</td>
+<td align="left">2016-11-01 00:00:49</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="right">701648.5</td>
+<td align="right">5504276</td>
+<td align="left">2016-11-01 02:00:33</td>
+<td align="right">1</td>
+</tr>
+<tr>
 <td align="left">I</td>
 <td align="right">711042.0</td>
 <td align="right">5506384</td>
@@ -245,10 +258,10 @@ DT[, datetime := as.POSIXct(datetime,
 <td align="right">1</td>
 </tr>
 <tr>
-<td align="left">H</td>
-<td align="right">701724.1</td>
-<td align="right">5504325</td>
-<td align="left">2016-11-01 00:00:49</td>
+<td align="left">I</td>
+<td align="right">711229.0</td>
+<td align="right">5506446</td>
+<td align="left">2016-11-01 02:00:33</td>
 <td align="right">1</td>
 </tr>
 <tr>
@@ -265,23 +278,9 @@ DT[, datetime := as.POSIXct(datetime,
 <td align="left">2016-11-01 02:00:21</td>
 <td align="right">1</td>
 </tr>
-<tr>
-<td align="left">H</td>
-<td align="right">701648.5</td>
-<td align="right">5504276</td>
-<td align="left">2016-11-01 02:00:33</td>
-<td align="right">1</td>
-</tr>
-<tr>
-<td align="left">I</td>
-<td align="right">711229.0</td>
-<td align="right">5506446</td>
-<td align="left">2016-11-01 02:00:33</td>
-<td align="right">1</td>
-</tr>
 </tbody></table>
 
-<h3><code>group_times</code></h3>
+<h2>Temporal grouping</h2>
 
 <p>The <code>group_times</code> function is used to group relocations temporally. It is flexible to a threshold provided in units of minutes, hours or days. Since GPS fixes taken at regular intervals have some level of variability, we will provide a time threshold (<code>threshold</code>), to consider all fixes within this threshold taken at the same time. Alternatively, we may want to understand different scales of grouping, perhaps daily movement trajectories or seasonal home range overlap. </p>
 
@@ -481,82 +480,82 @@ DT[, datetime := as.POSIXct(datetime,
 </tr>
 </thead><tbody>
 <tr>
-<td align="left">H</td>
-<td align="right">703319.4</td>
-<td align="right">5503448</td>
-<td align="left">2016-11-02 22:00:36</td>
-<td align="right">1</td>
-<td align="right">1</td>
-</tr>
-<tr>
-<td align="left">H</td>
-<td align="right">702320.5</td>
-<td align="right">5503328</td>
-<td align="left">2016-11-03 14:00:24</td>
-<td align="right">1</td>
+<td align="left">I</td>
+<td align="right">715719.3</td>
+<td align="right">5505147</td>
+<td align="left">2016-11-02 00:00:14</td>
+<td align="right">62</td>
 <td align="right">1</td>
 </tr>
 <tr>
-<td align="left">H</td>
-<td align="right">701877.1</td>
-<td align="right">5505031</td>
-<td align="left">2016-11-04 20:00:43</td>
-<td align="right">1</td>
+<td align="left">I</td>
+<td align="right">715441.6</td>
+<td align="right">5505076</td>
+<td align="left">2016-11-03 10:00:47</td>
+<td align="right">62</td>
 <td align="right">1</td>
 </tr>
 <tr>
-<td align="left">H</td>
-<td align="right">700871.5</td>
-<td align="right">5504582</td>
-<td align="left">2016-11-07 18:00:25</td>
-<td align="right">2</td>
-<td align="right">2</td>
+<td align="left">I</td>
+<td align="right">715496.3</td>
+<td align="right">5505163</td>
+<td align="left">2016-11-05 02:00:48</td>
+<td align="right">62</td>
+<td align="right">1</td>
 </tr>
 <tr>
 <td align="left">J</td>
-<td align="right">707927.4</td>
-<td align="right">5500058</td>
-<td align="left">2016-11-08 06:00:41</td>
-<td align="right">2</td>
-<td align="right">2</td>
-</tr>
-<tr>
-<td align="left">J</td>
-<td align="right">705507.5</td>
-<td align="right">5499069</td>
-<td align="left">2016-11-08 16:00:06</td>
-<td align="right">2</td>
+<td align="right">707827.9</td>
+<td align="right">5499683</td>
+<td align="left">2016-11-06 14:00:42</td>
+<td align="right">63</td>
 <td align="right">2</td>
 </tr>
 <tr>
-<td align="left">J</td>
-<td align="right">707533.1</td>
-<td align="right">5500404</td>
-<td align="left">2016-11-11 06:00:24</td>
-<td align="right">3</td>
-<td align="right">3</td>
+<td align="left">I</td>
+<td align="right">712845.0</td>
+<td align="right">5505442</td>
+<td align="left">2016-11-06 16:00:14</td>
+<td align="right">63</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td align="left">I</td>
+<td align="right">712786.7</td>
+<td align="right">5505620</td>
+<td align="left">2016-11-06 20:00:21</td>
+<td align="right">63</td>
+<td align="right">2</td>
 </tr>
 <tr>
 <td align="left">H</td>
-<td align="right">703133.0</td>
-<td align="right">5504843</td>
-<td align="left">2016-11-11 22:00:42</td>
-<td align="right">3</td>
+<td align="right">703219.9</td>
+<td align="right">5504760</td>
+<td align="left">2016-11-12 04:00:47</td>
+<td align="right">64</td>
 <td align="right">3</td>
 </tr>
 <tr>
 <td align="left">I</td>
-<td align="right">704344.4</td>
-<td align="right">5505799</td>
-<td align="left">2016-11-15 16:00:48</td>
+<td align="right">701752.5</td>
+<td align="right">5504253</td>
+<td align="left">2016-11-13 10:00:41</td>
+<td align="right">64</td>
 <td align="right">3</td>
+</tr>
+<tr>
+<td align="left">I</td>
+<td align="right">701701.4</td>
+<td align="right">5504369</td>
+<td align="left">2016-11-14 08:00:47</td>
+<td align="right">64</td>
 <td align="right">3</td>
 </tr>
 </tbody></table>
 
-<h3><code>group_pts</code></h3>
+<h2>Spatial grouping</h2>
 
-<p>The <code>group_pts</code> function compares the relocations of all individuals in each timegroup and groups individuals based on a distance threshold provided by the user.</p>
+<p>The <code>group_pts</code> function compares the relocations of all individuals in each timegroup and groups individuals based on a distance threshold provided by the user. The <code>group_pts</code> function uses the &ldquo;chain rule&rdquo; where three or more individuals that are all within the defined threshold distance of at least one other individual are considered in the same group. For point based spatial grouping with a distance threshold that does not use the chain rule, see <code>edge_dist</code> below.</p>
 
 <pre><code class="r">group_times(DT = DT, datetime = &#39;datetime&#39;, threshold = &#39;15 minutes&#39;)
 group_pts(DT, threshold = 50, id = &#39;ID&#39;, coords = c(&#39;X&#39;, &#39;Y&#39;), timegroup = &#39;timegroup&#39;)
@@ -639,8 +638,6 @@ group_pts(DT, threshold = 50, id = &#39;ID&#39;, coords = c(&#39;X&#39;, &#39;Y&
 </tr>
 </tbody></table>
 
-<h3><code>group_lines</code></h3>
-
 <p>The <code>group_lines</code> function groups individuals whose trajectories intersect in a specified time interval. This represents a coarser grouping method than <code>group_pts</code> which can help understand shared space at daily, weekly or other temporal resolutions.</p>
 
 <pre><code class="r">utm &lt;- &#39;+proj=utm +zone=21 ellps=WGS84&#39;
@@ -709,8 +706,6 @@ group_lines(DT, threshold = 50, projection = utm,
 <td align="right">206</td>
 </tr>
 </tbody></table>
-
-<h3><code>group_polys</code></h3>
 
 <p>The <code>group_polys</code> function groups individuals whose home ranges intersect. This represents the coarsest grouping method, to provide a measure of overlap across seasons, years or all available relocations. It can either return the proportion of home range area overlapping between individuals or simple groups. Home ranges are calculated using <code>adehabitatHR::kernelUD</code> or <code>adehabitatHR::mcp</code>. Alternatively, a <code>SpatialPolygonsDataFrame</code> can be input to the <code>spPolys</code> argument.</p>
 
@@ -786,6 +781,104 @@ group_polys(DT = DT, area = TRUE, hrType = &#39;mcp&#39;,
 <td align="left">J</td>
 <td align="right">132497451</td>
 <td align="right">1.0000000</td>
+</tr>
+</tbody></table>
+
+<h2>Edge list generation</h2>
+
+<p>The <code>edge_dist</code> function calculates the geographic distance between between individuals within each timegroup and returns all paired relocations within the spatial threshold. <code>edge_dist</code> uses a distance matrix like group_pts, but, in contrast, does not use the chain rule to group relocations.</p>
+
+<pre><code class="r">group_times(DT = DT, datetime = &#39;datetime&#39;, threshold = &#39;15 minutes&#39;)
+edge_dist(DT, threshold = 50, id = &#39;ID&#39;, coords = c(&#39;X&#39;, &#39;Y&#39;), timegroup = &#39;timegroup&#39;, fillNA = TRUE)
+</code></pre>
+
+<pre><code>## block, timegroup columns found in input DT and will be overwritten by this function
+</code></pre>
+
+<table><thead>
+<tr>
+<th align="right">timegroup</th>
+<th align="left">ID1</th>
+<th align="left">ID2</th>
+</tr>
+</thead><tbody>
+<tr>
+<td align="right">1</td>
+<td align="left">H</td>
+<td align="left">NA</td>
+</tr>
+<tr>
+<td align="right">1</td>
+<td align="left">I</td>
+<td align="left">NA</td>
+</tr>
+<tr>
+<td align="right">1</td>
+<td align="left">J</td>
+<td align="left">NA</td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td align="left">H</td>
+<td align="left">NA</td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td align="left">I</td>
+<td align="left">NA</td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td align="left">J</td>
+<td align="left">NA</td>
+</tr>
+</tbody></table>
+
+<p>The <code>edge_nn</code> function calculates the nearest neighbour to each individual within each time group. If the optional distance threshold is provided, it is used to limit the maximum distance between neighbours. <code>edge_nn</code> returns an edge list of each individual and their nearest neighbour.</p>
+
+<pre><code class="r">group_times(DT = DT, datetime = &#39;datetime&#39;, threshold = &#39;15 minutes&#39;)
+edge_nn(DT, id = &#39;ID&#39;, coords = c(&#39;X&#39;, &#39;Y&#39;), timegroup = &#39;timegroup&#39;)
+</code></pre>
+
+<pre><code>## minutes, timegroup columns found in input DT and will be overwritten by this function
+</code></pre>
+
+<table><thead>
+<tr>
+<th align="right">timegroup</th>
+<th align="left">ID</th>
+<th align="left">NN</th>
+</tr>
+</thead><tbody>
+<tr>
+<td align="right">1</td>
+<td align="left">H</td>
+<td align="left">J</td>
+</tr>
+<tr>
+<td align="right">1</td>
+<td align="left">I</td>
+<td align="left">J</td>
+</tr>
+<tr>
+<td align="right">1</td>
+<td align="left">J</td>
+<td align="left">I</td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td align="left">H</td>
+<td align="left">J</td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td align="left">I</td>
+<td align="left">J</td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td align="left">J</td>
+<td align="left">I</td>
 </tr>
 </tbody></table>
 
