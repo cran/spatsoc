@@ -159,7 +159,8 @@ knitr::opts_chunk$set(message = TRUE,
 #            'group', 'randomID')
 #    },
 #    i = iterYearLs$iter,
-#    y = iterYearLs$yr
+#    y = iterYearLs$yr,
+#    SIMPLIFY = FALSE
 #  )
 #  
 #  ## Generate a list of random networks
@@ -185,7 +186,8 @@ knitr::opts_chunk$set(message = TRUE,
 #    },
 #    i = iterYearLs$iter,
 #    y = iterYearLs$yr,
-#    p = iterYearLs$population
+#    p = iterYearLs$population,
+#    SIMPLIFY = FALSE
 #  )
 #  
 #  ## Generate a list of random networks
@@ -215,7 +217,8 @@ knitr::opts_chunk$set(message = TRUE,
 #            'group', 'ID')
 #    },
 #    i = iterYearLs$iter,
-#    y = iterYearLs$yr
+#    y = iterYearLs$yr,
+#    SIMPLIFY = FALSE
 #  )
 #  
 #  ## Generate a list of random networks
@@ -273,7 +276,8 @@ knitr::opts_chunk$set(message = TRUE,
 #            'group', 'randomID')
 #    },
 #    i = iterYearLs$iter,
-#    y = iterYearLs$yr
+#    y = iterYearLs$yr,
+#    SIMPLIFY = FALSE
 #  )
 #  
 #  ## Generate a list of random networks
