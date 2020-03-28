@@ -4,8 +4,14 @@
 \alias{build_lines}
 \title{Build Lines}
 \usage{
-build_lines(DT = NULL, projection = NULL, id = NULL, coords = NULL,
-  sortBy = NULL, splitBy = NULL)
+build_lines(
+  DT = NULL,
+  projection = NULL,
+  id = NULL,
+  coords = NULL,
+  sortBy = NULL,
+  splitBy = NULL
+)
 }
 \arguments{
 \item{DT}{input data.table}
@@ -16,9 +22,11 @@ build_lines(DT = NULL, projection = NULL, id = NULL, coords = NULL,
 
 \item{coords}{Character vector of X coordinate and Y coordinate column names}
 
-\item{sortBy}{Character string of date time column(s) to sort rows by. Must be a POSIXct.}
+\item{sortBy}{Character string of date time column(s) to sort rows by. Must
+be a POSIXct.}
 
-\item{splitBy}{(optional) character string or vector of grouping column name(s) upon which the grouping will be calculated}
+\item{splitBy}{(optional) character string or vector of grouping column
+name(s) upon which the grouping will be calculated}
 }
 \value{
 \code{build_lines} returns a \code{SpatialLines} object with a line for each individual (and optionally \code{splitBy} combination).
@@ -33,7 +41,7 @@ The \code{DT} must be a \code{data.table}. If your data is a \code{data.frame}, 
 
 The \code{id}, \code{coords}, \code{sortBy} (and optional \code{splitBy}) arguments expect the names of respective columns in \code{DT} which correspond to the individual identifier, X and Y coordinates, sorting column, and additional splitting columns.
 
-The \code{projection} expects a \code{PROJ.4} character string (such as those available on \url{spatialreference.org}).
+The \code{projection} expects a \code{PROJ.4} character string (such as those available on \url{https://spatialreference.org/}).
 
 The \code{sortBy} is used to order the input \code{data.table} when creating \code{SpatialLines}. It must a \code{POSIXct} to ensure the rows are sorted by date time.
 
@@ -67,6 +75,7 @@ build_lines(DT, projection = utm, id = 'ID', coords = c('X', 'Y'),
 \seealso{
 \code{\link{group_lines}}
 
-Other Build functions: \code{\link{build_polys}}
+Other Build functions: 
+\code{\link{build_polys}()}
 }
 \concept{Build functions}

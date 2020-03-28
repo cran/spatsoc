@@ -1,10 +1,26 @@
-# v 0.1.9 
+# v 0.1.13 (2020-03-25)
+* added `dyad_id` function for generating dyad IDs with edge functions ([PR 27](https://github.com/ropensci/spatsoc/pull/25))
+* added a vignette describing `edge_dist`, `edge_nn` and `dyad_id` functions [here](https://docs.ropensci.org/spatsoc/articles/using-edge-and-dyad.html) ([PR 14](https://github.com/ropensci/spatsoc/pull/14))
+
+# v 0.1.12 (2020-03-02)
+* fixed `data.table` error in `edge_dist` and `edge_nn` ([PR 25](https://github.com/ropensci/spatsoc/pull/25))
+
+
+# v 0.1.11 (2020-02-20)
+* removed default NULL from 'timegroup' arguments in `group_pts`, `edge_dist` and `edge_nn` ([PR 24](https://github.com/ropensci/spatsoc/pull/24))
+
+
+# v 0.1.10 (2019-06-06)
+* added optional return of distance between individuals with `edge_dist` ([PR 19](https://github.com/ropensci/spatsoc/pull/19)) and `edge_nn` ([PR 21](https://github.com/ropensci/spatsoc/pull/21))
+
+
+# v 0.1.9 (2019-05-14)
 * fixed bug for randomizations type 'step' and 'daily' ([PR 13](https://github.com/ropensci/spatsoc/pull/13)). 
 * clarified `SIMPLIFY=FALSE` in SNA vignette. 
 
 
 # v 0.1.8 (2019-04-05)
-* update [FAQ](http://spatsoc.robitalec.ca/articles/faq.html) and [Introduction to spatsoc](http://spatsoc.robitalec.ca/articles/intro-spatsoc.html) vignettes adding entries for edge list generating functions. 
+* update [FAQ](https://docs.ropensci.org/spatsoc/articles/faq.html) and [Introduction to spatsoc](https://docs.ropensci.org/spatsoc/articles/intro-spatsoc.html) vignettes adding entries for edge list generating functions. 
 * added edge list generating function `edge_nn` ([PR 11](https://github.com/ropensci/spatsoc/pull/12))
 * added edge list generating function `edge_dist` ([PR 11](https://github.com/ropensci/spatsoc/pull/11))
 
@@ -39,10 +55,10 @@
 # v 0.1.1 (2018-09-17)
 
 * improvements to package, function documentation
-* [FAQ](http://spatsoc.robitalec.ca/articles/faq.html) vignette added
+* [FAQ](https://docs.ropensci.org/spatsoc/articles/faq.html) vignette added
 * fixed `build_lines` ordering bug to ensure rows are ordered by date time when building lines
 * added CODE_OF_CONDUCT.md and CONTRIBUTING.md
-* [Using spatsoc in social network analysis](http://spatsoc.robitalec.ca/articles/using-in-sna.html) vignette added
+* [Using spatsoc in social network analysis](https://docs.ropensci.org/spatsoc/articles/using-in-sna.html) vignette added
 
 # v 0.1.0 (2018-07-20)
 

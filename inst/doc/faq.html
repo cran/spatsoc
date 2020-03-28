@@ -201,7 +201,7 @@ hr {
 </head>
 
 <body>
-<p>spatsoc is an R package for detecting spatial and temporal groups in GPS relocations. It can be used to build proximity-based social networks using gambit-of-the-group format and edge-lists. . In addition, the randomization function provides data-stream randomization methods suitable for GPS data.</p>
+<p>spatsoc is an R package for detecting spatial and temporal groups in GPS relocations. It can be used to build proximity-based social networks using gambit-of-the-group format and edge-lists. In addition, the randomization function provides data-stream randomization methods suitable for GPS data.</p>
 
 <h1>Usage</h1>
 
@@ -288,7 +288,7 @@ group_pts(
 
 <h2>Social network analysis</h2>
 
-<p>See the vignette about <a href="http://spatsoc.gitlab.io/articles/using-in-sna.html">using spatsoc in social network analysis</a>.</p>
+<p>See the vignette about <a href="https://docs.ropensci.org/spatsoc/articles/using-in-sna.html">using spatsoc in social network analysis</a>.</p>
 
 <h1>Installation</h1>
 
@@ -530,6 +530,8 @@ DT[, c(&#39;idate&#39;, &#39;itime&#39;) := IDateTime(datetime)]
 
 <p>This is the non-chain rule implementation similar to <code>group_pts</code>. Edges are defined by the distance threshold and NAs are returned for individuals within each timegroup if they are not within the threshold distance of any other individual (if <code>fillNA</code> is TRUE). </p>
 
+<p><strong>See the vignette <a href="https://docs.ropensci.org/spatsoc/articles/using-edge-and-dyad.html">Using edge list generating functions and dyad_id</a> for details about the <code>edge_dist</code> function.</strong></p>
+
 <h2>edge_nn</h2>
 
 <p><code>edge_nn(DT = NULL, id = NULL, coords = NULL, timegroup = NULL, splitBy = NULL, threshold = NULL)</code></p>
@@ -545,6 +547,8 @@ DT[, c(&#39;idate&#39;, &#39;itime&#39;) := IDateTime(datetime)]
 
 <p>This function can be used to generate edge lists defined either by nearest neighbour or nearest neighbour with a maximum distance. NAs are returned for nearest neighbour for an individual was alone in a timegroup (and/or splitBy) or if the distance between an individual and it&#39;s nearest neighbour is greater than the threshold. </p>
 
+<p><strong>See the vignette <a href="https://docs.ropensci.org/spatsoc/articles/using-edge-and-dyad.html">Using edge list generating functions and dyad_id</a> for details about the <code>edge_nn</code> function.</strong></p>
+
 <h2>randomizations</h2>
 
 <p><code>randomizations(DT, type, id, datetime, splitBy, iterations)</code></p>
@@ -558,23 +562,29 @@ DT[, c(&#39;idate&#39;, &#39;itime&#39;) := IDateTime(datetime)]
 <li><code>iterations</code>: The number of iterations to randomize</li>
 </ul>
 
-<p><strong>See the vignette <a href="http://spatsoc.gitlab.io/articles/using-in-sna.html">Using spatsoc in social network analysis</a> for details about the <code>randomizations</code> function (specifically the section &#39;Data stream randomization&#39;)</strong></p>
+<p><strong>See the vignette <a href="https://docs.ropensci.org/spatsoc/articles/using-in-sna.html">Using spatsoc in social network analysis</a> for details about the <code>randomizations</code> function (specifically the section &#39;Data stream randomization&#39;)</strong></p>
 
 <h1>Package design</h1>
 
 <h2>Don&#39;t I need to reassign to save the output?</h2>
 
-<p>(Almost) all functions in <code>spatsoc</code> use data.table&#39;s modify-by-reference to reduce recopying large datasets and improve performance. The exceptions are <code>group_polys(area = TRUE)</code> and <code>randomizations</code>.</p>
+<p>(Almost) all functions in <code>spatsoc</code> use data.table&#39;s modify-by-reference to reduce recopying large datasets and improve performance. The exceptions are <code>group_polys(area = TRUE)</code>, <code>randomizations</code> and the edge list generating functions <code>edge_dist</code> and <code>edge_nn</code>.</p>
 
 <h2>Why does a function print the result, but columns aren&#39;t added to my DT?</h2>
 
-<p>Check that your <code>data.table</code> has columns allocated (with <code>data.table::truelength</code>) and if not, use <code>data.table::setDT</code>. This can happen if you are reading your data from <code>RDS</code> or <code>RData</code> files.  <a href="https://cran.r-project.org/package=data.table/vignettes/datatable-faq.html#reading-data.table-from-rds-or-rdata-file">See here.</a></p>
+<p>Check that your <code>data.table</code> has columns allocated (with <code>data.table::truelength</code>) and if not, use <code>data.table::setDT</code> or <code>data.table::alloc.col</code>. This can happen if you are reading your data from <code>RDS</code> or <code>RData</code> files.  <a href="https://cran.r-project.org/package=data.table/vignettes/datatable-faq.html#reading-data.table-from-rds-or-rdata-file">See here.</a></p>
 
 <pre><code class="r">if (truelength(DT) == 0) {
   setDT(DT)
 }
 # then go to spatsoc
 group_times(DT, datetime = &#39;datetime&#39;, threshold = &#39;5 minutes&#39;)
+</code></pre>
+
+<p>or simply:</p>
+
+<pre><code class="r">DT &lt;- readRDS(&#39;path/to/data.Rds&#39;)
+alloc.col(DT)
 </code></pre>
 
 <h1>Summary information</h1>
