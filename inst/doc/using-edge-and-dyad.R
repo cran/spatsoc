@@ -70,7 +70,18 @@ dyad_id(edges, id1 = 'ID1', id2 = 'ID2')
 
 ## ---- eval = TRUE-------------------------------------------------------------
 # Get the unique dyads by timegroup
-dyads <- unique(edges, by = c('timegroup', 'dyadID'))
+# NOTE: we are explicitly selecting only where dyadID is not NA
+dyads <- unique(edges[!is.na(dyadID)], by = c('timegroup', 'dyadID'))
+
+# NOTE: if we wanted to also include where dyadID is NA, we should do it explicitly
+# dyadNN <- unique(DT[!is.na(NN)], by = c('timegroup', 'dyadID'))
+
+# Get where NN was NA
+# dyadNA <- DT[is.na(NN)]
+
+# Combine where NN is NA
+# dyads <- rbindlist(list(dyadNN, dyadNA))
+
 
 # Set the order of the rows
 setorder(dyads, timegroup)
@@ -95,9 +106,9 @@ dyads[, runCount := fifelse(difftimegrp == 1, .N, NA_integer_), by = .(runid, dy
 
 ## Start and end of consecutive relocations for each dyad
 # Dont consider where runs aren't more than one relocation
-dyads[runCount > 1, start := fifelse(timegroup == min(timegroup), TRUE, NA), by = .(runid, dyadID)]
+dyads[runCount > 1, start := fifelse(timegroup == min(timegroup), TRUE, FALSE), by = .(runid, dyadID)]
 
-dyads[runCount > 1, end := fifelse(timegroup == max(timegroup), TRUE, NA), by = .(runid, dyadID)]
+dyads[runCount > 1, end := fifelse(timegroup == max(timegroup), TRUE, FALSE), by = .(runid, dyadID)]
 
 ## Example output
 dyads[dyadID == 'B-H', 

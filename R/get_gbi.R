@@ -24,7 +24,7 @@
 #'   of \code{spatsoc} into social networks as
 #'   \code{\link[asnipe:get_group_by_individual]{asnipe::get_group_by_individual}}
 #'   but is more efficient thanks to
-#'   \code{\link[data.table:dcast]{data.table::dcast}}.
+#'   \code{\link[data.table:dcast.data.table]{data.table::dcast}}.
 #'
 #' @inheritParams group_pts
 #' @param group Character string of group column (generated from one of
@@ -46,7 +46,8 @@
 #' DT[, datetime := as.POSIXct(datetime, tz = 'UTC')]
 #' DT[, yr := year(datetime)]
 #'
-#' utm <- '+proj=utm +zone=36 +south +ellps=WGS84 +datum=WGS84 +units=m +no_defs'
+#' # EPSG code for example data
+#' utm <- '+init=epsg:32736'
 #'
 #' group_polys(DT, area = FALSE, hrType = 'mcp',
 #'             hrParams = list(percent = 95),

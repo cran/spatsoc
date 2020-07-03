@@ -35,8 +35,8 @@ knitr::opts_chunk$set(message = TRUE,
 #  
 
 ## ---- eval = FALSE------------------------------------------------------------
-#  # UTM zone for relocations
-#  utm <- '+proj=utm +zone=36 +south +ellps=WGS84 +datum=WGS84 +units=m +no_defs'
+#  # EPSG code for relocations
+#  utm <- '+init=epsg:32736'
 #  
 #  ## Group relocations by julian day
 #  group_times(DT, datetime = 'datetime', threshold = '1 day')
@@ -53,8 +53,8 @@ knitr::opts_chunk$set(message = TRUE,
 #  )
 
 ## ---- eval = FALSE------------------------------------------------------------
-#  # UTM zone for relocations
-#  utm <- '+proj=utm +zone=36 +south +ellps=WGS84 +datum=WGS84 +units=m +no_defs'
+#  # EPSG code for relocations
+#  utm <- '+init=epsg:32736'
 #  
 #  ## Option 1: area = FALSE and home range intersection 'group' column added to DT
 #  group_polys(

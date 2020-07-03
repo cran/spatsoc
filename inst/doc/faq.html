@@ -460,9 +460,17 @@ DT[, c(&#39;idate&#39;, &#39;itime&#39;) := IDateTime(datetime)]
 
 <p>The <code>threshold</code> argument represents a buffer area around each line. When <code>threshold = 0</code>, the lines are grouped by spatial overlap. If the threshold is greater than 0, the lines buffered, then grouped by spatial overlap. </p>
 
-<h3>coords</h3>
+<h3>projection</h3>
 
-<p>The coordinates must be planar, such as UTM (of whichever zone your relocations are in). </p>
+<p>The <code>projection</code> argument expects a character string defining the EPSG code. For example, for UTM zone 21N (EPSG 32736), the projection argument is <code>projection = &quot;+init=epsg:32736&quot;</code>. See \url{<a href="https://spatialreference.org">https://spatialreference.org</a>} for a list of EPSG codes. Please note, R spatial has followed updates to GDAL and PROJ for handling projections, see more at \url{<a href="https://www.r-spatial.org/r/2020/03/17/wkt.html">https://www.r-spatial.org/r/2020/03/17/wkt.html</a>}. </p>
+
+<p>Because of changes to projection handling, <code>group_polys</code>, <code>build_polys</code>, <code>group_lines</code> and <code>build_lines</code> may return the warning once, or many times: </p>
+
+<pre><code>In proj4string(xy) : CRS object has comment, which is lost in output
+Calls: group_polys ... do.call -&gt; &lt;Anonymous&gt; -&gt; proj4string -&gt; proj4string
+</code></pre>
+
+<p>This warning is explicitly verbose, to ensure we are considering the updated use of CRS <a href="https://www.r-spatial.org/r/2020/03/17/wkt.html#crs-objects-in-sp">in <code>sp</code></a> and other spatial packages.  </p>
 
 <h3>sortBy</h3>
 
@@ -493,9 +501,17 @@ DT[, c(&#39;idate&#39;, &#39;itime&#39;) := IDateTime(datetime)]
 
 <!-- direction of proportion -->
 
-<h3>coords</h3>
+<h3>projection</h3>
 
-<p>The coordinates must be planar, such as UTM (of whichever zone your relocations are in). </p>
+<p>The <code>projection</code> argument expects a character string defining the EPSG code. For example, for UTM zone 21N (EPSG 32736), the projection argument is <code>projection = &quot;+init=epsg:32736&quot;</code>. See \url{<a href="https://spatialreference.org">https://spatialreference.org</a>} for a list of EPSG codes. Please note, R spatial has followed updates to GDAL and PROJ for handling projections, see more at \url{<a href="https://www.r-spatial.org/r/2020/03/17/wkt.html">https://www.r-spatial.org/r/2020/03/17/wkt.html</a>}. </p>
+
+<p>Because of changes to projection handling, <code>group_polys</code>, <code>build_polys</code>, <code>group_lines</code> and <code>build_lines</code> may return the warning once, or many times: </p>
+
+<pre><code>In proj4string(xy) : CRS object has comment, which is lost in output
+Calls: group_polys ... do.call -&gt; &lt;Anonymous&gt; -&gt; proj4string -&gt; proj4string
+</code></pre>
+
+<p>This warning is explicitly verbose, to ensure we are considering the updated use of CRS <a href="https://www.r-spatial.org/r/2020/03/17/wkt.html#crs-objects-in-sp">in <code>sp</code></a> and other spatial packages.  </p>
 
 <h3>hrType and hrParams</h3>
 
