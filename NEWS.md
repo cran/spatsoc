@@ -1,4 +1,7 @@
-# v 0.1.14 
+# v 0.1.14 (2020-10-21)
+* fix TZ=UTC data.table tests ([Issue 32](https://github.com/ropensci/spatsoc/issues/32))
+
+# v 0.1.14 (2020-07-03)
 * updated tests, man and vignettes following new handling of projections in sp ([PR 31](https://github.com/ropensci/spatsoc/pull/31), [R spatial information](https://www.r-spatial.org/r/2020/03/17/wkt.html))
 * clarified explicit drop of NAs in dyadID in edge list vignette
 
@@ -44,17 +47,17 @@
 * added "https://" to `pkgdown` URL ([PR 1](https://github.com/ropensci/spatsoc/pull/1))
 
 # v 0.1.4 (2018-10-26)
-* fin [rOpenSci onboarding process](https://github.com/ropensci/onboarding/issues/237)
-* fixed bug couldn't provide percent to kernel type `build_polys` or `group_polys`([!3](https://gitlab.com/robit.a/spatsoc/merge_requests/3))
+* fin [rOpenSci onboarding process](https://github.com/ropensci/software-review/issues/237)
+* fixed bug couldn't provide percent to kernel type `build_polys` or `group_polys`([!3](https://gitlab.com/robit.a/spatsoc/-/merge_requests/3))
 
 
 # v 0.1.3 
-* added `get_gbi` to generate group by individual matrices for better integrating `spatsoc` in social network analysis workflows ([!2](https://gitlab.com/robit.a/spatsoc/merge_requests/2))
+* added `get_gbi` to generate group by individual matrices for better integrating `spatsoc` in social network analysis workflows ([!2](https://gitlab.com/robit.a/spatsoc/-/merge_requests/2))
 
 
 # v 0.1.2
 
-* **major change to randomizations**: when `iterations = 1`, `randomizations` no longer returns the DT with appended columns. Regardless of the value of iterations, `randomizations` always returns observed rows followed by randomized rows in a long `data.table` ([!1](https://gitlab.com/robit.a/spatsoc/merge_requests/1)). 
+* **major change to randomizations**: when `iterations = 1`, `randomizations` no longer returns the DT with appended columns. Regardless of the value of iterations, `randomizations` always returns observed rows followed by randomized rows in a long `data.table` ([!1](https://gitlab.com/robit.a/spatsoc/-/merge_requests/1)). 
 
 # v 0.1.1 (2018-09-17)
 
