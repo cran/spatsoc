@@ -77,7 +77,7 @@ knitr::kable(
 )
 
 ## ----fakegrouplines, echo = TRUE----------------------------------------------
-#  utm <- '+init=epsg:32736'
+#  utm <- 'EPSG:32736'
 #  
 #  group_times(DT = DT, datetime = 'datetime', threshold = '1 day')
 #  group_lines(DT, threshold = 50, projection = utm,
@@ -85,7 +85,7 @@ knitr::kable(
 #              timegroup = 'timegroup', sortBy = 'datetime')
 
 ## ----grouplines, eval = TRUE--------------------------------------------------
-utm <- '+init=epsg:32736'
+utm <- 'EPSG:32736'
 
 DT <- group_times(DT = DT, datetime = 'datetime', 
                 threshold = '1 day')
@@ -98,7 +98,7 @@ knitr::kable(
 )
 
 ## ----fakegrouppolys, echo = TRUE----------------------------------------------
-#  utm <- '+init=epsg:32736'
+#  utm <- 'EPSG:32736'
 #  group_times(DT = DT, datetime = 'datetime', threshold = '8 days')
 #  group_polys(DT = DT, area = TRUE, hrType = 'mcp',
 #             hrParams = list('percent' = 95),
@@ -106,7 +106,7 @@ knitr::kable(
 #             coords = c('X', 'Y'), id = 'ID')
 
 ## ----grouppolys, eval = TRUE--------------------------------------------------
-utm <- '+init=epsg:32736'
+utm <- 'EPSG:32736'
 DT <- group_times(DT = DT, datetime = 'datetime', 
                 threshold = '8 days')
 knitr::kable(

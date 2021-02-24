@@ -480,74 +480,74 @@ DT[, datetime := as.POSIXct(datetime, tz = &#39;UTC&#39;)]
 </tr>
 </thead><tbody>
 <tr>
-<td align="left">I</td>
-<td align="right">715081.3</td>
-<td align="right">5505245</td>
-<td align="left">2016-11-03 02:00:49</td>
+<td align="left">H</td>
+<td align="right">701676.3</td>
+<td align="right">5504820</td>
+<td align="left">2016-11-04 14:00:44</td>
 <td align="right">62</td>
 <td align="right">1</td>
 </tr>
 <tr>
 <td align="left">I</td>
-<td align="right">715119.4</td>
-<td align="right">5505257</td>
-<td align="left">2016-11-03 06:00:24</td>
+<td align="right">715525.9</td>
+<td align="right">5505588</td>
+<td align="left">2016-11-05 00:00:27</td>
 <td align="right">62</td>
 <td align="right">1</td>
 </tr>
 <tr>
-<td align="left">J</td>
-<td align="right">707432.1</td>
-<td align="right">5500457</td>
-<td align="left">2016-11-04 16:00:49</td>
+<td align="left">H</td>
+<td align="right">702144.6</td>
+<td align="right">5504656</td>
+<td align="left">2016-11-05 00:00:41</td>
 <td align="right">62</td>
 <td align="right">1</td>
 </tr>
 <tr>
-<td align="left">I</td>
-<td align="right">712567.2</td>
-<td align="right">5506216</td>
-<td align="left">2016-11-07 00:00:38</td>
+<td align="left">H</td>
+<td align="right">701676.5</td>
+<td align="right">5504814</td>
+<td align="left">2016-11-06 08:00:25</td>
 <td align="right">63</td>
 <td align="right">2</td>
 </tr>
 <tr>
 <td align="left">I</td>
-<td align="right">710883.3</td>
-<td align="right">5506231</td>
-<td align="left">2016-11-07 14:00:41</td>
-<td align="right">63</td>
-<td align="right">2</td>
-</tr>
-<tr>
-<td align="left">J</td>
-<td align="right">705763.1</td>
-<td align="right">5499143</td>
-<td align="left">2016-11-09 00:00:45</td>
+<td align="right">712265.6</td>
+<td align="right">5506159</td>
+<td align="left">2016-11-07 10:00:21</td>
 <td align="right">63</td>
 <td align="right">2</td>
 </tr>
 <tr>
 <td align="left">I</td>
-<td align="right">700010.1</td>
-<td align="right">5506643</td>
-<td align="left">2016-11-11 08:00:10</td>
-<td align="right">64</td>
-<td align="right">3</td>
+<td align="right">708839.6</td>
+<td align="right">5506852</td>
+<td align="left">2016-11-08 16:00:31</td>
+<td align="right">63</td>
+<td align="right">2</td>
 </tr>
 <tr>
-<td align="left">J</td>
-<td align="right">707930.6</td>
-<td align="right">5500106</td>
-<td align="left">2016-11-12 16:00:47</td>
+<td align="left">I</td>
+<td align="right">701202.3</td>
+<td align="right">5504600</td>
+<td align="left">2016-11-14 02:00:06</td>
 <td align="right">64</td>
 <td align="right">3</td>
 </tr>
 <tr>
 <td align="left">I</td>
-<td align="right">701225.6</td>
-<td align="right">5504733</td>
-<td align="left">2016-11-12 22:00:47</td>
+<td align="right">701769.8</td>
+<td align="right">5504378</td>
+<td align="left">2016-11-14 14:00:49</td>
+<td align="right">64</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="right">701970.1</td>
+<td align="right">5503993</td>
+<td align="left">2016-11-14 22:00:41</td>
 <td align="right">64</td>
 <td align="right">3</td>
 </tr>
@@ -640,7 +640,7 @@ group_pts(DT, threshold = 50, id = &#39;ID&#39;, coords = c(&#39;X&#39;, &#39;Y&
 
 <p>The <code>group_lines</code> function groups individuals whose trajectories intersect in a specified time interval. This represents a coarser grouping method than <code>group_pts</code> which can help understand shared space at daily, weekly or other temporal resolutions.</p>
 
-<pre><code class="r">utm &lt;- &#39;+init=epsg:32736&#39;
+<pre><code class="r">utm &lt;- &#39;EPSG:32736&#39;
 
 group_times(DT = DT, datetime = &#39;datetime&#39;, threshold = &#39;1 day&#39;)
 group_lines(DT, threshold = 50, projection = utm, 
@@ -710,7 +710,7 @@ group_lines(DT, threshold = 50, projection = utm,
 
 <p>The <code>group_polys</code> function groups individuals whose home ranges intersect. This represents the coarsest grouping method, to provide a measure of overlap across seasons, years or all available relocations. It can either return the proportion of home range area overlapping between individuals or simple groups. Home ranges are calculated using <code>adehabitatHR::kernelUD</code> or <code>adehabitatHR::mcp</code>. Alternatively, a <code>SpatialPolygonsDataFrame</code> can be input to the <code>spPolys</code> argument.</p>
 
-<pre><code class="r">utm &lt;- &#39;+init=epsg:32736&#39;
+<pre><code class="r">utm &lt;- &#39;EPSG:32736&#39;
 group_times(DT = DT, datetime = &#39;datetime&#39;, threshold = &#39;8 days&#39;)
 group_polys(DT = DT, area = TRUE, hrType = &#39;mcp&#39;,
            hrParams = list(&#39;percent&#39; = 95),

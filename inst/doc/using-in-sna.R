@@ -36,7 +36,7 @@ knitr::opts_chunk$set(message = TRUE,
 
 ## ---- eval = FALSE------------------------------------------------------------
 #  # EPSG code for relocations
-#  utm <- '+init=epsg:32736'
+#  utm <- 'EPSG:32736'
 #  
 #  ## Group relocations by julian day
 #  group_times(DT, datetime = 'datetime', threshold = '1 day')
@@ -54,7 +54,7 @@ knitr::opts_chunk$set(message = TRUE,
 
 ## ---- eval = FALSE------------------------------------------------------------
 #  # EPSG code for relocations
-#  utm <- '+init=epsg:32736'
+#  utm <- 'EPSG:32736'
 #  
 #  ## Option 1: area = FALSE and home range intersection 'group' column added to DT
 #  group_polys(

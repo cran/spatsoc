@@ -1,7 +1,7 @@
 Package: spatsoc
 Title: Group Animal Relocation Data by Spatial and Temporal
         Relationship
-Version: 0.1.15
+Version: 0.1.16
 Authors@R: 
     c(person(given = "Alec L.",
              family = "Robitaille",
@@ -37,10 +37,10 @@ URL: https://docs.ropensci.org/spatsoc/,
         https://github.com/ropensci/spatsoc,
         http://spatsoc.robitalec.ca
 NeedsCompilation: no
-Packaged: 2020-10-21 20:45:57 UTC; alecr
+Packaged: 2021-02-24 02:35:25 UTC; alecr
 Author: Alec L. Robitaille [aut, cre] (<https://orcid.org/0000-0002-4706-1762>),
   Quinn Webber [aut] (<https://orcid.org/0000-0002-0434-9360>),
   Eric Vander Wal [aut] (<https://orcid.org/0000-0002-8534-4317>)
 Maintainer: Alec L. Robitaille <robit.alec@gmail.com>
 Repository: CRAN
-Date/Publication: 2020-10-21 21:30:03 UTC
+Date/Publication: 2021-02-24 06:50:02 UTC

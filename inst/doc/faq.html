@@ -462,7 +462,12 @@ DT[, c(&#39;idate&#39;, &#39;itime&#39;) := IDateTime(datetime)]
 
 <h3>projection</h3>
 
-<p>The <code>projection</code> argument expects a character string defining the EPSG code. For example, for UTM zone 21N (EPSG 32736), the projection argument is <code>projection = &quot;+init=epsg:32736&quot;</code>. See \url{<a href="https://spatialreference.org">https://spatialreference.org</a>} for a list of EPSG codes. Please note, R spatial has followed updates to GDAL and PROJ for handling projections, see more at \url{<a href="https://www.r-spatial.org/r/2020/03/17/wkt.html">https://www.r-spatial.org/r/2020/03/17/wkt.html</a>}. </p>
+<p>The <code>projection</code> argument expects a character string defining the projection to
+be passed to <code>sp::CRS</code>. For example, for UTM zone 36S (EPSG 32736), the projection
+argument is <code>projection = &quot;EPSG:32736&quot;</code>. See \url{<a href="https://spatialreference.org">https://spatialreference.org</a>} 
+for a list of EPSG codes. Please note, R spatial has followed updates to GDAL 
+and PROJ for handling projections, see more at
+\url{<a href="https://www.r-spatial.org/r/2020/03/17/wkt.html">https://www.r-spatial.org/r/2020/03/17/wkt.html</a>}. </p>
 
 <p>Because of changes to projection handling, <code>group_polys</code>, <code>build_polys</code>, <code>group_lines</code> and <code>build_lines</code> may return the warning once, or many times: </p>
 
@@ -503,7 +508,12 @@ Calls: group_polys ... do.call -&gt; &lt;Anonymous&gt; -&gt; proj4string -&gt; p
 
 <h3>projection</h3>
 
-<p>The <code>projection</code> argument expects a character string defining the EPSG code. For example, for UTM zone 21N (EPSG 32736), the projection argument is <code>projection = &quot;+init=epsg:32736&quot;</code>. See \url{<a href="https://spatialreference.org">https://spatialreference.org</a>} for a list of EPSG codes. Please note, R spatial has followed updates to GDAL and PROJ for handling projections, see more at \url{<a href="https://www.r-spatial.org/r/2020/03/17/wkt.html">https://www.r-spatial.org/r/2020/03/17/wkt.html</a>}. </p>
+<p>The <code>projection</code> argument expects a character string defining the projection to be
+passed to <code>sp::CRS</code>. For example, for UTM zone 36S (EPSG 32736), the projection
+argument is <code>projection = &quot;EPSG:32736&quot;</code>. See \url{<a href="https://spatialreference.org">https://spatialreference.org</a>} 
+for a list of EPSG codes. Please note, R spatial has followed updates to GDAL 
+and PROJ for handling projections, see more at
+\url{<a href="https://www.r-spatial.org/r/2020/03/17/wkt.html">https://www.r-spatial.org/r/2020/03/17/wkt.html</a>}.</p>
 
 <p>Because of changes to projection handling, <code>group_polys</code>, <code>build_polys</code>, <code>group_lines</code> and <code>build_lines</code> may return the warning once, or many times: </p>
 

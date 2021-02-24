@@ -4,7 +4,7 @@ library(spatsoc)
 
 DT <- fread('../testdata/DT.csv')
 
-utm <- '+init=epsg:32736'
+utm <- 'EPSG:32736'
 
 DT[, datetime := as.POSIXct(datetime)]
 DT[, jul := data.table::yday(datetime)]
@@ -191,18 +191,6 @@ test_that('threshold is correctly provided, or error', {
       sortBy = 'datetime'
     ),
     'cannot provide a negative threshold'
-  )
-
-  expect_silent(
-    group_lines(
-      DT = copyDT[N > 2],
-      threshold = 0,
-      timegroup = 'timegroup',
-      id = 'ID',
-      coords = c('X', 'Y'),
-      projection = utm,
-      sortBy = 'datetime'
-    )
   )
 
   expect_error(
