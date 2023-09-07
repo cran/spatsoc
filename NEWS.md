@@ -1,4 +1,45 @@
-# v 0.1.16 (in development)
+# v 0.2.1 (2023-08-23)
+
+* fixed CRAN notes [PR 56](https://github.com/ropensci/spatsoc/pull/56)
+
+
+# v 0.2.0 (2023-08-22)
+
+* following [R-spatial evolution](https://r-spatial.org/r/2022/04/12/evolution.html),
+removed dependencies on retired spatial packages (
+[PR 50](https://github.com/ropensci/spatsoc/issues/50):
+[PR 52](https://github.com/ropensci/spatsoc/issues/52),
+[PR 53](https://github.com/ropensci/spatsoc/issues/53),
+[PR 54](https://github.com/ropensci/spatsoc/issues/54)
+[PR 55](https://github.com/ropensci/spatsoc/issues/55))
+  - spatsoc now depends on `sf`, `units` instead of `rgeos` and `sp`
+  - `build_lines` now returns an `sf` LINESTRING object
+  - `build_polys` now returns an `sf` POLYGON/MULTIPOLYGON object
+  - `group_lines` now accepts an input `sf` LINESTRING object (argument "sfLines") 
+  and internally uses `sf::st_intersects`, `sf::st_buffer`, etc instead of `rgeos` functions
+  - `group_polys` now accepts an input `sf` POLYGON/MULTIPOLYGON object (argument "sfPolys") 
+  and internally uses `sf::st_intersects`, `sf::st_area`, etc instead of `rgeos` functions. 
+  `group_polys` now returns area and proportion of overlap when `area = TRUE` with 
+  respective units using the `units` package
+  - tests, vignettes, manual updated
+  - added temporary package startup message until October 2023
+
+  
+# v 0.1.17 (2023-03-16)
+
+* added a link to our `spatsoc` + `targets` workflow example
+* changed the error and underlying check for `group_polys` from alphanumeric to
+spaces in input DT's id column
+* clarify timegroups are required for `group_pts`, `edge_nn` and `edge_dist` ([PR 46](https://github.com/ropensci/spatsoc/pull/46))
+* fix potential mixup between a column named splitBy and splitBy arg ([PR 45](https://github.com/ropensci/spatsoc/pull/45))
+* fix links in man ([PR 47](https://github.com/ropensci/spatsoc/pull/47))
+* fix proportions outside 0-1 due to differences in default units from rgeos::gArea 
+and polys@area ([PR 49](https://github.com/ropensci/spatsoc/pull/49))
+* Add keyword internal by @maelle in https://github.com/ropensci/spatsoc/pull/40
+* Rm unnecessary lines by @maelle in https://github.com/ropensci/spatsoc/pull/43
+
+
+# v 0.1.16 (2021-03-23)
 * added an option for `edge_dist` to handle threshold = NULL. If NULL, `edge_dist` will return all neighbours observed (eg. useful if one wanted to calculated mean nearest neighbour distance at each timegroup). 
 * updated EPSG argument according to newest recommendations in tests, man and vignettes ([PR 38](https://github.com/ropensci/spatsoc/pull/38)
 * removed expect_silent tests ([PR 37](https://github.com/ropensci/spatsoc/pull/37))
@@ -9,7 +50,7 @@
 * fix TZ=UTC data.table tests ([Issue 32](https://github.com/ropensci/spatsoc/issues/32))
 
 # v 0.1.14 (2020-07-03)
-* updated tests, man and vignettes following new handling of projections in sp ([PR 31](https://github.com/ropensci/spatsoc/pull/31), [R spatial information](https://www.r-spatial.org/r/2020/03/17/wkt.html))
+* updated tests, man and vignettes following new handling of projections in sp ([PR 31](https://github.com/ropensci/spatsoc/pull/31), [R spatial information](https://r-spatial.org/r/2020/03/17/wkt.html))
 * clarified explicit drop of NAs in dyadID in edge list vignette
 
 # v 0.1.13 (2020-03-25)
@@ -55,16 +96,16 @@
 
 # v 0.1.4 (2018-10-26)
 * fin [rOpenSci onboarding process](https://github.com/ropensci/software-review/issues/237)
-* fixed bug couldn't provide percent to kernel type `build_polys` or `group_polys`([!3](https://gitlab.com/robit.a/spatsoc/-/merge_requests/3))
+* fixed bug couldn't provide percent to kernel type `build_polys` or `group_polys`([!3](https://gitlab.com/robitalec/spatsoc/-/merge_requests/3))
 
 
 # v 0.1.3 
-* added `get_gbi` to generate group by individual matrices for better integrating `spatsoc` in social network analysis workflows ([!2](https://gitlab.com/robit.a/spatsoc/-/merge_requests/2))
+* added `get_gbi` to generate group by individual matrices for better integrating `spatsoc` in social network analysis workflows ([!2](https://gitlab.com/robitalec/spatsoc/-/merge_requests/2))
 
 
 # v 0.1.2
 
-* **major change to randomizations**: when `iterations = 1`, `randomizations` no longer returns the DT with appended columns. Regardless of the value of iterations, `randomizations` always returns observed rows followed by randomized rows in a long `data.table` ([!1](https://gitlab.com/robit.a/spatsoc/-/merge_requests/1)). 
+* **major change to randomizations**: when `iterations = 1`, `randomizations` no longer returns the DT with appended columns. Regardless of the value of iterations, `randomizations` always returns observed rows followed by randomized rows in a long `data.table` ([!1](https://gitlab.com/robitalec/spatsoc/-/merge_requests/1)). 
 
 # v 0.1.1 (2018-09-17)
 

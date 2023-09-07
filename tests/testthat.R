@@ -1,4 +1,6 @@
 library(testthat)
 library(spatsoc)
-
+library(data.table)
+library(sf)
+data.table::setDTthreads(1)
 test_check("spatsoc")

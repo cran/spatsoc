@@ -4,27 +4,26 @@ knitr::opts_chunk$set(message = TRUE,
                       eval = FALSE, 
                       echo = FALSE)
 
-## ----libs, eval = TRUE, include = FALSE---------------------------------------
-library(spatsoc); library(data.table)
+## ---- eval = TRUE, echo = TRUE------------------------------------------------
+# Load packages
+library(spatsoc)
+library(data.table)
+
+## ---- echo = FALSE, eval = TRUE-----------------------------------------------
+data.table::setDTthreads(1)
+
+## ---- eval = TRUE, echo = TRUE------------------------------------------------
+# Read in spatsoc's example data
 DT <- fread(system.file("extdata", "DT.csv", package = "spatsoc"))
+
+# Use subset of individuals
+DT <- DT[ID %in% c('H', 'I', 'J')]
+
+# Cast character column 'datetime' as POSIXct
 DT[, datetime := as.POSIXct(datetime, tz = 'UTC')]
-
-## ---- echo = TRUE-------------------------------------------------------------
-#  # Load packages
-#  library(spatsoc)
-#  library(data.table)
-#  
-#  # Read in spatsoc's example data
-#  DT <- fread(system.file("extdata", "DT.csv", package = "spatsoc"))
-#  
-#  # Use subset of individuals
-#  DT <- DT[ID %in% c('H', 'I', 'J')]
-#  
-#  # Cast character column 'datetime' as POSIXct
-#  DT[, datetime := as.POSIXct(datetime, tz = 'UTC')]
-
-## ---- eval = TRUE-------------------------------------------------------------
 DT <- DT[ID %chin% c('H', 'I', 'J')]
+
+## ---- eval = TRUE, echo = FALSE-----------------------------------------------
 knitr::kable(DT[, .SD[1:2], ID][order(ID)])
 
 ## ----groupmins, echo = TRUE---------------------------------------------------
@@ -77,7 +76,7 @@ knitr::kable(
 )
 
 ## ----fakegrouplines, echo = TRUE----------------------------------------------
-#  utm <- 'EPSG:32736'
+#  utm <- 32736
 #  
 #  group_times(DT = DT, datetime = 'datetime', threshold = '1 day')
 #  group_lines(DT, threshold = 50, projection = utm,
@@ -85,7 +84,7 @@ knitr::kable(
 #              timegroup = 'timegroup', sortBy = 'datetime')
 
 ## ----grouplines, eval = TRUE--------------------------------------------------
-utm <- 'EPSG:32736'
+utm <- 32736
 
 DT <- group_times(DT = DT, datetime = 'datetime', 
                 threshold = '1 day')
@@ -98,7 +97,7 @@ knitr::kable(
 )
 
 ## ----fakegrouppolys, echo = TRUE----------------------------------------------
-#  utm <- 'EPSG:32736'
+#  utm <- 32736
 #  group_times(DT = DT, datetime = 'datetime', threshold = '8 days')
 #  group_polys(DT = DT, area = TRUE, hrType = 'mcp',
 #             hrParams = list('percent' = 95),
@@ -106,9 +105,8 @@ knitr::kable(
 #             coords = c('X', 'Y'), id = 'ID')
 
 ## ----grouppolys, eval = TRUE--------------------------------------------------
-utm <- 'EPSG:32736'
-DT <- group_times(DT = DT, datetime = 'datetime', 
-                threshold = '8 days')
+utm <- 32736
+DT <- group_times(DT = DT, datetime = 'datetime', threshold = '8 days')
 knitr::kable(
   data.frame(group_polys(
     DT, 

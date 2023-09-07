@@ -10,7 +10,11 @@ knitr::opts_chunk$set(message = TRUE,
 #  library(data.table)
 #  library(asnipe)
 #  library(igraph)
-#  
+
+## ---- echo = FALSE, eval = TRUE-----------------------------------------------
+data.table::setDTthreads(1)
+
+## -----------------------------------------------------------------------------
 #  ## Read data as a data.table
 #  DT <- fread(system.file("extdata", "DT.csv", package = "spatsoc"))
 #  
@@ -36,7 +40,7 @@ knitr::opts_chunk$set(message = TRUE,
 
 ## ---- eval = FALSE------------------------------------------------------------
 #  # EPSG code for relocations
-#  utm <- 'EPSG:32736'
+#  utm <- 32736
 #  
 #  ## Group relocations by julian day
 #  group_times(DT, datetime = 'datetime', threshold = '1 day')
@@ -54,7 +58,7 @@ knitr::opts_chunk$set(message = TRUE,
 
 ## ---- eval = FALSE------------------------------------------------------------
 #  # EPSG code for relocations
-#  utm <- 'EPSG:32736'
+#  utm <- 32736
 #  
 #  ## Option 1: area = FALSE and home range intersection 'group' column added to DT
 #  group_polys(
@@ -147,7 +151,7 @@ knitr::opts_chunk$set(message = TRUE,
 #  )
 
 ## -----------------------------------------------------------------------------
-#  ## Create a data.table of unique combinations of iteration and year, exluding observed rows
+#  ## Create a data.table of unique combinations of iteration and year, excluding observed rows
 #  iterYearLs <- unique(randStep[!(observed), .(iteration, yr)])
 #  
 #  ## Generate group by individual matrix
@@ -172,7 +176,7 @@ knitr::opts_chunk$set(message = TRUE,
 #  ## Generate fake population
 #  randDaily[, population := sample(1:2, .N, replace = TRUE)]
 #  
-#  ## Create a data.table of unique combinations of iteration, year, and population, exluding observed rows
+#  ## Create a data.table of unique combinations of iteration, year, and population, excluding observed rows
 #  iterYearLs <- unique(randStep[!(observed), .(iteration, yr, population)])
 #  
 #  ## Generate group by individual matrix
@@ -205,7 +209,7 @@ knitr::opts_chunk$set(message = TRUE,
 #  group_pts(randTraj, threshold = 50, id = 'ID', coords = c('X', 'Y'),
 #            timegroup = 'timegroup', splitBy = 'iteration')
 #  
-#  ## Create a data.table of unique combinations of iteration and year, exluding observed rows
+#  ## Create a data.table of unique combinations of iteration and year, excluding observed rows
 #  iterYearLs <- unique(randStep[!(observed), .(iteration, yr)])
 #  
 #  ## Generate group by individual matrix

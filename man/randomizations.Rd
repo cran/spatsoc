@@ -103,9 +103,13 @@ value for \code{iterations} with large input \code{DT}.
 \examples{
 # Load data.table
 library(data.table)
+\dontshow{data.table::setDTthreads(1)}
 
 # Read example data
 DT <- fread(system.file("extdata", "DT.csv", package = "spatsoc"))
+
+# Select only individuals A, B, C for this example
+DT <- DT[ID \%in\% c('A', 'B', 'C')]
 
 # Date time columns
 DT[, datetime := as.POSIXct(datetime)]
@@ -153,7 +157,7 @@ randTraj <- randomizations(
 
 }
 \references{
-\url{https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12553}
+\url{doi:10.1111/2041-210X.12553}
 }
 \seealso{
 Other Social network tools: 

@@ -23,4 +23,16 @@
 #' @docType package
 #' @name spatsoc
 #' @aliases spatsoc-package
+#' @keywords internal
 "_PACKAGE"
+
+
+
+.onAttach <- function(libname, pkgname) {
+  packageStartupMessage(
+    'Note: spatsoc has been updated to follow the R-spatial evolution. \n',
+    'Package dependencies and some functions have been modified. \n',
+    'Please see the NEWS for details: \n',
+    'https://docs.ropensci.org/spatsoc/index.html#news'
+  )
+}

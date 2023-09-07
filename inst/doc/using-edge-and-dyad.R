@@ -6,11 +6,15 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-## ---- message = FALSE, warning = FALSE, eval = TRUE---------------------------
+## ---- eval = TRUE-------------------------------------------------------------
 ## Load packages
 library(spatsoc)
 library(data.table)
 
+## ---- echo = FALSE, eval = TRUE-----------------------------------------------
+data.table::setDTthreads(1)
+
+## ---- eval = TRUE-------------------------------------------------------------
 ## Read data as a data.table
 DT <- fread(system.file("extdata", "DT.csv", package = "spatsoc"))
 

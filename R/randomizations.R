@@ -74,7 +74,7 @@
 #' @param iterations The number of iterations to randomize
 #'
 #' @references
-#' \url{https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12553}
+#' <doi:10.1111/2041-210X.12553>
 #' @export
 #'
 #' @family Social network tools
@@ -82,9 +82,13 @@
 #' @examples
 #' # Load data.table
 #' library(data.table)
+#' \dontshow{data.table::setDTthreads(1)}
 #'
 #' # Read example data
 #' DT <- fread(system.file("extdata", "DT.csv", package = "spatsoc"))
+#'
+#' # Select only individuals A, B, C for this example
+#' DT <- DT[ID %in% c('A', 'B', 'C')]
 #'
 #' # Date time columns
 #' DT[, datetime := as.POSIXct(datetime)]
@@ -224,7 +228,7 @@ randomizations <- function(DT = NULL,
   }
 
   repDT <- DT[, .SD, .SDcols = selCols][rep(1:.N, iterations + 1)]
-  repDT[, rowID := .GRP, by = selCols]
+  repDT[, rowID := .GRP, by = c(selCols)]
 
   if (any(repDT[, .N , by = rowID]$N != iterations + 1)) {
     warning('found non-unique rows of id, datetime (and splitBy)')
@@ -264,7 +268,7 @@ randomizations <- function(DT = NULL,
     }
 
 
-    idDays[, randomID := .SD[sample(.N, size = .N)], by = splitBy, .SDcols = id]
+    idDays[, randomID := .SD[sample(.N, size = .N)], by = c(splitBy), .SDcols = id]
     idDays[(observed), randomID := .SD[[1]], .SDcols = id]
 
     return(merge(repDT, idDays, on = splitBy, all = TRUE))
@@ -276,7 +280,7 @@ randomizations <- function(DT = NULL,
       splitBy <- c(id, 'iteration', splitBy)
     }
 
-    idDays[, randomJul := sample(jul, size = .N), by = splitBy]
+    idDays[, randomJul := sample(jul, size = .N), by = c(splitBy)]
 
     merged <- merge(
       x = repDT,

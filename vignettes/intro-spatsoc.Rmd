@@ -24,22 +24,17 @@ The functions were developed for application across animal relocation data, for 
 
 ## Data preparation
 
-```{r libs, eval = TRUE, include = FALSE}
-library(spatsoc); library(data.table)
-DT <- fread(system.file("extdata", "DT.csv", package = "spatsoc"))
-DT[, datetime := as.POSIXct(datetime, tz = 'UTC')]
-```
-
-`spatsoc` expects a `data.table` for all of its functions. If you have a `data.frame`, you can use `data.table::setDT()` to convert it by reference. If your data is a CSV, you can use `data.table::fread()` to import it as a `data.table`. 
-
-The data consist of relocations of `r DT[, uniqueN(ID)]` individuals over `r DT[, max(yday(datetime)) - min(yday(datetime))]` days. Using these data, we can compare the various grouping methods available in `spatsoc`. Note: these examples will use a subset of the data, only individuals H, I and J. 
-
-
-```{r, echo = TRUE}
+```{r, eval = TRUE, echo = TRUE}
 # Load packages
 library(spatsoc)
 library(data.table)
+```
 
+```{r, echo = FALSE, eval = TRUE}
+data.table::setDTthreads(1)
+```
+
+```{r, eval = TRUE, echo = TRUE}
 # Read in spatsoc's example data
 DT <- fread(system.file("extdata", "DT.csv", package = "spatsoc"))
 
@@ -48,12 +43,17 @@ DT <- DT[ID %in% c('H', 'I', 'J')]
 
 # Cast character column 'datetime' as POSIXct
 DT[, datetime := as.POSIXct(datetime, tz = 'UTC')]
+DT <- DT[ID %chin% c('H', 'I', 'J')]
 ```
 
-```{r, eval = TRUE}
-DT <- DT[ID %chin% c('H', 'I', 'J')]
+```{r, eval = TRUE, echo = FALSE}
 knitr::kable(DT[, .SD[1:2], ID][order(ID)])
 ```
+
+
+`spatsoc` expects a `data.table` for all of its functions. If you have a `data.frame`, you can use `data.table::setDT()` to convert it by reference. If your data is a CSV, you can use `data.table::fread()` to import it as a `data.table`. 
+
+The data consist of relocations of `r DT[, uniqueN(ID)]` individuals over `r DT[, max(yday(datetime)) - min(yday(datetime))]` days. Using these data, we can compare the various grouping methods available in `spatsoc`. Note: these examples will use a subset of the data, only individuals H, I and J. 
 
 ## Temporal grouping
 The `group_times` function is used to group relocations temporally. It is flexible to a threshold provided in units of minutes, hours or days. Since GPS fixes taken at regular intervals have some level of variability, we will provide a time threshold (`threshold`), to consider all fixes within this threshold taken at the same time. Alternatively, we may want to understand different scales of grouping, perhaps daily movement trajectories or seasonal home range overlap. 
@@ -126,7 +126,7 @@ knitr::kable(
 The `group_lines` function groups individuals whose trajectories intersect in a specified time interval. This represents a coarser grouping method than `group_pts` which can help understand shared space at daily, weekly or other temporal resolutions.
 
 ```{r fakegrouplines, echo = TRUE}
-utm <- 'EPSG:32736'
+utm <- 32736
 
 group_times(DT = DT, datetime = 'datetime', threshold = '1 day')
 group_lines(DT, threshold = 50, projection = utm, 
@@ -135,7 +135,7 @@ group_lines(DT, threshold = 50, projection = utm,
 ```
 
 ```{r grouplines, eval = TRUE}
-utm <- 'EPSG:32736'
+utm <- 32736
 
 DT <- group_times(DT = DT, datetime = 'datetime', 
                 threshold = '1 day')
@@ -149,10 +149,12 @@ knitr::kable(
 ```
 
 
-The `group_polys` function groups individuals whose home ranges intersect. This represents the coarsest grouping method, to provide a measure of overlap across seasons, years or all available relocations. It can either return the proportion of home range area overlapping between individuals or simple groups. Home ranges are calculated using `adehabitatHR::kernelUD` or `adehabitatHR::mcp`. Alternatively, a `SpatialPolygonsDataFrame` can be input to the `spPolys` argument.
+The `group_polys` function groups individuals whose home ranges intersect. This represents the coarsest grouping method, to provide a measure of overlap across seasons, years or all available relocations. It can either return the proportion of home range area overlapping between individuals or simple groups. Home ranges are calculated using `adehabitatHR::kernelUD` or `adehabitatHR::mcp`. Alternatively, a 
+simple features POLYGON or MULTIPOLYGON object can be provided to the `sfPolys`
+argument along with an id column. 
 
 ```{r fakegrouppolys, echo = TRUE}
-utm <- 'EPSG:32736'
+utm <- 32736
 group_times(DT = DT, datetime = 'datetime', threshold = '8 days')
 group_polys(DT = DT, area = TRUE, hrType = 'mcp',
            hrParams = list('percent' = 95),
@@ -161,9 +163,8 @@ group_polys(DT = DT, area = TRUE, hrType = 'mcp',
 ```
 
 ```{r grouppolys, eval = TRUE}
-utm <- 'EPSG:32736'
-DT <- group_times(DT = DT, datetime = 'datetime', 
-                threshold = '8 days')
+utm <- 32736
+DT <- group_times(DT = DT, datetime = 'datetime', threshold = '8 days')
 knitr::kable(
   data.frame(group_polys(
     DT, 
@@ -212,5 +213,3 @@ knitr::kable(
 
 ## Notes
 Package dependencies for `spatsoc` are `sp`, `rgeos`, `igraph`, `adehabitatHR` and `data.table`. `data.table` provides efficient methods for manipulating large (or small) datasets. As a result, input `DT` for all `spatsoc` functions must be a `data.table` and if it isn't, you can simply use `data.table::setDT(df)` to convert it by reference. 
-
-In addition, since the `rgeos` package is used in most functions (`group_lines` and `group_polys`) the input `DT`'s coordinate system is important. `rgeos` expects planar coordinates and this requirement is carried forward for `spatsoc`. Since `rgeos` is used, system dependencies include `GEOS`. 

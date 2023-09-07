@@ -4,11 +4,15 @@ knitr::opts_chunk$set(message = FALSE,
                       eval = FALSE, 
                       echo = TRUE)
 
-## ---- eval = TRUE, results = 'hide'-------------------------------------------
+## ---- eval = TRUE-------------------------------------------------------------
 # Load packages
 library(spatsoc)
 library(data.table)
 
+## ---- echo = FALSE, eval = TRUE-----------------------------------------------
+data.table::setDTthreads(1)
+
+## ---- eval = TRUE-------------------------------------------------------------
 # Read data as a data.table
 DT <- fread(system.file("extdata", "DT.csv", package = "spatsoc"))
 
@@ -26,9 +30,6 @@ group_pts(
   coords = c('X', 'Y'),
   timegroup = 'timegroup'
 )
-
-## ---- eval = TRUE, echo = FALSE-----------------------------------------------
-knitr::kable(DT[order(group, timegroup)][1:5, .(ID, X, Y, datetime, timegroup, group)])
 
 ## ----posixct------------------------------------------------------------------
 #  DT[, datetime := as.POSIXct(datetime)]
