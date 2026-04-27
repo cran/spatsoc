@@ -20,11 +20,12 @@ randomizations(
 
 \item{type}{one of 'daily', 'step' or 'trajectory' - see details}
 
-\item{id}{Character string of ID column name}
+\item{id}{character string of ID column name}
 
 \item{group}{generated from spatial grouping functions - see details}
 
-\item{coords}{Character vector of X coordinate and Y coordinate column names}
+\item{coords}{character vector of X coordinate and Y coordinate column names.
+Note: the order is assumed X followed by Y column names}
 
 \item{datetime}{field used for providing date time or time group - see
 details}
@@ -55,7 +56,7 @@ day relocations are swapped to. }
 }
 \description{
 \code{randomizations} performs data-stream social network randomization. The
-function accepts a \code{data.table} with relocation data, individual
+function expects a \code{data.table} with relocation data, individual
 identifiers and a randomization \code{type}. The \code{data.table} is
 randomized either using \code{step} or \code{daily} between-individual
 methods, or within-individual daily \code{trajectory} method described by
@@ -64,7 +65,7 @@ Spiegel et al. (2016).
 \details{
 The \code{DT} must be a \code{data.table}. If your data is a
 \code{data.frame}, you can convert it by reference using
-\code{\link[data.table:setDT]{data.table::setDT}}.
+\code{\link[data.table:setDT]{data.table::setDT()}}.
 
 Three randomization \code{type}s are provided: \enumerate{ \item step -
 randomizes identities of relocations between individuals within each time
@@ -92,7 +93,7 @@ randomizations only occur within each year.
 The \code{group} argument is expected only when \code{type} is 'step' or
 'daily'.
 
-For example, using \code{\link[data.table:IDateTime]{data.table::year}}:
+For example, using \code{\link[data.table:IDateTime]{data.table::year()}}:
 
 \preformatted{ DT[, yr := year(datetime)] randomizations(DT, type = 'step',
 id = 'ID', datetime = 'timegroup', splitBy = 'yr') }
@@ -119,7 +120,8 @@ DT[, yr := year(datetime)]
 group_times(DT, datetime = 'datetime', threshold = '5 minutes')
 
 # Spatial grouping with timegroup
-group_pts(DT, threshold = 5, id = 'ID', coords = c('X', 'Y'), timegroup = 'timegroup')
+group_pts(DT, threshold = 5, id = 'ID',
+          coords = c('X', 'Y'), timegroup = 'timegroup')
 
 # Randomization: step
 randStep <- randomizations(

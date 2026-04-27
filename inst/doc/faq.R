@@ -4,15 +4,15 @@ knitr::opts_chunk$set(message = FALSE,
                       eval = FALSE, 
                       echo = TRUE)
 
-## ---- eval = TRUE-------------------------------------------------------------
+## ----eval = TRUE--------------------------------------------------------------
 # Load packages
 library(spatsoc)
 library(data.table)
 
-## ---- echo = FALSE, eval = TRUE-----------------------------------------------
+## ----echo = FALSE, eval = TRUE------------------------------------------------
 data.table::setDTthreads(1)
 
-## ---- eval = TRUE-------------------------------------------------------------
+## ----eval = TRUE--------------------------------------------------------------
 # Read data as a data.table
 DT <- fread(system.file("extdata", "DT.csv", package = "spatsoc"))
 
@@ -32,70 +32,70 @@ group_pts(
 )
 
 ## ----posixct------------------------------------------------------------------
-#  DT[, datetime := as.POSIXct(datetime)]
-#  DT[, c('idate', 'itime') := IDateTime(datetime)]
+# DT[, datetime := as.POSIXct(datetime)]
+# DT[, c('idate', 'itime') := IDateTime(datetime)]
 
 ## -----------------------------------------------------------------------------
-#  group_polys(
-#    DT,
-#    area = FALSE,
-#    projection = utm,
-#    hrType = 'mcp',
-#    hrParams = list(grid = 60, percent = 95),
-#    id = 'ID',
-#    coords = c('X', 'Y')
-#  )
+# group_polys(
+#   DT,
+#   area = FALSE,
+#   crs = utm,
+#   hrType = 'mcp',
+#   hrParams = list(grid = 60, percent = 95),
+#   id = 'ID',
+#   coords = c('X', 'Y')
+# )
 
 ## ----setdt--------------------------------------------------------------------
-#  if (truelength(DT) == 0) {
-#    setDT(DT)
-#  }
-#  # then go to spatsoc
-#  group_times(DT, datetime = 'datetime', threshold = '5 minutes')
+# if (truelength(DT) == 0) {
+#   setDT(DT)
+# }
+# # then go to spatsoc
+# group_times(DT, datetime = 'datetime', threshold = '5 minutes')
 
 ## ----alloc--------------------------------------------------------------------
-#  DT <- readRDS('path/to/data.Rds')
-#  alloc.col(DT)
+# DT <- readRDS('path/to/data.Rds')
+# alloc.col(DT)
 
 ## -----------------------------------------------------------------------------
-#  # Number of unique individuals
-#  DT[, uniqueN(ID)]
-#  
-#  # Number of unique individuals by timegroup
-#  DT[, uniqueN(ID), by = timegroup]
+# # Number of unique individuals
+# DT[, uniqueN(ID)]
+# 
+# # Number of unique individuals by timegroup
+# DT[, uniqueN(ID), by = timegroup]
 
 ## -----------------------------------------------------------------------------
-#  # Min, max datetime
-#  DT[, range(datetime)]
-#  
-#  # Difference between relocations in hours
-#  DT[order(datetime),
-#     .(difHours = as.numeric(difftime(datetime, shift(datetime), units = 'hours'))),
-#     by = ID]
-#  
-#  # Difference between relocations in hours
-#  DT[order(datetime),
-#     .(difMins = as.numeric(difftime(datetime, shift(datetime), units = 'mins'))),
-#     by = ID]
+# # Min, max datetime
+# DT[, range(datetime)]
+# 
+# # Difference between relocations in hours
+# DT[order(datetime),
+#    .(difHours = as.numeric(difftime(datetime, shift(datetime), units = 'hours'))),
+#    by = ID]
+# 
+# # Difference between relocations in hours
+# DT[order(datetime),
+#    .(difMins = as.numeric(difftime(datetime, shift(datetime), units = 'mins'))),
+#    by = ID]
 
 ## -----------------------------------------------------------------------------
-#  # All individuals
-#  DT[, .(minX = min(X),
-#         maxX = max(X),
-#         minY = min(Y),
-#         maxY = max(Y),)]
-#  
-#  # By individual
-#  DT[, .(minX = min(X),
-#         maxX = max(X),
-#         minY = min(Y),
-#         maxY = max(Y),),
-#     by = ID]
+# # All individuals
+# DT[, .(minX = min(X),
+#        maxX = max(X),
+#        minY = min(Y),
+#        maxY = max(Y),)]
+# 
+# # By individual
+# DT[, .(minX = min(X),
+#        maxX = max(X),
+#        minY = min(Y),
+#        maxY = max(Y),),
+#    by = ID]
 
 ## -----------------------------------------------------------------------------
-#  # Number of unique individuals by timegroup
-#  DT[, uniqueN(ID), by = timegroup]
-#  
-#  # Number of unique individuals by group
-#  DT[, uniqueN(ID), by = group]
+# # Number of unique individuals by timegroup
+# DT[, uniqueN(ID), by = timegroup]
+# 
+# # Number of unique individuals by group
+# DT[, uniqueN(ID), by = group]
 

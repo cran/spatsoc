@@ -3,72 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Using spatsoc in social network analysis - grouping functions</title>
-<style type="text/css">
-/**
- * Prism.s theme ported from highlight.js's xcode style
- */
-pre code {
-  padding: 1em;
-}
-.token.comment {
-  color: #007400;
-}
-.token.punctuation {
-  color: #999;
-}
-.token.tag,
-.token.selector {
-  color: #aa0d91;
-}
-.token.boolean,
-.token.number,
-.token.constant,
-.token.symbol {
-  color: #1c00cf;
-}
-.token.property,
-.token.attr-name,
-.token.string,
-.token.char,
-.token.builtin {
-  color: #c41a16;
-}
-.token.inserted {
-  background-color: #ccffd8;
-}
-.token.deleted {
-  background-color: #ffebe9;
-}
-.token.operator,
-.token.entity,
-.token.url,
-.language-css .token.string,
-.style .token.string {
-  color: #9a6e3a;
-}
-.token.atrule,
-.token.attr-value,
-.token.keyword {
-  color: #836c28;
-}
-.token.function,
-.token.class-name {
-  color: #DD4A68;
-}
-.token.regex,
-.token.important,
-.token.variable {
-  color: #5c2699;
-}
-.token.important,
-.token.bold {
-  font-weight: bold;
-}
-.token.italic {
-  font-style: italic;
-}
-</style>
+<meta name="generator" content="litedown 0.9">
+<title>Using spatsoc in social network analysis</title>
 <style type="text/css">
 body {
   font-family: sans-serif;
@@ -76,78 +12,112 @@ body {
   margin: auto;
   padding: 1em;
   line-height: 1.5;
-  box-sizing: border-box;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
 }
-body, .footnotes, code { font-size: .9em; }
+body, .abstract, code, .footnotes, footer, #refs, .caption { font-size: .9em; }
 li li { font-size: .95em; }
-*, *:before, *:after {
-  box-sizing: inherit;
-}
+ul:has(li > input[type="checkbox"]) { list-style: none; padding-left: 1em; }
+*, :before, :after { box-sizing: border-box; }
+a { color: steelblue; }
 pre, img { max-width: 100%; }
-pre, pre:hover {
-  white-space: pre-wrap;
-  word-break: break-all;
-}
-pre code {
-  display: block;
-  overflow-x: auto;
-}
+pre { white-space: pre-wrap; word-break: break-word; }
+pre code { display: block; padding: 1em; overflow-x: auto; }
 code { font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace; }
-:not(pre) > code, code[class] { background-color: #F8F8F8; }
-code.language-undefined, pre > code:not([class]) {
-  background-color: inherit;
-  border: 1px solid #eee;
+:not(pre, th) > code, code[class], div > .caption { background: #f8f8f8; }
+pre > code:is(:not([class]), .language-plain, .language-none, .plain), .box, .figure, .table { background: inherit; border: 1px solid #eee; }
+pre > code {
+  &.message { border-color: #9eeaf9; }
+  &.warning { background: #fff3cd; border-color: #fff3cd; }
+  &.error { background: #f8d7da; border-color: #f8d7da; }
 }
+.fenced-chunk { border-left: 1px solid #666; }
+.code-fence {
+  opacity: .4;
+  border: 1px dashed #666;
+  border-left: 2px solid;
+  &:hover { opacity: inherit; }
+}
+.box, .figure, .table, table { margin: 1em auto; }
+div > .caption { padding: 1px 1em; }
+.figure { p:has(img, svg), pre:has(svg) { text-align: center; } }
+.flex-col { display: flex; justify-content: space-between; }
 table {
-  margin: auto;
-  border-top: 1px solid #666;
+  &:only-child:not(.table > *) { margin: auto; }
+  th, td { padding: 5px; font-variant-numeric: tabular-nums; }
+  thead, tfoot, tr:nth-child(even) { background: whitesmoke; }
+  thead th { border-bottom: 1px solid #ddd; }
+  &:not(.datatable-table) {
+    border-top: 1px solid #666;
+    border-bottom: 1px solid #666;
+  }
 }
-table thead th { border-bottom: 1px solid #ddd; }
-th, td { padding: 5px; }
-thead, tfoot, tr:nth-child(even) { background: #eee; }
 blockquote {
   color: #666;
   margin: 0;
-  padding-left: 1em;
-  border-left: 0.5em solid #eee;
+  padding: 1px 1em;
+  border-left: .5em solid #eee;
 }
 hr, .footnotes::before { border: 1px dashed #ddd; }
 .frontmatter { text-align: center; }
-#TOC .numbered li { list-style: none; }
-#TOC .numbered { padding-left: 0; }
-#TOC .numbered ul { padding-left: 1em; }
-table, .body h2 { border-bottom: 1px solid #666; }
+#TOC {
+  a { text-decoration: none; }
+  ul { list-style: none; padding-left: 1em; }
+  & > ul { padding: 0; }
+  ul ul { border-left: 1px solid lightsteelblue; }
+}
+.body h2 { border-bottom: 1px solid #666; }
 .body .appendix, .appendix ~ h2 { border-bottom-style: dashed; }
-.footnote-ref a::before { content: "["; }
-.footnote-ref a::after { content: "]"; }
-.footnotes::before {
-  content: "";
-  display: block;
-  max-width: 20em;
+.main-number::after { content: "."; }
+span[class^="ref-number-"] { font-weight: bold; }
+.ref-number-fig::after, .ref-number-tab::after { content: ":"; }
+.cross-ref-chp::before { content: "Chapter "; }
+.cross-ref-sec::before { content: "Section "; }
+.cross-ref-fig::before, .ref-number-fig::before { content: "Figure "; }
+.cross-ref-tab::before, .ref-number-tab::before { content: "Table "; }
+.cross-ref-eqn::before, .MathJax_ref:has(mjx-mtext > mjx-c + mjx-c)::before { content: "Equation "; }
+.abstract, #refs {
+  &::before { display: block; margin: 1em auto; font-weight: bold; }
+}
+.abstract::before { content: "Abstract"; text-align: center; }
+#refs::before { content: "Bibliography"; font-size: 1.5em; }
+.ref-paren-open::before { content: "("; }
+.ref-paren-close::after { content: ")"; }
+.ref-semicolon::after { content: "; "; }
+.ref-and::after { content: " and "; }
+.ref-et-al::after { content: " et al."; font-style: italic; }
+.footnote-ref a {
+  &::before { content: "["; }
+  &::after { content: "]"; }
+}
+section.footnotes {
+  margin-top: 2em;
+  &::before { content: ""; display: block; max-width: 20em; }
+}
+.fade {
+  background: repeating-linear-gradient(135deg, white, white 30px, #ddd 32px, #ddd 32px);
+  opacity: 0.6;
 }
 
 @media print {
-  body {
-    font-size: 12pt;
-    max-width: 100%;
-  }
-  tr, img { page-break-inside: avoid; }
+  body { max-width: 100%; }
+  tr, img { break-inside: avoid; }
 }
 @media only screen and (min-width: 992px) {
-  pre { white-space: pre; }
+  body:not(.pagesjs) pre:has(.line-numbers):not(:hover) { white-space: pre; }
 }
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xiee/utils@1.14.14/css/prism-xcode.min.css">
 </head>
 <body>
-<div class="include-before">
-</div>
 <div class="frontmatter">
-<div class="title"><h1>Using spatsoc in social network analysis - grouping functions</h1></div>
-<div class="author"><h2>Alec Robitaille, Quinn Webber and Eric Vander Wal</h2></div>
-<div class="date"><h3>2023-09-07</h3></div>
+<div class="title"><h1>Using spatsoc in social network analysis</h1></div>
+<div class="author"><h2>Alec L. Robitaille, Quinn Webber and Eric Vander Wal</h2></div>
 </div>
 <div class="body">
-<p><code>spatsoc</code> can be used in social network analysis to generate gambit of the group format data from GPS relocation data, perform data stream randomization and generate group by individual matrices.</p>
+<p><code>spatsoc</code> can be used in social network analysis to generate gambit of the group
+format data from GPS relocation data, perform data stream randomization and
+generate group by individual matrices.</p>
 <p>Gambit of the group format data is generated using the grouping functions:</p>
 <ul>
 <li><code>group_times</code></li>
@@ -155,13 +125,66 @@ table, .body h2 { border-bottom: 1px solid #666; }
 <li><code>group_lines</code></li>
 <li><code>group_polys</code></li>
 </ul>
-<p>Data stream randomization is performed using the <code>randomizations</code> function.</p>
-<p>Group by individual matrices are generated using the <code>get_gbi</code> function.</p>
-<p><strong>Note</strong>: edge list generating functions are also available and are described in the vignette <a href="https://docs.ropensci.org/spatsoc/articles/using-edge-and-dyad.html">Using edge list generating functions and dyad_id</a>.</p>
-<h1 id="generate-gambit-of-the-group-data">Generate gambit of the group data</h1>
-<p>spatsoc provides users with one temporal (<code>group_times</code>) and three spatial (<code>group_pts</code>, <code>group_lines</code>, <code>group_polys</code>) functions to generate gambit of the group data from GPS relocations. Users can consider spatial grouping at three different scales combined with an appropriate temporal grouping threshold. The gambit of the group data is then used to generate a group by individual matrix and build the network.</p>
-<h2 id="1-load-packages-and-prepare-data">1. Load packages and prepare data</h2>
-<p><code>spatsoc</code> expects a <code>data.table</code> for all <code>DT</code> arguments and date time columns to be formatted <code>POSIXct</code>.</p>
+<p>Data stream randomization is performed using the <code>randomizations</code> function. Group
+by individual matrices are generated using the <code>get_gbi</code> function.</p>
+<hr />
+<p>See the other vignettes for further information:</p>
+<ul>
+<li><a href="https://docs.ropensci.org/spatsoc/articles/intro.html">Introduction to spatsoc</a>
+<ul>
+<li>temporal grouping</li>
+<li>spatiotemporal grouping with <code>group_pts</code>, <code>group_lines</code>, <code>group_polys</code></li>
+<li>distance based edge-list generation with <code>edge_dist</code></li>
+</ul>
+</li>
+<li><a href="https://docs.ropensci.org/spatsoc/articles/faq.html">Frequently asked questions about spatsoc</a>
+<ul>
+<li>install</li>
+<li>function details for <code>group_times</code>, <code>group_pts</code>, <code>group_lines</code>, <code>group_polys</code>,
+<code>edge_dist</code>, <code>edge_nn</code>, and <code>randomizations</code></li>
+<li>package design including modify-by-reference, data.table column allocation</li>
+<li>calculating summary information</li>
+</ul>
+</li>
+<li><a href="https://docs.ropensci.org/spatsoc/articles/using-in-sna.html">Using spatsoc in social network analysis</a>
+<ul>
+<li>generating gambit-of-the-group data</li>
+<li>generating observed networks</li>
+<li>data stream randomization, randomized networks</li>
+<li>network metrics</li>
+</ul>
+</li>
+<li><a href="https://docs.ropensci.org/spatsoc/articles/using-edge-and-dyad.html">Using distance based edge-lists generating functions, dyad_id, and fusion_id</a>
+<ul>
+<li>generate distance based edge-lists with <code>edge_dist</code> and <code>edge_nn</code></li>
+<li>generate dyad identifiers for edge-lists with <code>dyad_id</code></li>
+<li>identify fusion events with <code>fusion_id</code></li>
+</ul>
+</li>
+<li><a href="https://docs.ropensci.org/spatsoc/articles/geometry-interface-and-spatial-measures.html">Geometry interface</a>
+<ul>
+<li>using <code>get_geometry</code> to setup a geometry column and use the geometry interface</li>
+<li>details of underlying distance, direction and centroid spatial measures</li>
+<li>converting to and from related packages</li>
+</ul>
+</li>
+<li><a href="https://docs.ropensci.org/spatsoc/articles/interspecific-interactions.html">Interspecific interactions</a>
+<ul>
+<li>combine two movement datasets</li>
+<li>identify interspecific interactions</li>
+</ul>
+</li>
+</ul>
+<h1 id="chp:generate-gambit-of-the-group-data">Generate gambit of the group data</h1>
+<p>spatsoc provides users with one temporal (<code>group_times</code>) and three spatial
+(<code>group_pts</code>, <code>group_lines</code>, <code>group_polys</code>) functions to generate gambit of the
+group data from GPS relocations. Users can consider spatial grouping at three
+different scales combined with an appropriate temporal grouping threshold. The
+gambit of the group data is then used to generate a group by individual matrix
+and build the network.</p>
+<h2 id="sec:1-load-packages-and-prepare-data">1. Load packages and prepare data</h2>
+<p><code>spatsoc</code> expects a <code>data.table</code> for all <code>DT</code> arguments and date time columns to
+be formatted <code>POSIXct</code>.</p>
 <pre><code class="language-r">## Load packages
 library(spatsoc)
 library(data.table)
@@ -177,9 +200,14 @@ DT[, datetime := as.POSIXct(datetime)]
 ## Calculate the year of the relocation 
 DT[, yr := year(datetime)]
 </code></pre>
-<p>Next, we will group relocations temporally with <code>group_times</code> and spatially with one of <code>group_pts</code>, <code>group_lines</code>, <code>group_polys</code>. Note: these are mutually exclusive, only select one spatial grouping function at a time.</p>
-<h2 id="2-a-group-pts">2. a) <code>group_pts</code></h2>
-<p>Point based grouping by calculating distance between relocations in each timegroup. Depending on species and study system, relevant temporal and spatial grouping thresholds are used. In this case, relocations within 5 minutes and 50 meters are grouped together.</p>
+<p>Next, we will group relocations temporally with <code>group_times</code> and spatially with
+one of <code>group_pts</code>, <code>group_lines</code>, <code>group_polys</code>. Note: these are mutually
+exclusive, only select one spatial grouping function at a time.</p>
+<h2 id="sec:2-a-group-pts">2. a) <code>group_pts</code></h2>
+<p>Point based grouping by calculating distance between relocations in each
+timegroup. Depending on species and study system, relevant temporal and spatial
+grouping thresholds are used. In this case, relocations within 5 minutes and 50
+meters are grouped together.</p>
 <pre><code class="language-r">## Temporal groups
 group_times(DT, datetime = 'datetime', threshold = '5 minutes')
 
@@ -192,8 +220,10 @@ group_pts(
   timegroup = 'timegroup'
 )
 </code></pre>
-<h2 id="2-b-group-lines">2. b) <code>group_lines</code></h2>
-<p>Line based grouping by measuring intersection of, optionally buffered, trajectories for each individual in each timegroup. Longer temporal thresholds are used to measure, for example, intersecting daily trajectories.</p>
+<h2 id="sec:2-b-group-lines">2. b) <code>group_lines</code></h2>
+<p>Line based grouping by measuring intersection of, optionally buffered,
+trajectories for each individual in each timegroup. Longer temporal thresholds
+are used to measure, for example, intersecting daily trajectories.</p>
 <pre><code class="language-r"># EPSG code for relocations
 utm &lt;- 32736
 
@@ -204,15 +234,17 @@ group_times(DT, datetime = 'datetime', threshold = '1 day')
 group_lines(
   DT,
   threshold = 50,
-  projection = utm,
+  crs = utm,
   id = 'ID',
   coords = c('X', 'Y'),
   timegroup = 'timegroup',
   sortBy = 'datetime'
 )
 </code></pre>
-<h2 id="2-c-group-polys">2. c) <code>group_polys</code></h2>
-<p>Polygon based grouping by generating home ranges using <code>adehabitatHR</code> and measuring intersection or proportional overlap. Longer temporal thresholds are used to create seasonal, monthly, yearly home ranges.</p>
+<h2 id="sec:2-c-group-polys">2. c) <code>group_polys</code></h2>
+<p>Polygon based grouping by generating home ranges using <code>adehabitatHR</code> and
+measuring intersection or proportional overlap. Longer temporal thresholds are
+used to create seasonal, monthly, yearly home ranges.</p>
 <pre><code class="language-r"># EPSG code for relocations
 utm &lt;- 32736
 
@@ -222,7 +254,7 @@ group_polys(
   area = FALSE,
   hrType = 'mcp',
   hrParams = list(percent = 95),
-  projection = utm,
+  crs = utm,
   id = 'ID',
   coords = c('X', 'Y')
 )
@@ -235,16 +267,24 @@ areaDT &lt;- group_polys(
   area = TRUE,
   hrType = 'mcp',
   hrParams = list(percent = 95),
-  projection = utm,
+  crs = utm,
   id = 'ID',
   coords = c('X', 'Y')
 )
 </code></pre>
-<h1 id="build-observed-network">Build observed network</h1>
-<p>Once we’ve generated groups using <code>group_times</code> and one of the spatial grouping functions, we can generate a group by individual matrix.</p>
-<p>The following code chunk showing <code>get_gbi</code> can be used for outputs from any of <code>group_pts</code>, <code>group_lines</code> or <code>group_polys(area = FALSE)</code>. For the purpose of this vignette however, we will consider the outputs from <code>group_pts</code> (<a href="#a-group_pts">2. a)</a>) for the following code chunk.</p>
-<p>Note: we show this example creating the group by individual matrix and network for only 2016 to illustrate how <code>spatsoc</code> can be used for simpler data with no splitting of temporal or spatial subgroups (e.g.: yearly, population). See the random network section for how to use <code>spatsoc</code> in social network analysis for multi-year or other complex data.</p>
-<h2 id="3-get-gbi">3. <code>get_gbi</code></h2>
+<h1 id="chp:build-observed-network">Build observed network</h1>
+<p>Once we’ve generated groups using <code>group_times</code> and one of the spatial grouping
+functions, we can generate a group by individual matrix.</p>
+<p>The following code chunk showing <code>get_gbi</code> can be used for outputs from any of
+<code>group_pts</code>, <code>group_lines</code> or <code>group_polys(area = FALSE)</code>. For the purpose of
+this vignette however, we will consider the outputs from <code>group_pts</code> (<a href="#a-group_pts">2.
+a)</a>) for the following code chunk.</p>
+<p>Note: we show this example creating the group by individual matrix and network
+for only 2016 to illustrate how <code>spatsoc</code> can be used for simpler data with no
+splitting of temporal or spatial subgroups (e.g.: yearly, population). See the
+random network section for how to use <code>spatsoc</code> in social network analysis for
+multi-year or other complex data.</p>
+<h2 id="sec:3-get-gbi">3. <code>get_gbi</code></h2>
 <pre><code class="language-r">## Subset DT to only year 2016
 subDT &lt;- DT[yr == 2016]
 
@@ -252,33 +292,50 @@ subDT &lt;- DT[yr == 2016]
 # group column generated by spatsoc::group_pts
 gbiMtrx &lt;- get_gbi(DT = subDT, group = 'group', id = 'ID')
 </code></pre>
-<p>Note: <code>spatsoc::get_gbi</code> is identical in function to <code>asnipe::get_group_by_individual</code>, but is more efficient (some benchmarks measuring &gt;10x improvements) thanks to <code>data.table::dcast</code>.</p>
-<h2 id="4-asnipe-get-network">4. <code>asnipe::get_network</code></h2>
-<p>Next, we can use <code>asnipe::get_network</code> to build the observed social network. Ensure that the argument “data_format” is “GBI”. Use other arguments that are relevant to your analysis, here we calculate a Simple ratio index.</p>
+<p>Note: <code>spatsoc::get_gbi</code> is identical in function to
+<code>asnipe::get_group_by_individual</code>, but is more efficient (some benchmarks
+measuring &gt;10x improvements) thanks to <code>data.table::dcast</code>.</p>
+<h2 id="sec:4-asnipe-get-network">4. <code>asnipe::get_network</code></h2>
+<p>Next, we can use <code>asnipe::get_network</code> to build the observed social network.
+Ensure that the argument “data_format” is “GBI”. Use other arguments that are
+relevant to your analysis, here we calculate a Simple ratio index.</p>
 <pre><code class="language-r">## Generate observed network
 net &lt;- get_network(gbiMtrx,
                    data_format = &quot;GBI&quot;,
                    association_index = &quot;SRI&quot;)
 </code></pre>
-<h1 id="data-stream-randomization">Data stream randomization</h1>
-<p>Three types of data stream randomization are provided by <code>spatsoc</code>’s <code>randomizations</code> function:</p>
+<h1 id="chp:data-stream-randomization">Data stream randomization</h1>
+<p>Three types of data stream randomization are provided by <code>spatsoc</code>’s
+<code>randomizations</code> function:</p>
 <ul>
 <li>step: randomizes identities of relocations between individuals within each time step.</li>
 <li>daily: randomizes identities of relocations between individuals within each day.</li>
-<li>trajectory: randomizes daily trajectories within individuals (<a href="https://doi.org/10.1111/2041-210X.12553">Spiegel et al. 2016</a>).</li>
+<li>trajectory: randomizes daily trajectories within individuals
+(<a href="https://doi.org/10.1111/2041-210X.12553">Spiegel et al. 2016</a>).</li>
 </ul>
-<p>The results of <code>randomizations</code> must be assigned. The function returns the <code>id</code> and <code>datetime</code> columns provided (and anything provided to <code>splitBy</code>). In addition, columns ‘observed’ and ‘iteration’ are returned indicating observed rows and which iteration rows correspond to (where 0 is the observed).</p>
-<p>As with spatial grouping functions, these methods are mutually exclusive. Pick one <code>type</code> and rebuild the network after randomization.</p>
-<p>Note: the <code>coords</code> argument is only required for trajectory type randomization, since after randomizing with this method, the ‘coords’ are needed to redo spatial grouping (with <code>group_pts</code>, <code>group_lines</code> or <code>group_polys</code>).</p>
-<h2 id="5-a-type-step">5. a) <code>type = 'step'</code></h2>
-<p><code>'step'</code> randomizes identities of relocations between individuals within each time step. The <code>datetime</code> argument expects an integer group generated by <code>group_times</code>. The <code>group</code> argument expects the column name of the group generated from the spatial grouping functions.</p>
-<p>Four columns are returned when <code>type = 'step'</code> along with <code>id</code>, <code>datetime</code> and <code>splitBy</code> columns:</p>
+<p>The results of <code>randomizations</code> must be assigned. The function returns the <code>id</code>
+and <code>datetime</code> columns provided (and anything provided to <code>splitBy</code>). In
+addition, columns ‘observed’ and ‘iteration’ are returned indicating observed
+rows and which iteration rows correspond to (where 0 is the observed).</p>
+<p>As with spatial grouping functions, these methods are mutually exclusive. Pick
+one <code>type</code> and rebuild the network after randomization.</p>
+<p>Note: the <code>coords</code> argument is only required for trajectory type randomization,
+since after randomizing with this method, the ‘coords’ are needed to redo
+spatial grouping (with <code>group_pts</code>, <code>group_lines</code> or <code>group_polys</code>).</p>
+<h2 id="sec:5-a-type-step">5. a) <code>type = 'step'</code></h2>
+<p><code>'step'</code> randomizes identities of relocations between individuals within each
+time step. The <code>datetime</code> argument expects an integer group generated by
+<code>group_times</code>. The <code>group</code> argument expects the column name of the group
+generated from the spatial grouping functions.</p>
+<p>Four columns are returned when <code>type = 'step'</code> along with <code>id</code>, <code>datetime</code> and
+<code>splitBy</code> columns:</p>
 <ul>
 <li>‘randomID’ - randomly selected ID from IDs within each time step</li>
 <li>‘observed’ - observed rows (TRUE/FALSE)</li>
 <li>‘iteration’ - which iteration rows correspond to (0 is observed)</li>
 </ul>
-<pre><code class="language-r"># Calculate year column to ensure randomization only occurs within years since data spans multiple years
+<pre><code class="language-r"># Calculate year column to ensure randomization only occurs within years
+#   since data spans multiple years
 DT[, yr := year(datetime)]
 
 ## Step type randomizations
@@ -295,16 +352,19 @@ randStep &lt;- randomizations(
    splitBy = 'yr'
 )
 </code></pre>
-<h2 id="5-b-type-daily">5. b) <code>type = 'daily'</code></h2>
-<p><code>'daily'</code> randomizes identities of relocations between individuals within each day. The <code>datetime</code> argument expects a datetime <code>POSIXct</code> format column.</p>
-<p>Four columns are returned when <code>type = 'daily'</code> along with <code>id</code>, <code>datetime</code> and <code>splitBy</code> columns:</p>
+<h2 id="sec:5-b-type-daily">5. b) <code>type = 'daily'</code></h2>
+<p><code>'daily'</code> randomizes identities of relocations between individuals within each
+day. The <code>datetime</code> argument expects a datetime <code>POSIXct</code> format column.</p>
+<p>Four columns are returned when <code>type = 'daily'</code> along with <code>id</code>, <code>datetime</code> and
+<code>splitBy</code> columns:</p>
 <ul>
 <li>‘randomID’ - randomly selected ID for each day</li>
 <li>‘jul’ - julian day</li>
 <li>‘observed’ - observed rows (TRUE/FALSE)</li>
 <li>‘iteration’ - which iteration rows correspond to (0 is observed)</li>
 </ul>
-<pre><code class="language-r"># Calculate year column to ensure randomization only occurs within years since data spans multiple years
+<pre><code class="language-r"># Calculate year column to ensure randomization only occurs within years 
+#   since data spans multiple years
 DT[, yr := year(datetime)]
 
 ## Daily type randomizations
@@ -320,17 +380,23 @@ randDaily &lt;- randomizations(
    iterations = 20
 )
 </code></pre>
-<h2 id="5-c-type-trajectory">5. c) <code>type = 'trajectory'</code></h2>
-<p><code>'trajectory'</code> randomizes daily trajectories within individuals (<a href="https://doi.org/10.1111/2041-210X.12553">Spiegel et al. 2016</a>). The <code>datetime</code> argument expects a datetime <code>POSIXct</code> format column.</p>
-<p>Five columns are returned when <code>type = 'trajectory'</code> along with <code>id</code>, <code>datetime</code> and <code>splitBy</code> columns:</p>
+<h2 id="sec:5-c-type-trajectory">5. c) <code>type = 'trajectory'</code></h2>
+<p><code>'trajectory'</code> randomizes daily trajectories within individuals
+(<a href="https://doi.org/10.1111/2041-210X.12553">Spiegel et al. 2016</a>).
+The <code>datetime</code> argument expects
+a datetime <code>POSIXct</code> format column.</p>
+<p>Five columns are returned when <code>type = 'trajectory'</code> along with <code>id</code>, <code>datetime</code>
+and <code>splitBy</code> columns:</p>
 <ul>
 <li>random date time (“random” prefixed to <em>datetime</em> argument)</li>
 <li>‘jul’ - observed julian day</li>
 <li>‘observed’ - observed rows (TRUE/FALSE)</li>
 <li>‘iteration’ - which iteration rows correspond to (0 is observed)</li>
-<li>‘randomJul’ - random julian day relocations are swapped to from observed julian day</li>
+<li>‘randomJul’ - random julian day relocations are swapped to from observed
+julian day</li>
 </ul>
-<pre><code class="language-r"># Calculate year column to ensure randomization only occurs within years since data spans multiple years
+<pre><code class="language-r"># Calculate year column to ensure randomization only occurs within years 
+#   since data spans multiple years
 DT[, yr := year(datetime)]
 
 ## Trajectory type randomization
@@ -345,13 +411,22 @@ randTraj &lt;- randomizations(
    iterations = 20
 )
 </code></pre>
-<h1 id="build-random-network">Build random network</h1>
-<p>Once we’ve randomized the data stream with <code>randomizations</code>, we can build the random network.</p>
-<p>We will use the <code>get_gbi</code> function directly when <code>type</code> is either ‘step’ or ‘daily’. For <code>type = 'trajectory'</code>, we will recalculate spatial groups with one of <code>group_pts</code>, <code>group_lines</code>, <code>group_polys</code> for the randomized data. In this case, the example shows <code>group_pts</code>.</p>
-<p>Since we want to create a group by individual matrix for each random iteration (and in this case, each year), we will use <code>mapply</code> to work on subsets of the randomized data.</p>
-<p>Note: building the random networks depends on the <code>type</code> used and therefore, the following chunks are mutually exclusive. Use the one that corresponds to the randomization type you used above.</p>
-<h2 id="6-a-type-step">6. a) <code>type = 'step'</code></h2>
-<p><code>randomizations</code> with <code>type = 'step'</code> returns a ‘randomID’ which should be used instead of the observed ‘ID’ to generate the group by individual matrix.</p>
+<h1 id="chp:build-random-network">Build random network</h1>
+<p>Once we’ve randomized the data stream with <code>randomizations</code>, we can build the
+random network.</p>
+<p>We will use the <code>get_gbi</code> function directly when <code>type</code> is either ‘step’ or
+‘daily’. For <code>type = 'trajectory'</code>, we will recalculate spatial groups with one
+of <code>group_pts</code>, <code>group_lines</code>, <code>group_polys</code> for the randomized data. In this
+case, the example shows <code>group_pts</code>.</p>
+<p>Since we want to create a group by individual matrix for each random iteration
+(and in this case, each year), we will use <code>mapply</code> to work on subsets of the
+randomized data.</p>
+<p>Note: building the random networks depends on the <code>type</code> used and therefore, the
+following chunks are mutually exclusive. Use the one that corresponds to the
+randomization type you used above.</p>
+<h2 id="sec:6-a-type-step">6. a) <code>type = 'step'</code></h2>
+<p><code>randomizations</code> with <code>type = 'step'</code> returns a ‘randomID’ which should be used
+instead of the observed ‘ID’ to generate the group by individual matrix.</p>
 <p>After <code>get_gbi</code>, we use <code>asnipe::get_network</code> to build the random network.</p>
 <pre><code class="language-r">## Create a data.table of unique combinations of iteration and year, excluding observed rows
 iterYearLs &lt;- unique(randStep[!(observed), .(iteration, yr)])
@@ -373,14 +448,17 @@ gbiLs &lt;- mapply(FUN = function(i, y) {
 netLs &lt;- lapply(gbiLs, FUN = get_network,
                 data_format = &quot;GBI&quot;, association_index = &quot;SRI&quot;)
 </code></pre>
-<h2 id="6-b-type-daily">6. b) <code>type = 'daily'</code></h2>
-<p><code>randomizations</code> with <code>type = 'step'</code> returns a ‘randomID’ which should be used instead of the observed ‘ID’ to generate the group by individual matrix.</p>
+<h2 id="sec:6-b-type-daily">6. b) <code>type = 'daily'</code></h2>
+<p><code>randomizations</code> with <code>type = 'step'</code> returns a ‘randomID’ which should be used
+instead of the observed ‘ID’ to generate the group by individual matrix.</p>
 <p>After <code>get_gbi</code>, we use <code>asnipe::get_network</code> to build the random network.</p>
-<p>In this case, we will generate a fake column representing a “population” to show how we can translate the <code>mapply</code> chunk above to three (or more variables).</p>
+<p>In this case, we will generate a fake column representing a “population” to show
+how we can translate the <code>mapply</code> chunk above to three (or more variables).</p>
 <pre><code class="language-r">## Generate fake population
 randDaily[, population := sample(1:2, .N, replace = TRUE)]
 
-## Create a data.table of unique combinations of iteration, year, and population, excluding observed rows
+## Create a data.table of unique combinations of iteration, year, and population, 
+#    excluding observed rows
 iterYearLs &lt;- unique(randStep[!(observed), .(iteration, yr, population)])
 
 ## Generate group by individual matrix 
@@ -402,9 +480,12 @@ gbiLs &lt;- mapply(FUN = function(i, y, p) {
 netLs &lt;- lapply(gbiLs, FUN = get_network,
                 data_format = &quot;GBI&quot;, association_index = &quot;SRI&quot;)
 </code></pre>
-<h2 id="6-c-type-trajectory">6. c) <code>type = 'trajectory'</code></h2>
-<p><code>randomizations</code> with <code>type = 'trajectory'</code> returns a random date time which should be used instead of the observed date time to generate random gambit of the group data.</p>
-<p>First, we pass the randomized data to <code>group_times</code> using the random date time for <code>datetime</code>.</p>
+<h2 id="sec:6-c-type-trajectory">6. c) <code>type = 'trajectory'</code></h2>
+<p><code>randomizations</code> with <code>type = 'trajectory'</code> returns a random date time which
+should be used instead of the observed date time to generate random gambit of
+the group data.</p>
+<p>First, we pass the randomized data to <code>group_times</code> using the random date time
+for <code>datetime</code>.</p>
 <p>After <code>get_gbi</code>, we use <code>asnipe::get_network</code> to build the random network.</p>
 <pre><code class="language-r">## Randomized temporal groups
 # 'datetime' is the randomdatetime produced by randomizations(type = 'trajectory')
@@ -435,10 +516,13 @@ gbiLs &lt;- mapply(FUN = function(i, y) {
 netLs &lt;- lapply(gbiLs, FUN = get_network,
                 data_format = &quot;GBI&quot;, association_index = &quot;SRI&quot;)
 </code></pre>
-<h1 id="network-metrics">Network metrics</h1>
-<p>Finally, we can calculate some network metrics. Please note that there are many ways of interpreting, analyzing and measuring networks, so this will simply show one option.</p>
-<h2 id="7-calculate-observed-network-metrics">7. Calculate observed network metrics</h2>
-<p>To calculate observed network metrics, use the network (<code>net</code>) produced in <a href="#asnipeget_network">4.</a> from 2016 data.</p>
+<h1 id="chp:network-metrics">Network metrics</h1>
+<p>Finally, we can calculate some network metrics. Please note that there are many
+ways of interpreting, analyzing and measuring networks, so this will simply show
+one option.</p>
+<h2 id="sec:7-calculate-observed-network-metrics">7. Calculate observed network metrics</h2>
+<p>To calculate observed network metrics, use the network (<code>net</code>) produced in
+<a href="#asnipeget_network">4.</a> from 2016 data.</p>
 <pre><code class="language-r">## Generate graph
 g &lt;- graph.adjacency(net, 'undirected', 
                      diag = FALSE, weighted = TRUE)
@@ -452,9 +536,12 @@ observed &lt;- data.table(
   yr = subDT[, unique(yr)]
 )
 </code></pre>
-<h2 id="8-calculate-random-network-metrics">8. Calculate random network metrics</h2>
-<p>With the list of random networks from <a href="#build-random-network">6.</a>, we can generate a list of graphs with <code>igraph::graph.adjacency</code> (for example) and calculate random network metrics.</p>
-<p>This example uses the <code>netLs</code> generated by <a href="#a-type-step-1">6. a)</a> which was split by year and iteration.</p>
+<h2 id="sec:8-calculate-random-network-metrics">8. Calculate random network metrics</h2>
+<p>With the list of random networks from <a href="#build-random-network">6.</a>, we can
+generate a list of graphs with <code>igraph::graph.adjacency</code> (for example) and
+calculate random network metrics.</p>
+<p>This example uses the <code>netLs</code> generated by <a href="#a-type-step-1">6. a)</a> which was
+split by year and iteration.</p>
 <pre><code class="language-r">## Generate graph and calculate network metrics
 mets &lt;- lapply(seq_along(netLs), function(n) {
   g &lt;- graph.adjacency(netLs[[n]], 'undirected', 
@@ -477,10 +564,16 @@ random &lt;- rbindlist(mets)
 meanMets &lt;- random[, lapply(.SD, mean), by = .(ID, yr),
                 .SDcols = c('centrality', 'strength', 'degree')]
 </code></pre>
-<h2 id="9-compare-observed-and-random-metrics">9. Compare observed and random metrics</h2>
-<p>Instead of calculating observed and random metrics separately (shown in <a href="#calculate-observed-network-metrics">7.</a> and <a href="#calculate-random-network-metrics">8.</a>), we can calculate metrics for both at the same time and compare.</p>
+<h2 id="sec:9-compare-observed-and-random-metrics">9. Compare observed and random metrics</h2>
+<p>Instead of calculating observed and random metrics separately (shown in
+<a href="#calculate-observed-network-metrics">7.</a> and
+<a href="#calculate-random-network-metrics">8.</a>), we can calculate metrics for both at
+the same time and compare.</p>
 <p>This chunk expects the outputs from <a href="#a-type-step">5. a)</a>, skipping steps 6.-8.</p>
-<p>Note: by removing the <code>!(observed)</code> subset from <code>randStep</code> performed in <a href="#a-type-step-1">6. a)</a>, we will include observed rows where <code>iteration == 0</code>. This will return a <code>gbiLs</code> where the observed and random rows are included in the same <code>data.table</code>.</p>
+<p>Note: by removing the <code>!(observed)</code> subset from <code>randStep</code> performed in <a href="#a-type-step-1">6.
+a)</a>, we will include observed rows where <code>iteration == 0</code>. This
+will return a <code>gbiLs</code> where the observed and random rows are included in the
+same <code>data.table</code>.</p>
 <pre><code class="language-r">## Create a data.table of unique combinations of iteration and year, including observed and random rows
 iterYearLs &lt;- unique(randStep[, .(iteration, yr)])
 
@@ -525,8 +618,6 @@ out[, observed := ifelse(iteration == 0, TRUE, FALSE)]
 meanMets &lt;- out[, lapply(.SD, mean), by = .(ID, yr, observed),
                 .SDcols = c('centrality', 'strength')]
 </code></pre>
-</div>
-<div class="include-after">
 </div>
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>

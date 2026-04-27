@@ -10,9 +10,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+<meta name="author" content="Alec L. Robitaille, Quinn Webber and Eric Vander Wal" />
 
 
-<title>Using edge list generating functions and dyad_id</title>
+<title>Using distance based edge-list generating functions, dyad_id and fusion_id</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -48,6 +49,7 @@ overflow: visible;
 }
 </style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -336,31 +338,109 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">Using edge list generating functions and
-dyad_id</h1>
+<h1 class="title toc-ignore">Using distance based edge-list generating
+functions, dyad_id and fusion_id</h1>
+<h4 class="author">Alec L. Robitaille, Quinn Webber and Eric Vander
+Wal</h4>
 
 
+<div id="TOC">
+<ul>
+<li><a href="#generate-edge-lists" id="toc-generate-edge-lists"><span class="toc-section-number">1</span> Generate edge-lists</a>
+<ul>
+<li><a href="#load-packages-and-prepare-data" id="toc-load-packages-and-prepare-data"><span class="toc-section-number">1.1</span> 1. Load packages and prepare
+data</a></li>
+<li><a href="#a-edge_dist" id="toc-a-edge_dist"><span class="toc-section-number">1.2</span> 2. a)
+<code>edge_dist</code></a></li>
+<li><a href="#b-edge_nn" id="toc-b-edge_nn"><span class="toc-section-number">1.3</span> 2. b)
+<code>edge_nn</code></a></li>
+</ul></li>
+<li><a href="#dyads" id="toc-dyads"><span class="toc-section-number">2</span> Dyads</a>
+<ul>
+<li><a href="#dyad_id" id="toc-dyad_id"><span class="toc-section-number">2.1</span> 3. <code>dyad_id</code></a></li>
+</ul></li>
+<li><a href="#fusion-events" id="toc-fusion-events"><span class="toc-section-number">3</span> Fusion events</a>
+<ul>
+<li><a href="#fusion_id" id="toc-fusion_id"><span class="toc-section-number">3.1</span> 4. <code>fusion_id</code></a></li>
+</ul></li>
+</ul>
+</div>
 
 <p><code>spatsoc</code> can be used in social network analysis to
-generate edge lists from GPS relocation data.</p>
-<p>Edge lists are generated using either the <code>edge_dist</code> or
-the <code>edge_nn</code> function.</p>
-<p><strong>Note</strong>: The grouping functions and their application
-in social network analysis are further described in the vignette <a href="https://docs.ropensci.org/spatsoc/articles/using-in-sna.html">Using
-spatsoc in social network analysis - grouping functions</a>.</p>
-<div id="generate-edge-lists" class="section level2">
-<h2>Generate edge lists</h2>
+generate distance based edge-lists from GPS relocation data using either
+the <code>edge_dist</code> or the <code>edge_nn</code> function.</p>
+<hr />
+<p>See the other vignettes for further information:</p>
+<ul>
+<li><a href="https://docs.ropensci.org/spatsoc/articles/intro.html">Introduction
+to spatsoc</a>
+<ul>
+<li>temporal grouping</li>
+<li>spatiotemporal grouping with <code>group_pts</code>,
+<code>group_lines</code>, <code>group_polys</code></li>
+<li>distance based edge-list generation with <code>edge_dist</code></li>
+</ul></li>
+<li><a href="https://docs.ropensci.org/spatsoc/articles/faq.html">Frequently
+asked questions about spatsoc</a>
+<ul>
+<li>install</li>
+<li>function details for <code>group_times</code>,
+<code>group_pts</code>, <code>group_lines</code>,
+<code>group_polys</code>, <code>edge_dist</code>, <code>edge_nn</code>,
+and <code>randomizations</code></li>
+<li>package design including modify-by-reference, data.table column
+allocation</li>
+<li>calculating summary information</li>
+</ul></li>
+<li><a href="https://docs.ropensci.org/spatsoc/articles/using-in-sna.html">Using
+spatsoc in social network analysis</a>
+<ul>
+<li>generating gambit-of-the-group data</li>
+<li>generating observed networks</li>
+<li>data stream randomization, randomized networks</li>
+<li>network metrics</li>
+</ul></li>
+<li><a href="https://docs.ropensci.org/spatsoc/articles/using-edge-and-dyad.html">Using
+distance based edge-lists generating functions, dyad_id, and
+fusion_id</a>
+<ul>
+<li>generate distance based edge-lists with <code>edge_dist</code> and
+<code>edge_nn</code></li>
+<li>generate dyad identifiers for edge-lists with
+<code>dyad_id</code></li>
+<li>identify fusion events with <code>fusion_id</code></li>
+</ul></li>
+<li><a href="https://docs.ropensci.org/spatsoc/articles/geometry-interface-and-spatial-measures.html">Geometry
+interface</a>
+<ul>
+<li>using <code>get_geometry</code> to setup a geometry column and use
+the geometry interface</li>
+<li>details of underlying distance, direction and centroid spatial
+measures</li>
+<li>converting to and from related packages</li>
+</ul></li>
+<li><a href="https://docs.ropensci.org/spatsoc/articles/interspecific-interactions.html">Interspecific
+interactions</a>
+<ul>
+<li>combine two movement datasets</li>
+<li>identify interspecific interactions</li>
+</ul></li>
+</ul>
+<div id="generate-edge-lists" class="section level2" number="1">
+<h2><span class="header-section-number">1</span> Generate
+edge-lists</h2>
 <p>spatsoc provides users with one temporal (<code>group_times</code>)
-and two edge list generating functions (<code>edge_dist</code>,
-<code>edge_nn</code>) to generate edge lists from GPS relocations. Users
-can consider edges defined by either the spatial proximity between
-individuals (with <code>edge_dist</code>), by nearest neighbour (with
-<code>edge_nn</code>) or by nearest neighbour with a maximum distance
-(with <code>edge_nn</code>). The edge lists can be used directly by the
-animal social network package <code>asnipe</code> to generate
-networks.</p>
-<div id="load-packages-and-prepare-data" class="section level3">
-<h3>1. Load packages and prepare data</h3>
+and two distance based edge-list generating functions
+(<code>edge_dist</code>, <code>edge_nn</code>) to generate edge-lists
+from GPS relocations. Users can consider edges defined by either the
+spatial proximity between individuals (with <code>edge_dist</code>), by
+nearest neighbour (with <code>edge_nn</code>) or by nearest neighbour
+with a maximum distance (with <code>edge_nn</code>). The edge-lists can
+be used directly by the animal social network package
+<code>asnipe</code> to generate networks.</p>
+<div id="load-packages-and-prepare-data" class="section level3" number="1.1">
+<h3><span class="header-section-number">1.1</span> 1. Load packages and
+prepare data</h3>
 <p><code>spatsoc</code> expects a <code>data.table</code> for all
 <code>DT</code> arguments and date time columns to be formatted
 <code>POSIXct</code>.</p>
@@ -375,11 +455,12 @@ networks.</p>
 <p>Next, we will group relocations temporally with
 <code>group_times</code> and generate edges lists with one of
 <code>edge_dist</code>, <code>edge_dist</code>. Note: these are mutually
-exclusive, only select one edge list generating function at a time.</p>
+exclusive, only select one edge-list generating function at a time.</p>
 </div>
-<div id="a-edge_dist" class="section level3">
-<h3>2. a) <code>edge_dist</code></h3>
-<p>Distance based edge lists where relocations in each timegroup are
+<div id="a-edge_dist" class="section level3" number="1.2">
+<h3><span class="header-section-number">1.2</span> 2. a)
+<code>edge_dist</code></h3>
+<p>Distance based edge-lists where relocations in each timegroup are
 considered edges if they are within the spatial distance defined by the
 user with the <code>threshold</code> argument. Depending on species and
 study system, relevant temporal and spatial distance thresholds are
@@ -395,35 +476,37 @@ individuals (less than the threshold) in a column named ‘distance’ with
 argument <code>returnDist = TRUE</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Temporal groups</span></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">group_times</span>(DT, <span class="at">datetime =</span> <span class="st">&#39;datetime&#39;</span>, <span class="at">threshold =</span> <span class="st">&#39;5 minutes&#39;</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt;        ID        X       Y            datetime population minutes timegroup</span></span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt;     1:  A 715851.4 5505340 2016-11-01 00:00:54          1       0         1</span></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt;     2:  A 715822.8 5505289 2016-11-01 02:01:22          1       0         2</span></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt;     3:  A 715872.9 5505252 2016-11-01 04:01:24          1       0         3</span></span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt;     4:  A 715820.5 5505231 2016-11-01 06:01:05          1       0         4</span></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt;     5:  A 715830.6 5505227 2016-11-01 08:01:11          1       0         5</span></span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt;    ---                                                                     </span></span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; 14293:  J 700616.5 5509069 2017-02-28 14:00:54          1       0      1393</span></span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; 14294:  J 700622.6 5509065 2017-02-28 16:00:11          1       0      1394</span></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; 14295:  J 700657.5 5509277 2017-02-28 18:00:55          1       0      1449</span></span>
-<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; 14296:  J 700610.3 5509269 2017-02-28 20:00:48          1       0      1395</span></span>
-<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; 14297:  J 700744.0 5508782 2017-02-28 22:00:39          1       0      1396</span></span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co"># Edge list generation</span></span>
-<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">edge_dist</span>(</span>
-<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>  DT,</span>
-<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a>  <span class="at">threshold =</span> <span class="dv">100</span>,</span>
-<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a>  <span class="at">id =</span> <span class="st">&#39;ID&#39;</span>,</span>
-<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">&#39;X&#39;</span>, <span class="st">&#39;Y&#39;</span>),</span>
-<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a>  <span class="at">timegroup =</span> <span class="st">&#39;timegroup&#39;</span>,</span>
-<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a>  <span class="at">returnDist =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a>  <span class="at">fillNA =</span> <span class="cn">TRUE</span></span>
-<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a>)</span></code></pre></div>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt;            ID        X       Y            datetime population minutes timegroup</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt;        &lt;char&gt;    &lt;num&gt;   &lt;num&gt;              &lt;POSc&gt;      &lt;int&gt;   &lt;int&gt;     &lt;int&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt;     1:      A 715851.4 5505340 2016-11-01 00:00:54          1       0         1</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt;     2:      A 715822.8 5505289 2016-11-01 02:01:22          1       0         2</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt;     3:      A 715872.9 5505252 2016-11-01 04:01:24          1       0         3</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt;     4:      A 715820.5 5505231 2016-11-01 06:01:05          1       0         4</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt;     5:      A 715830.6 5505227 2016-11-01 08:01:11          1       0         5</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt;    ---                                                                         </span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; 14293:      J 700616.5 5509069 2017-02-28 14:00:54          1       0      1393</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; 14294:      J 700622.6 5509065 2017-02-28 16:00:11          1       0      1394</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; 14295:      J 700657.5 5509277 2017-02-28 18:00:55          1       0      1449</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; 14296:      J 700610.3 5509269 2017-02-28 20:00:48          1       0      1395</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; 14297:      J 700744.0 5508782 2017-02-28 22:00:39          1       0      1396</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co"># Edge-list generation</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">edge_dist</span>(</span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a>  DT,</span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a>  <span class="at">threshold =</span> <span class="dv">100</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a>  <span class="at">id =</span> <span class="st">&#39;ID&#39;</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">&#39;X&#39;</span>, <span class="st">&#39;Y&#39;</span>),</span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a>  <span class="at">timegroup =</span> <span class="st">&#39;timegroup&#39;</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a>  <span class="at">returnDist =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a>  <span class="at">fillNA =</span> <span class="cn">TRUE</span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a>)</span></code></pre></div>
 </div>
-<div id="b-edge_nn" class="section level3">
-<h3>2. b) <code>edge_nn</code></h3>
-<p>Nearest neighbour based edge lists where each individual is connected
+<div id="b-edge_nn" class="section level3" number="1.3">
+<h3><span class="header-section-number">1.3</span> 2. b)
+<code>edge_nn</code></h3>
+<p>Nearest neighbour based edge-lists where each individual is connected
 to their nearest neighbour. <code>edge_nn</code> can be used to generate
-edge lists defined either by nearest neighbour or nearest neighbour with
+edge-lists defined either by nearest neighbour or nearest neighbour with
 a maximum distance. As with grouping functions and
 <code>edge_dist</code>, temporal and spatial threshold depend on species
 and study system.</p>
@@ -436,7 +519,7 @@ argument <code>returnDist = TRUE</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># Temporal groups</span></span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">group_times</span>(DT, <span class="at">datetime =</span> <span class="st">&#39;datetime&#39;</span>, <span class="at">threshold =</span> <span class="st">&#39;5 minutes&#39;</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co"># Edge list generation</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co"># Edge-list generation</span></span>
 <span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">edge_nn</span>(</span>
 <span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  DT,</span>
 <span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  <span class="at">id =</span> <span class="st">&#39;ID&#39;</span>,</span>
@@ -444,7 +527,7 @@ argument <code>returnDist = TRUE</code>.</p>
 <span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>  <span class="at">timegroup =</span> <span class="st">&#39;timegroup&#39;</span></span>
 <span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>)</span>
 <span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co"># Edge list generation using maximum distance threshold</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co"># Edge-list generation using maximum distance threshold</span></span>
 <span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">edge_nn</span>(</span>
 <span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>  DT, </span>
 <span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>  <span class="at">id =</span> <span class="st">&#39;ID&#39;</span>, </span>
@@ -453,7 +536,7 @@ argument <code>returnDist = TRUE</code>.</p>
 <span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>  <span class="at">threshold =</span> <span class="dv">100</span></span>
 <span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>)</span>
 <span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a></span>
-<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co"># Edge list generation using maximum distance threshold, returning distances</span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co"># Edge-list generation using maximum distance threshold, returning distances</span></span>
 <span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">edge_nn</span>(</span>
 <span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a>  DT, </span>
 <span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a>  <span class="at">id =</span> <span class="st">&#39;ID&#39;</span>, </span>
@@ -464,109 +547,97 @@ argument <code>returnDist = TRUE</code>.</p>
 <span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a>)</span></code></pre></div>
 </div>
 </div>
-<div id="dyads" class="section level2">
-<h2>Dyads</h2>
-<div id="dyad_id" class="section level3">
-<h3>3. <code>dyad_id</code></h3>
+<div id="dyads" class="section level2" number="2">
+<h2><span class="header-section-number">2</span> Dyads</h2>
+<div id="dyad_id" class="section level3" number="2.1">
+<h3><span class="header-section-number">2.1</span> 3.
+<code>dyad_id</code></h3>
 <p>The function <code>dyad_id</code> can be used to generate a unique,
-undirected dyad identifier for edge lists.</p>
+undirected dyad identifier for edge-lists.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># In this case, using the edges generated in 2. a) edge_dist</span></span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">dyad_id</span>(edges, <span class="at">id1 =</span> <span class="st">&#39;ID1&#39;</span>, <span class="at">id2 =</span> <span class="st">&#39;ID2&#39;</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt;        timegroup ID1  ID2  distance dyadID</span></span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt;     1:         1   A &lt;NA&gt;        NA   &lt;NA&gt;</span></span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt;     2:         1   B    G  5.782904    B-G</span></span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt;     3:         1   C &lt;NA&gt;        NA   &lt;NA&gt;</span></span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt;     4:         1   D &lt;NA&gt;        NA   &lt;NA&gt;</span></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt;     5:         1   E    H 65.061671    E-H</span></span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt;    ---                                    </span></span>
-<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt; 22942:      1457   G &lt;NA&gt;        NA   &lt;NA&gt;</span></span>
-<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt; 22943:      1458   H &lt;NA&gt;        NA   &lt;NA&gt;</span></span>
-<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt; 22944:      1459   I &lt;NA&gt;        NA   &lt;NA&gt;</span></span>
-<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; 22945:      1460   J &lt;NA&gt;        NA   &lt;NA&gt;</span></span>
-<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; 22946:      1461   J &lt;NA&gt;        NA   &lt;NA&gt;</span></span></code></pre></div>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; Key: &lt;timegroup, ID1&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt;        timegroup    ID1    ID2  distance dyadID</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt;            &lt;int&gt; &lt;char&gt; &lt;char&gt;     &lt;num&gt; &lt;char&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt;     1:         1      A   &lt;NA&gt;        NA   &lt;NA&gt;</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt;     2:         1      B      G  5.782904    B-G</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt;     3:         1      C   &lt;NA&gt;        NA   &lt;NA&gt;</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt;     4:         1      D   &lt;NA&gt;        NA   &lt;NA&gt;</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt;     5:         1      E      H 65.061671    E-H</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt;    ---                                         </span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt; 22942:      1457      G   &lt;NA&gt;        NA   &lt;NA&gt;</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; 22943:      1458      H   &lt;NA&gt;        NA   &lt;NA&gt;</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; 22944:      1459      I   &lt;NA&gt;        NA   &lt;NA&gt;</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; 22945:      1460      J   &lt;NA&gt;        NA   &lt;NA&gt;</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; 22946:      1461      J   &lt;NA&gt;        NA   &lt;NA&gt;</span></span></code></pre></div>
 <p>Once we have generated dyad ids, we can measure consecutive
 relocations, start and end relocation, etc. <strong>Note:</strong> since
 the edges are duplicated A-B and B-A, you will need to use the unique
 timegroup*dyadID or divide counts by 2.</p>
 </div>
-<div id="dyad-stats" class="section level3">
-<h3>4. Dyad stats</h3>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># Get the unique dyads by timegroup</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: we are explicitly selecting only where dyadID is not NA</span></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>dyads <span class="ot">&lt;-</span> <span class="fu">unique</span>(edges[<span class="sc">!</span><span class="fu">is.na</span>(dyadID)], <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&#39;timegroup&#39;</span>, <span class="st">&#39;dyadID&#39;</span>))</span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: if we wanted to also include where dyadID is NA, we should do it explicitly</span></span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co"># dyadNN &lt;- unique(DT[!is.na(NN)], by = c(&#39;timegroup&#39;, &#39;dyadID&#39;))</span></span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co"># Get where NN was NA</span></span>
-<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co"># dyadNA &lt;- DT[is.na(NN)]</span></span>
-<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a></span>
-<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co"># Combine where NN is NA</span></span>
-<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co"># dyads &lt;- rbindlist(list(dyadNN, dyadNA))</span></span>
-<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a></span>
-<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a></span>
-<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co"># Set the order of the rows</span></span>
-<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="fu">setorder</span>(dyads, timegroup)</span>
-<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a></span>
-<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="do">## Count number of timegroups dyads are observed together</span></span>
-<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>dyads[, nObs <span class="sc">:=</span> .N, by <span class="ot">=</span> .(dyadID)]</span>
-<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a></span>
-<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="do">## Count consecutive relocations together</span></span>
-<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co"># Shift the timegroup within dyadIDs</span></span>
-<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a>dyads[, shifttimegrp <span class="sc">:=</span> <span class="fu">shift</span>(timegroup, <span class="dv">1</span>), by <span class="ot">=</span>  dyadID]</span>
-<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a></span>
-<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a><span class="co"># Difference between consecutive timegroups for each dyadID</span></span>
-<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co"># where difftimegrp == 1, the dyads remained together in consecutive timegroups</span></span>
-<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a>dyads[, difftimegrp <span class="sc">:=</span> timegroup <span class="sc">-</span> shifttimegrp]</span>
-<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a></span>
-<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a></span>
-<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a><span class="co"># Run id of diff timegroups</span></span>
-<span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a>dyads[, runid <span class="sc">:=</span> <span class="fu">rleid</span>(difftimegrp), by <span class="ot">=</span> dyadID]</span>
-<span id="cb6-32"><a href="#cb6-32" tabindex="-1"></a></span>
-<span id="cb6-33"><a href="#cb6-33" tabindex="-1"></a><span class="co"># N consecutive observations of dyadIDs</span></span>
-<span id="cb6-34"><a href="#cb6-34" tabindex="-1"></a>dyads[, runCount <span class="sc">:=</span> <span class="fu">fifelse</span>(difftimegrp <span class="sc">==</span> <span class="dv">1</span>, .N, <span class="cn">NA_integer_</span>), by <span class="ot">=</span> .(runid, dyadID)]</span>
-<span id="cb6-35"><a href="#cb6-35" tabindex="-1"></a></span>
-<span id="cb6-36"><a href="#cb6-36" tabindex="-1"></a><span class="do">## Start and end of consecutive relocations for each dyad</span></span>
-<span id="cb6-37"><a href="#cb6-37" tabindex="-1"></a><span class="co"># Dont consider where runs aren&#39;t more than one relocation</span></span>
-<span id="cb6-38"><a href="#cb6-38" tabindex="-1"></a>dyads[runCount <span class="sc">&gt;</span> <span class="dv">1</span>, start <span class="sc">:=</span> <span class="fu">fifelse</span>(timegroup <span class="sc">==</span> <span class="fu">min</span>(timegroup), <span class="cn">TRUE</span>, <span class="cn">FALSE</span>), by <span class="ot">=</span> .(runid, dyadID)]</span>
-<span id="cb6-39"><a href="#cb6-39" tabindex="-1"></a></span>
-<span id="cb6-40"><a href="#cb6-40" tabindex="-1"></a>dyads[runCount <span class="sc">&gt;</span> <span class="dv">1</span>, end <span class="sc">:=</span> <span class="fu">fifelse</span>(timegroup <span class="sc">==</span> <span class="fu">max</span>(timegroup), <span class="cn">TRUE</span>, <span class="cn">FALSE</span>), by <span class="ot">=</span> .(runid, dyadID)]</span>
-<span id="cb6-41"><a href="#cb6-41" tabindex="-1"></a></span>
-<span id="cb6-42"><a href="#cb6-42" tabindex="-1"></a><span class="do">## Example output</span></span>
-<span id="cb6-43"><a href="#cb6-43" tabindex="-1"></a>dyads[dyadID <span class="sc">==</span> <span class="st">&#39;B-H&#39;</span>, </span>
-<span id="cb6-44"><a href="#cb6-44" tabindex="-1"></a>      .(timegroup, nObs, shifttimegrp, difftimegrp, runid, runCount, start, end)]</span>
-<span id="cb6-45"><a href="#cb6-45" tabindex="-1"></a><span class="co">#&gt;     timegroup nObs shifttimegrp difftimegrp runid runCount start   end</span></span>
-<span id="cb6-46"><a href="#cb6-46" tabindex="-1"></a><span class="co">#&gt;  1:      1340   29           NA          NA     1       NA    NA    NA</span></span>
-<span id="cb6-47"><a href="#cb6-47" tabindex="-1"></a><span class="co">#&gt;  2:      1341   29         1340           1     2        3  TRUE FALSE</span></span>
-<span id="cb6-48"><a href="#cb6-48" tabindex="-1"></a><span class="co">#&gt;  3:      1342   29         1341           1     2        3 FALSE FALSE</span></span>
-<span id="cb6-49"><a href="#cb6-49" tabindex="-1"></a><span class="co">#&gt;  4:      1343   29         1342           1     2        3 FALSE  TRUE</span></span>
-<span id="cb6-50"><a href="#cb6-50" tabindex="-1"></a><span class="co">#&gt;  5:      1346   29         1343           3     3       NA    NA    NA</span></span>
-<span id="cb6-51"><a href="#cb6-51" tabindex="-1"></a><span class="co">#&gt;  6:      1347   29         1346           1     4        3  TRUE FALSE</span></span>
-<span id="cb6-52"><a href="#cb6-52" tabindex="-1"></a><span class="co">#&gt;  7:      1348   29         1347           1     4        3 FALSE FALSE</span></span>
-<span id="cb6-53"><a href="#cb6-53" tabindex="-1"></a><span class="co">#&gt;  8:      1349   29         1348           1     4        3 FALSE  TRUE</span></span>
-<span id="cb6-54"><a href="#cb6-54" tabindex="-1"></a><span class="co">#&gt;  9:      1351   29         1349           2     5       NA    NA    NA</span></span>
-<span id="cb6-55"><a href="#cb6-55" tabindex="-1"></a><span class="co">#&gt; 10:      1356   29         1351           5     6       NA    NA    NA</span></span>
-<span id="cb6-56"><a href="#cb6-56" tabindex="-1"></a><span class="co">#&gt; 11:      1357   29         1356           1     7        2  TRUE FALSE</span></span>
-<span id="cb6-57"><a href="#cb6-57" tabindex="-1"></a><span class="co">#&gt; 12:      1358   29         1357           1     7        2 FALSE  TRUE</span></span>
-<span id="cb6-58"><a href="#cb6-58" tabindex="-1"></a><span class="co">#&gt; 13:      1360   29         1358           2     8       NA    NA    NA</span></span>
-<span id="cb6-59"><a href="#cb6-59" tabindex="-1"></a><span class="co">#&gt; 14:      1361   29         1360           1     9        1    NA    NA</span></span>
-<span id="cb6-60"><a href="#cb6-60" tabindex="-1"></a><span class="co">#&gt; 15:      1364   29         1361           3    10       NA    NA    NA</span></span>
-<span id="cb6-61"><a href="#cb6-61" tabindex="-1"></a><span class="co">#&gt; 16:      1383   29         1364          19    11       NA    NA    NA</span></span>
-<span id="cb6-62"><a href="#cb6-62" tabindex="-1"></a><span class="co">#&gt; 17:      1384   29         1383           1    12        7  TRUE FALSE</span></span>
-<span id="cb6-63"><a href="#cb6-63" tabindex="-1"></a><span class="co">#&gt; 18:      1385   29         1384           1    12        7 FALSE FALSE</span></span>
-<span id="cb6-64"><a href="#cb6-64" tabindex="-1"></a><span class="co">#&gt; 19:      1386   29         1385           1    12        7 FALSE FALSE</span></span>
-<span id="cb6-65"><a href="#cb6-65" tabindex="-1"></a><span class="co">#&gt; 20:      1387   29         1386           1    12        7 FALSE FALSE</span></span>
-<span id="cb6-66"><a href="#cb6-66" tabindex="-1"></a><span class="co">#&gt; 21:      1388   29         1387           1    12        7 FALSE FALSE</span></span>
-<span id="cb6-67"><a href="#cb6-67" tabindex="-1"></a><span class="co">#&gt; 22:      1389   29         1388           1    12        7 FALSE FALSE</span></span>
-<span id="cb6-68"><a href="#cb6-68" tabindex="-1"></a><span class="co">#&gt; 23:      1390   29         1389           1    12        7 FALSE  TRUE</span></span>
-<span id="cb6-69"><a href="#cb6-69" tabindex="-1"></a><span class="co">#&gt; 24:      1392   29         1390           2    13       NA    NA    NA</span></span>
-<span id="cb6-70"><a href="#cb6-70" tabindex="-1"></a><span class="co">#&gt; 25:      1393   29         1392           1    14        3  TRUE FALSE</span></span>
-<span id="cb6-71"><a href="#cb6-71" tabindex="-1"></a><span class="co">#&gt; 26:      1394   29         1393           1    14        3 FALSE FALSE</span></span>
-<span id="cb6-72"><a href="#cb6-72" tabindex="-1"></a><span class="co">#&gt; 27:      1395   29         1394           1    14        3 FALSE  TRUE</span></span>
-<span id="cb6-73"><a href="#cb6-73" tabindex="-1"></a><span class="co">#&gt; 28:      1445   29         1395          50    15       NA    NA    NA</span></span>
-<span id="cb6-74"><a href="#cb6-74" tabindex="-1"></a><span class="co">#&gt; 29:      1446   29         1445           1    16        1    NA    NA</span></span>
-<span id="cb6-75"><a href="#cb6-75" tabindex="-1"></a><span class="co">#&gt;     timegroup nObs shifttimegrp difftimegrp runid runCount start   end</span></span></code></pre></div>
-<!-- mean xy, todo -->
+</div>
+<div id="fusion-events" class="section level2" number="3">
+<h2><span class="header-section-number">3</span> Fusion events</h2>
+<div id="fusion_id" class="section level3" number="3.1">
+<h3><span class="header-section-number">3.1</span> 4.
+<code>fusion_id</code></h3>
+<p>The function <code>fusion_id</code> can be used to identify fusion
+events in distance based edge-lists. The “n_min_length” argument defines
+the minimum number of successive fixes that are required to establish a
+fusion event. The “n_max_missing” argument defines the the maximum
+number of allowable missing observations for the dyad within a fusion
+event. The “allow_split” argument defines if a single observation can be
+greater than the threshold distance without initiating fission
+event.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">fusion_id</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="at">edges =</span> edges,</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="at">threshold =</span> <span class="dv">100</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="at">n_min_length =</span> <span class="dv">1</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="at">n_max_missing =</span> <span class="dv">0</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  <span class="at">allow_split =</span> <span class="cn">FALSE</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>)</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co"># Print first 10 fusion events</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="fu">print</span>(edges[fusionID <span class="sc">&lt;=</span> <span class="dv">5</span>])</span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#&gt; Key: &lt;timegroup, ID1&gt;</span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt;     timegroup    ID1    ID2  distance dyadID fusionID</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt;         &lt;int&gt; &lt;char&gt; &lt;char&gt;     &lt;num&gt; &lt;char&gt;    &lt;int&gt;</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt;  1:         1      B      G  5.782904    B-G        1</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt;  2:         1      E      H 65.061671    E-H        2</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt;  3:         1      G      B  5.782904    B-G        1</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt;  4:         1      H      E 65.061671    E-H        2</span></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt;  5:         2      E      H 79.659918    E-H        2</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#&gt;  6:         2      H      E 79.659918    E-H        2</span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt;  7:         3      E      H 84.345303    E-H        2</span></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt;  8:         3      H      E 84.345303    E-H        2</span></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co">#&gt;  9:         4      B      G 21.129001    B-G        3</span></span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a><span class="co">#&gt; 10:         4      E      H 11.961466    E-H        2</span></span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="co">#&gt; 11:         4      G      B 21.129001    B-G        3</span></span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a><span class="co">#&gt; 12:         4      H      E 11.961466    E-H        2</span></span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co">#&gt; 13:         5      B      G  9.630521    B-G        3</span></span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a><span class="co">#&gt; 14:         5      E      H 31.498449    E-H        2</span></span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a><span class="co">#&gt; 15:         5      G      B  9.630521    B-G        3</span></span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a><span class="co">#&gt; 16:         5      H      E 31.498449    E-H        2</span></span>
+<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a><span class="co">#&gt; 17:         6      B      G 27.816927    B-G        3</span></span>
+<span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a><span class="co">#&gt; 18:         6      G      B 27.816927    B-G        3</span></span>
+<span id="cb6-32"><a href="#cb6-32" tabindex="-1"></a><span class="co">#&gt; 19:         7      B      G 17.463267    B-G        3</span></span>
+<span id="cb6-33"><a href="#cb6-33" tabindex="-1"></a><span class="co">#&gt; 20:         7      G      B 17.463267    B-G        3</span></span>
+<span id="cb6-34"><a href="#cb6-34" tabindex="-1"></a><span class="co">#&gt; 21:         8      A      I 76.831235    A-I        4</span></span>
+<span id="cb6-35"><a href="#cb6-35" tabindex="-1"></a><span class="co">#&gt; 22:         8      B      G 51.547342    B-G        3</span></span>
+<span id="cb6-36"><a href="#cb6-36" tabindex="-1"></a><span class="co">#&gt; 23:         8      G      B 51.547342    B-G        3</span></span>
+<span id="cb6-37"><a href="#cb6-37" tabindex="-1"></a><span class="co">#&gt; 24:         8      I      A 76.831235    A-I        4</span></span>
+<span id="cb6-38"><a href="#cb6-38" tabindex="-1"></a><span class="co">#&gt; 25:         9      B      G 66.724550    B-G        3</span></span>
+<span id="cb6-39"><a href="#cb6-39" tabindex="-1"></a><span class="co">#&gt; 26:         9      G      B 66.724550    B-G        3</span></span>
+<span id="cb6-40"><a href="#cb6-40" tabindex="-1"></a><span class="co">#&gt; 27:        10      B      G 16.209695    B-G        3</span></span>
+<span id="cb6-41"><a href="#cb6-41" tabindex="-1"></a><span class="co">#&gt; 28:        10      G      B 16.209695    B-G        3</span></span>
+<span id="cb6-42"><a href="#cb6-42" tabindex="-1"></a><span class="co">#&gt; 29:        11      E      H 16.730634    E-H        5</span></span>
+<span id="cb6-43"><a href="#cb6-43" tabindex="-1"></a><span class="co">#&gt; 30:        11      H      E 16.730634    E-H        5</span></span>
+<span id="cb6-44"><a href="#cb6-44" tabindex="-1"></a><span class="co">#&gt; 31:        12      E      H 25.731123    E-H        5</span></span>
+<span id="cb6-45"><a href="#cb6-45" tabindex="-1"></a><span class="co">#&gt; 32:        12      H      E 25.731123    E-H        5</span></span>
+<span id="cb6-46"><a href="#cb6-46" tabindex="-1"></a><span class="co">#&gt; 33:        13      E      H 21.746311    E-H        5</span></span>
+<span id="cb6-47"><a href="#cb6-47" tabindex="-1"></a><span class="co">#&gt; 34:        13      H      E 21.746311    E-H        5</span></span>
+<span id="cb6-48"><a href="#cb6-48" tabindex="-1"></a><span class="co">#&gt;     timegroup    ID1    ID2  distance dyadID fusionID</span></span>
+<span id="cb6-49"><a href="#cb6-49" tabindex="-1"></a><span class="co">#&gt;         &lt;int&gt; &lt;char&gt; &lt;char&gt;     &lt;num&gt; &lt;char&gt;    &lt;int&gt;</span></span></code></pre></div>
 </div>
 </div>
 

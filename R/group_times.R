@@ -1,18 +1,18 @@
-#' Group Times
+#' Group times
 #'
-#' \code{group_times} groups rows into time groups. The function accepts date
+#' `group_times` groups rows into time groups. The function expects date
 #' time formatted data and a threshold argument. The threshold argument is used
 #' to specify a time window within which rows are grouped.
 #'
-#' The \code{DT} must be a \code{data.table}. If your data is a
-#' \code{data.frame}, you can convert it by reference using
-#' \code{\link[data.table:setDT]{data.table::setDT}}.
+#' The `DT` must be a `data.table`. If your data is a
+#' `data.frame`, you can convert it by reference using
+#' [data.table::setDT()].
 #'
-#' The \code{datetime} argument expects the name of a column in \code{DT} which
-#' is of type \code{POSIXct} or the name of two columns in \code{DT} which are
-#' of type \code{IDate} and \code{ITime}.
+#' The `datetime` argument expects the name of a column in `DT` which
+#' is of type `POSIXct` or the name of two columns in `DT` which are
+#' of type `IDate` and `ITime`.
 #'
-#' \code{threshold} must be provided in units of minutes, hours or days. The
+#' `threshold` must be provided in units of minutes, hours or days. The
 #' character string should start with an integer followed by a unit, separated
 #' by a space. It is interpreted in terms of 24 hours which poses the following
 #' limitations:
@@ -23,32 +23,35 @@
 #' divide evenly into 24 \item multi-day blocks should divide into the range of
 #' days, else the blocks may not be the same length }
 #'
-#' In addition, the \code{threshold} is considered a fixed window throughout the
+#' In addition, the `threshold` is considered a fixed window throughout the
 #' time series and the rows are grouped to the nearest interval.
 #'
-#' If \code{threshold} is NULL, rows are grouped using the \code{datetime}
+#' If `threshold` is NULL, rows are grouped using the `datetime`
 #' column directly.
 #'
-#' @return \code{group_times} returns the input \code{DT} appended with a
-#'   \code{timegroup} column and additional temporal grouping columns to help
+#' @return `group_times` returns the input `DT` appended with a
+#'   `timegroup` column and additional temporal grouping columns to help
 #'   investigate, troubleshoot and interpret the timegroup.
 #'
-#'   The actual value of \code{timegroup} is arbitrary and represents the
-#'   identity of a given \code{timegroup} which 1 or more individuals are
+#'   The actual value of `timegroup` is arbitrary and represents the
+#'   identity of a given `timegroup` which 1 or more individuals are
 #'   assigned to. If the data was reordered, the group may change, but the
 #'   contents of each group would not.
 #'
-#'   The temporal grouping columns added depend on the \code{threshold}
+#'   The temporal grouping columns added depend on the `threshold`
 #'   provided:
 #'
-#'   \itemize{ \item \code{threshold} with unit minutes: "minutes" column added
-#'   identifying the nearest minute group for each row. \item \code{threshold}
+#'   \itemize{ \item `threshold` with unit minutes: "minutes" column added
+#'   identifying the nearest minute group for each row. \item `threshold`
 #'   with unit hours: "hours" column added identifying the nearest hour group
-#'   for each row. \item \code{threshold} with unit days: "block" columns added
+#'   for each row. \item `threshold` with unit days: "block" columns added
 #'   identifying the multiday block for each row. }
 #'
 #'   A message is returned when any of these columns already exist in the input
-#'   \code{DT}, because they will be overwritten.
+#'   `DT`, because they will be overwritten.
+#'
+#'   See details for appending outputs using modify-by-reference in the
+#'   [FAQ](https://docs.ropensci.org/spatsoc/articles/faq.html).
 #'
 #'
 #' @inheritParams group_pts
@@ -61,8 +64,8 @@
 #' @export
 #'
 #' @family Temporal grouping
-#' @seealso \code{\link{group_pts}} \code{\link{group_lines}}
-#'   \code{\link{group_polys}}
+#' @seealso `group_pts` `group_lines`
+#'   `group_polys`
 #' @examples
 #' # Load data.table
 #' library(data.table)
@@ -80,24 +83,18 @@
 #'
 #' group_times(DT, datetime = 'datetime', threshold = '10 days')
 #'
-group_times <- function(DT = NULL,
-                        datetime = NULL,
-                        threshold = NULL) {
+group_times <- function(
+    DT = NULL,
+    datetime = NULL,
+    threshold = NULL) {
   # due to NSE notes in R CMD check
   minutes <- block <- hours <- itime <- . <- idate <- timegroup <- NULL
   minday <- maxday <- rangeday <- adjIDate <- adjHour <-  NULL
 
-  if (is.null(DT)) {
-    stop('input DT required')
-  }
-
-  if (is.null(datetime)) {
-    stop('datetime field required')
-  }
-
-  if (all(!(datetime %in% colnames(DT)))) {
-    stop('datetime field provided is not found in DT')
-  }
+  assert_not_null(DT)
+  assert_is_data_table(DT)
+  assert_not_null(datetime)
+  assert_are_colnames(DT, datetime)
 
   checkCols <- c('hours', 'minutes', 'block', 'timegroup')
 
@@ -108,7 +105,7 @@ group_times <- function(DT = NULL,
       )), collapse = ', '),
       ' columns found in input DT and will be overwritten by this function'
     ))
-    set(DT, j = intersect(colnames(DT), checkCols), value = NULL)
+    data.table::set(DT, j = intersect(colnames(DT), checkCols), value = NULL)
   }
 
   if (is.null(threshold)) {
@@ -181,8 +178,8 @@ group_times <- function(DT = NULL,
       dtm[hours == 24, c('adjIDate', 'hours') := .(idate + 1, 0)]
 
       dtm[, timegroup := .GRP, by = .(hours, adjIDate)]
-      set(dtm, j = 'adjIDate', value = NULL)
-      set(dtm, j = c('idate', 'itime'), value = NULL)
+      data.table::set(dtm, j = 'adjIDate', value = NULL)
+      data.table::set(dtm, j = c('idate', 'itime'), value = NULL)
       DT[, (colnames(dtm)) := dtm]
 
       return(DT[])
@@ -203,9 +200,8 @@ group_times <- function(DT = NULL,
         nMins <- as.integer(nMins)
       }
 
-      if (nMins > 60) {
-        stop('threshold provided with > 60 minutes')
-      }
+      assert_relation(nMins, `<=`, 60, ... = ' minutes')
+
       if (60 %% nMins != 0) {
         stop('threshold not evenly divisible by 60')
       }
@@ -229,8 +225,8 @@ group_times <- function(DT = NULL,
       dtm[, timegroup := .GRP,
           by = c('adjMinute', 'adjHour', 'adjDate')]
 
-      set(dtm, j = c('adjMinute', 'adjHour', 'adjDate'), value = NULL)
-      set(dtm, j = c('idate', 'itime'), value = NULL)
+      data.table::set(dtm, j = c('adjMinute', 'adjHour', 'adjDate'), value = NULL)
+      data.table::set(dtm, j = c('idate', 'itime'), value = NULL)
 
       DT[, (colnames(dtm)) := dtm]
       return(DT[])
@@ -243,7 +239,7 @@ group_times <- function(DT = NULL,
         dtm[, timegroup := .GRP,
             by = .(data.table::year(idate), data.table::yday(idate))]
 
-        set(dtm, j = c('idate', 'itime'), value = NULL)
+        data.table::set(dtm, j = c('idate', 'itime'), value = NULL)
         DT[, (colnames(dtm)) := dtm]
         return(DT[])
       } else {
@@ -271,7 +267,7 @@ group_times <- function(DT = NULL,
         )]
 
         dtm[, timegroup := .GRP, .(year(idate), block)]
-        set(dtm, j = c('idate', 'itime'),
+        data.table::set(dtm, j = c('idate', 'itime'),
             value = NULL)
         DT[, (colnames(dtm)) := dtm]
         return(DT[])

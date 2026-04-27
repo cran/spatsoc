@@ -2,7 +2,7 @@
 % Please edit documentation in R/group_times.R
 \name{group_times}
 \alias{group_times}
-\title{Group Times}
+\title{Group times}
 \usage{
 group_times(DT = NULL, datetime = NULL, threshold = NULL)
 }
@@ -37,16 +37,19 @@ identifying the multiday block for each row. }
 
 A message is returned when any of these columns already exist in the input
 \code{DT}, because they will be overwritten.
+
+See details for appending outputs using modify-by-reference in the
+\href{https://docs.ropensci.org/spatsoc/articles/faq.html}{FAQ}.
 }
 \description{
-\code{group_times} groups rows into time groups. The function accepts date
+\code{group_times} groups rows into time groups. The function expects date
 time formatted data and a threshold argument. The threshold argument is used
 to specify a time window within which rows are grouped.
 }
 \details{
 The \code{DT} must be a \code{data.table}. If your data is a
 \code{data.frame}, you can convert it by reference using
-\code{\link[data.table:setDT]{data.table::setDT}}.
+\code{\link[data.table:setDT]{data.table::setDT()}}.
 
 The \code{datetime} argument expects the name of a column in \code{DT} which
 is of type \code{POSIXct} or the name of two columns in \code{DT} which are
@@ -88,7 +91,7 @@ group_times(DT, datetime = 'datetime', threshold = '10 days')
 
 }
 \seealso{
-\code{\link{group_pts}} \code{\link{group_lines}}
-\code{\link{group_polys}}
+\code{group_pts} \code{group_lines}
+\code{group_polys}
 }
 \concept{Temporal grouping}

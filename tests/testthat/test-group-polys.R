@@ -1,5 +1,6 @@
 # Test group_polys
 context('test group_polys')
+
 library(spatsoc)
 
 DT <- fread('../testdata/DT.csv')
@@ -26,11 +27,15 @@ test_that('DT or spPts are required but not both', {
   'cannot provide both DT and sfPolys')
 })
 
+test_that('id required', {
+  expect_error(group_polys(DT, area = TRUE, id = NULL), 'id')
+})
+
 test_that('area provided and logical, or error', {
   expect_error(
     group_polys(
       DT = DT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       area = NULL,
       coords = c('X', 'Y'),
@@ -43,22 +48,22 @@ test_that('area provided and logical, or error', {
   expect_error(
     group_polys(
       DT = DT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       area = 'potato',
       coords = c('X', 'Y'),
       id = 'ID'
     ),
-    'area must be provided',
+    'area must be of class logical',
     fixed = TRUE
   )
 
   expect_error(
     group_polys(
       DT = DT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
-      area = 10,
+      area = NULL,
       coords = c('X', 'Y'),
       id = 'ID'
     ),
@@ -71,7 +76,7 @@ test_that('id provided', {
   expect_error(
     group_polys(
       DT = DT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       area = TRUE,
       coords = c('X', 'Y'),
@@ -82,17 +87,17 @@ test_that('id provided', {
   )
 })
 
-test_that('projection provided or error', {
+test_that('crs provided or error', {
   expect_error(
     group_polys(
       DT = DT,
-      projection = NULL,
+      crs = NULL,
       hrType = 'mcp',
       area = FALSE,
       coords = c('X', 'Y'),
       id = 'ID'
     ),
-    'projection must be provided'
+    'crs must be provided'
   )
 })
 
@@ -101,7 +106,7 @@ test_that('mising hrParams warns default used', {
   missingpromise <- evaluate_promise(
     group_polys(
       DT = copyDT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       area = FALSE,
       coords = c('X', 'Y'),
@@ -118,7 +123,7 @@ test_that('missing hrType fails', {
   expect_error(
     group_polys(
       DT = DT,
-      projection = utm,
+      crs = utm,
       hrType = NULL,
       area = FALSE,
       coords = c('X', 'Y'),
@@ -132,40 +137,40 @@ test_that('column names must exist in DT', {
   expect_error(
     group_polys(
       DT = DT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       area = FALSE,
       coords = c('X', 'Y'),
       id = 'potato'
     ),
-    'not present in input DT',
+    'not present in input',
     fixed = FALSE
   )
 
   expect_error(
     group_polys(
       DT = DT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       area = FALSE,
       coords = c('potatoX', 'potatoY'),
       id = 'ID'
     ),
-    'not present in input DT',
+    'not present in input',
     fixed = FALSE
   )
 
   expect_error(
     group_polys(
       DT = DT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       area = FALSE,
       coords = c('X', 'Y'),
       id = 'ID',
       splitBy = 'potato'
     ),
-    'not present in input DT',
+    'not present in input',
     fixed = FALSE
   )
 })
@@ -187,7 +192,7 @@ test_that('ID field does not have spaces', {
   idpromise <- evaluate_promise(
     expect_error(group_polys(
       DT = copyDT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       hrParams = list(percent = 95),
       area = TRUE,
@@ -204,7 +209,7 @@ test_that('ID field does not have spaces', {
   expect_error(
     group_polys(
       DT = copyDT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       hrParams = list(percent = 95),
       area = TRUE,
@@ -220,7 +225,7 @@ test_that('column and row lengths returned make sense', {
   copyDT <- copy(DT)
   group_polys_mcp <- group_polys(
       DT = copyDT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       hrParams = list(percent = 95),
       area = TRUE,
@@ -234,7 +239,7 @@ test_that('column and row lengths returned make sense', {
 
   group_polys_mcp_split <- group_polys(
       DT = copyDT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       hrParams = list(percent = 95),
       area = FALSE,
@@ -250,7 +255,7 @@ test_that('column and row lengths returned make sense', {
       area = FALSE,
       sfPolys = build_polys(
         DT = DT,
-        projection = utm,
+        crs = utm,
         hrType = 'mcp',
         hrParams = list(percent = 95),
         coords = c('X', 'Y'),
@@ -262,14 +267,14 @@ test_that('column and row lengths returned make sense', {
     area = TRUE,
     sfPolys = build_polys(
       DT = DT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       hrParams = list(percent = 95),
       coords = c('X', 'Y'),
       id = 'ID'
     )
   )
-  expect_equal(nrow(group_sf_polys), length(unique(DT$ID)))
+  expect_length(unique(DT$ID), nrow(group_sf_polys))
   expect_equal(nrow(group_sf_polys_area), length(unique(DT$ID)) ^ 2)
 })
 
@@ -283,7 +288,7 @@ test_that('withinGroup is not returned to the user', {
   copyDT[, N := .N, by = .(ID, block)]
   within_group <- group_polys(
       DT = copyDT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       hrParams = list(percent = 95),
       area = FALSE,
@@ -300,7 +305,7 @@ test_that('group column succesfully detected', {
   groupdelpromise <- evaluate_promise(
     group_polys(
       DT = copyDT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       hrParams = list(percent = 95),
       area = FALSE,
@@ -316,7 +321,7 @@ test_that('group column succesfully detected', {
   overwritepromise <- evaluate_promise(
     group_polys(
       DT = copyDT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       hrParams = list(percent = 95),
       area = FALSE,
@@ -336,7 +341,7 @@ test_that('area provided with splitBy does not return errors', {
   copyDT[, yr := year(datetime)]
   within_split <- group_polys(
       DT = copyDT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       hrParams = list(percent = 95),
       area = TRUE,
@@ -348,7 +353,7 @@ test_that('area provided with splitBy does not return errors', {
 
   area <- group_polys(
       DT = copyDT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       hrParams = list(percent = 95),
       area = TRUE,
@@ -360,7 +365,7 @@ test_that('area provided with splitBy does not return errors', {
 
   prop <- group_polys(
       DT = copyDT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       hrParams = list(percent = 95),
       area = TRUE,
@@ -379,7 +384,7 @@ test_that('less than 5 locs returns NAs and warning', {
   expect_warning(
     group_polys(
       DT = copyDT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       hrParams = list(percent = 95),
       area = TRUE,
@@ -393,7 +398,7 @@ test_that('less than 5 locs returns NAs and warning', {
   expect_warning(
     group_polys(
       DT = copyDT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       hrParams = list(percent = 95),
       area = FALSE,
@@ -407,7 +412,7 @@ test_that('less than 5 locs returns NAs and warning', {
   expect_true(
     suppressWarnings(group_polys(
       DT = copyDT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       hrParams = list(percent = 95),
       area = FALSE,
@@ -420,7 +425,7 @@ test_that('less than 5 locs returns NAs and warning', {
   expect_true(
     suppressWarnings(group_polys(
       DT = copyDT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       hrParams = list(percent = 95),
       area = TRUE,
@@ -445,7 +450,7 @@ test_that('splitBy argument doesnt use splitBy column', {
   expect_true(
     suppressWarnings(group_polys(
       DT = copyDT,
-      projection = utm,
+      crs = utm,
       hrType = 'mcp',
       hrParams = list(percent = 95),
       area = FALSE,
@@ -455,19 +460,17 @@ test_that('splitBy argument doesnt use splitBy column', {
     ))[, uniqueN(jul), group][, all(V1 == 1)]
   )
 
-  expect_true(
-    ! 'splitBy' %in%
+  expect_false('splitBy' %in%
       suppressWarnings(group_polys(
         DT = copyDT,
-        projection = utm,
+        crs = utm,
         hrType = 'mcp',
         hrParams = list(percent = 95),
         area = TRUE,
         coords = c('X', 'Y'),
         id = 'ID',
         splitBy = 'jul'
-      ))
-  )
+      )))
 
 })
 
@@ -476,7 +479,7 @@ test_that('proportion within 0-100, area > 0', {
 
   out_mcp <- suppressWarnings(group_polys(
     DT = DT,
-    projection = utm,
+    crs = utm,
     hrType = 'mcp',
     hrParams = list(percent = 95),
     area = TRUE,
@@ -494,7 +497,7 @@ test_that('proportion within 0-100, area > 0', {
 
   out_kernel <- suppressWarnings(group_polys(
     DT = DT,
-    projection = utm,
+    crs = utm,
     hrType = 'kernel',
     hrParams = list(percent = 95),
     area = TRUE,
@@ -513,7 +516,7 @@ test_that('proportion within 0-100, area > 0', {
 
 
 test_that('sfPolys has area column', {
-  sfPolys <- build_polys(DT, projection = utm, hrType = 'kernel',
+  sfPolys <- build_polys(DT, crs = utm, hrType = 'kernel',
                          hrParams = list(grid = 60, percent = 95),
                          id = 'ID', coords = c('X', 'Y'))
 
@@ -525,5 +528,21 @@ test_that('sfPolys has area column', {
                 id = 'id'),
     'please ensure column "area"',
     fixed = TRUE
+  )
+})
+
+
+test_that('projection arg is deprecated', {
+  expect_warning(
+    group_polys(
+      DT = DT,
+      hrType = 'mcp',
+      hrParams = list(percent = 95),
+      area = TRUE,
+      coords = c('X', 'Y'),
+      id = 'ID',
+      projection = utm
+    ),
+    'projection argument is deprecated'
   )
 })

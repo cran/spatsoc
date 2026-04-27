@@ -2,44 +2,49 @@
 % Please edit documentation in R/group_polys.R
 \name{group_polys}
 \alias{group_polys}
-\title{Group Polygons}
+\title{Group polygons}
 \usage{
 group_polys(
   DT = NULL,
   area = NULL,
   hrType = NULL,
   hrParams = NULL,
-  projection = NULL,
+  crs = NULL,
   id = NULL,
   coords = NULL,
   splitBy = NULL,
-  sfPolys = NULL
+  sfPolys = NULL,
+  projection = NULL
 )
 }
 \arguments{
 \item{DT}{input data.table}
 
-\item{area}{boolean indicating either overlap group (when \code{FALSE}) or
+\item{area}{logical indicating either overlap group (when \code{FALSE}) or
 area and proportion of overlap (when \code{TRUE})}
 
 \item{hrType}{type of HR estimation, either 'mcp' or 'kernel'}
 
 \item{hrParams}{a named list of parameters for \code{adehabitatHR} functions}
 
-\item{projection}{numeric or character defining the coordinate reference
+\item{crs}{numeric or character defining the coordinate reference
 system to be passed to \link[sf:st_crs]{sf::st_crs}. For example, either
-\code{projection = "EPSG:32736"} or \code{projection = 32736}.}
+\code{crs = "EPSG:32736"} or \code{crs = 32736}. Used only if coords are provided,
+see details under Interface}
 
-\item{id}{Character string of ID column name}
+\item{id}{character string of ID column name}
 
-\item{coords}{Character vector of X coordinate and Y coordinate column names}
+\item{coords}{character vector of X coordinate and Y coordinate column names.
+Note: the order is assumed X followed by Y column names}
 
 \item{splitBy}{(optional) character string or vector of grouping column
-name(s) upon which the grouping will be calculated}
+name(s) upon which the output will be calculated}
 
 \item{sfPolys}{Alternatively, provide solely a simple features object with
 POLYGONs or MULTIPOLYGONs. If sfPolys are provided, id is required and
 splitBy cannot be used.}
+
+\item{projection}{(deprecated) use crs argument instead}
 }
 \value{
 When \code{area} is \code{FALSE}, \code{group_polys} returns the input \code{DT} appended
@@ -57,10 +62,14 @@ already exists in the input \code{DT}, because it will be overwritten.
 Along with changes to follow the R-spatial evolution, \code{group_polys} also
 now returns area and proportion of overlap with units explicitly specified
 through the \code{units} package.
+
+Note: if area is TRUE, the output of \code{group_polys} needs to be
+reassigned. See details in
+\href{https://docs.ropensci.org/spatsoc/articles/faq.html}{FAQ}.
 }
 \description{
 \code{group_polys} groups rows into spatial groups by overlapping polygons (home
-ranges). The function accepts a \code{data.table} with relocation data, individual
+ranges). The function expects a \code{data.table} with relocation data, individual
 identifiers and an \code{area} argument.  The relocation data is transformed into
 home range POLYGONs using \code{\link[=build_polys]{build_polys()}} with \link[adehabitatHR:mcp]{adehabitatHR::mcp} or
 \link[adehabitatHR:kernelUD]{adehabitatHR::kernelUD}. If the \code{area} argument is \code{FALSE}, \code{group_polys}
@@ -73,7 +82,7 @@ coordinates.
 \subsection{R-spatial evolution}{
 
 Please note, spatsoc has followed updates from R spatial, GDAL and PROJ for
-handling projections, see more below and  details at
+handling coordinate reference systems, see more below and  details at
 \url{https://r-spatial.org/r/2020/03/17/wkt.html}.
 
 In addition, \code{group_polys} previously used rgeos::gIntersection,
@@ -93,12 +102,9 @@ The \code{id}, \code{coords} (and optional \code{splitBy}) arguments expect
 the names of respective columns in \code{DT} which correspond to the
 individual identifier, X and Y coordinates, and additional grouping columns.
 
-The \code{projection} argument expects a character string or numeric
-defining the coordinate reference system to be passed to \link[sf:st_crs]{sf::st_crs}.
-For example, for UTM zone 36S (EPSG 32736), the projection
-argument is \code{projection = "EPSG:32736"} or \code{projection = 32736}.
-See \url{https://spatialreference.org}
-for a list of EPSG codes.
+The \code{crs} argument expects a character string or numeric defining the
+coordinate reference system to be passed to \link[sf:st_crs]{sf::st_crs}. For example, for
+UTM zone 36S (EPSG 32736), the crs argument is \code{crs = "EPSG:32736"} or \code{crs = 32736}. See \url{https://spatialreference.org} for a list of EPSG codes.
 
 The \code{hrType} must be either one of "kernel" or "mcp". The
 \code{hrParams} must be a named list of arguments matching those of
@@ -126,11 +132,11 @@ DT[, datetime := as.POSIXct(datetime, tz = 'UTC')]
 utm <- 32736
 
 group_polys(DT, area = FALSE, hrType = 'mcp',
-            hrParams = list(percent = 95), projection = utm,
+            hrParams = list(percent = 95), crs = utm,
             id = 'ID', coords = c('X', 'Y'))
 
 areaDT <- group_polys(DT, area = TRUE, hrType = 'mcp',
-                      hrParams = list(percent = 95), projection = utm,
+                      hrParams = list(percent = 95), crs = utm,
                       id = 'ID', coords = c('X', 'Y'))
 print(areaDT)
 }
